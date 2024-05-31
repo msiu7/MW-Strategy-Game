@@ -59,7 +59,6 @@ def checkIfUsedID(id, ids):
     
 #Develop Mountains
 def CreateMountains(grid):
-    print(1)
     foundLand = True
     row = random.randrange(1, 29)
     col = random.randrange(1, 49)
@@ -93,9 +92,7 @@ def CreateMountains(grid):
             elif choice == 14:
                 row += 1
             else:
-                row -= 1      
-
-        
+                row -= 1          
 
 def randomizeTextures(grid):
     for row in range(29):
@@ -122,9 +119,13 @@ def surroundedByLand(grid, row, col):
         return True
     return False
 
-
-
-
+def checkTotalMountain(grid):
+    count = 0
+    for row in range(30):
+        for col in range(50):
+            if isinstance(grid[row][col], mountainTile):
+                count += 1
+    return count
 
 
 

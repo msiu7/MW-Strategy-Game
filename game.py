@@ -124,7 +124,7 @@ print(checkTotalLand(grid))
 fixTextures(grid)
 for a in range(75):
     CreateForest(grid)
-for b in range(15):
+while checkTotalMountain(grid) < 60:
     CreateMountains(grid)
 randomizeTextures(grid)
 
@@ -167,37 +167,45 @@ while running1:
     screen1.fill(Background_color)
     drawUI(screen1, backgroundUI, endturn)
     pygame.draw.rect(screen1, (21, 173, 41), yesExpand)
-    pygame.draw.rect(screen1,(2, 24, 97),noExpand)
+    pygame.draw.rect(screen1,(2, 24, 97), noExpand)
     
     #All User inputs work through this 
+    waitingForSecond = False
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running1 = False
+        
+        
+        
+        #hell starts here
         if event.type == pygame.MOUSEBUTTONDOWN:
+            while not waitingForSecond:
             #Expansion
-            if event.pos[1]//25 < 30:
-                print("whywhwyhwhwhw")
-                x = event.pos[0]//25
-                y = event.pos[1]//25
-            
-                if yesExpand.collidepoint(event.pos):
-                    currentplayer.addTerritoryToPlayer(grid[x][y].getID())
+                if event.pos[1]//25 < 30:
+                    x = event.pos[0]//25
+                    y = event.pos[1]//25
+                waitingForSecond = True
+                      
+            while waitingForSecond:  
+                if yesExpand.collidepoint(event.pos):  
+                    currentplayer.addTerritoryToPlayer(grid[y][x].getID())
                     if currentplayerindex == 0:
-                        grid[x][y].setTexture(pygame.image.load('red.png'))
+                        grid[y][x].setTexture(pygame.image.load('red.png'))
                     if currentplayerindex == 1:
-                        grid[x][y].setTexture(pygame.image.load('blue.jpg'))
+                        grid[y][x].setTexture(pygame.image.load('blue.jpg'))
                 if noExpand.collidepoint(event.pos):
                     screen1.fill(Background_color)
-               
-            #Player Turn Cycling
+                waitingForSecond = False
             
-
+            
+            #Player Turn Cycling
             if endturn.collidepoint(event.pos):
                 currentplayerindex += 1
                 if currentplayerindex == numplayers:
                     currentplayerindex = 0
                     turnnumber += 1
-                currentplayer = players[currentplayerindex]             
+                currentplayer = players[currentplayerindex]
+                        
 
     text = pygame.font.SysFont("Arial", 30)
     textdraw = text.render(f"Player:{currentplayer.name}", True, (0, 0, 0))
