@@ -6,6 +6,33 @@ from array import *
 from classes import *
 from functions import *
 
+#Things To Work On
+
+#UI Buttons
+#Give Each Tile Resources depending on type
+#Give each player starting resources
+#Give each tile a cost
+#Population should increase every turn depending on food and capacity
+#Army is created by taking population from a tile
+#Create textures for settlement, village, city, mine, farmland?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #Player and Territory Management
 usedIDs = []
 players = []
@@ -175,9 +202,7 @@ while running1:
         if event.type == pygame.QUIT:
             running1 = False
         
-        
-        
-        #hell starts here
+        #hell starts here (spaghetti code, still not completely working as it should)
         if event.type == pygame.MOUSEBUTTONDOWN:
             while not waitingForSecond:
             #Expansion
@@ -187,7 +212,7 @@ while running1:
                 waitingForSecond = True
                       
             while waitingForSecond:  
-                if yesExpand.collidepoint(event.pos):  
+                if yesExpand.collidepoint(event.pos): 
                     currentplayer.addTerritoryToPlayer(grid[y][x].getID())
                     if currentplayerindex == 0:
                         grid[y][x].setTexture(pygame.image.load('red.png'))
