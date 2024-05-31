@@ -95,7 +95,6 @@ while not isValidGen(grid):
     genLand(45, 25, grid)
     if checkTotalLand(grid) > 700:
         break
-    print(checkTotalLand(grid))
 x = 0
 count = 0
 for col in range(50):
@@ -123,9 +122,9 @@ for row in range(30):
 removeIsolatedOcean(grid)
 print(checkTotalLand(grid))
 fixTextures(grid)
-for a in range(70):
+for a in range(75):
     CreateForest(grid)
-for a in range(4):
+for b in range(15):
     CreateMountains(grid)
 randomizeTextures(grid)
 

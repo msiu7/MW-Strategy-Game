@@ -59,6 +59,7 @@ def checkIfUsedID(id, ids):
     
 #Develop Mountains
 def CreateMountains(grid):
+    print(1)
     foundLand = True
     row = random.randrange(1, 29)
     col = random.randrange(1, 49)
@@ -68,28 +69,28 @@ def CreateMountains(grid):
         else:
             row = random.randrange(1, 29)
             col = random.randrange(1, 49) 
-    hOrV = random.randrange(1, 2)
+    hOrV = random.randrange(1, 3)
     if hOrV == 1:
-        while (isinstance(grid[row][col], landTile) and row < 29 and col < 49):
+        while (isinstance(grid[row][col], landTile) and row < 29 and col < 49 and surroundedByLand(grid, row ,col)):
             grid[row][col] = mountainTile(col * 25, row * 25, 25, 25)
-            choice = random.randrange(1, 10)
-            if choice < 5:
+            choice = random.randrange(1, 16)
+            if choice < 7:
                 row += 1
-            elif choice < 9:
+            elif choice < 14:
                 row -= 1
-            elif choice == 9:
+            elif choice == 14:
                 col += 1
             else:
                 col -= 1
     else:
-        while (isinstance(grid[row][col], landTile) and row < 29 and col < 49):
+        while (isinstance(grid[row][col], landTile) and row < 29 and col < 49 and surroundedByLand(grid, row ,col)):
             grid[row][col] = mountainTile(col * 25, row * 25, 25, 25)
-            choice = random.randrange(1, 10)
-            if choice < 5:
+            choice = random.randrange(1, 16)
+            if choice < 7:
                 col += 1
-            elif choice < 9:
+            elif choice < 14:
                 col -= 1
-            elif choice == 9:
+            elif choice == 14:
                 row += 1
             else:
                 row -= 1      
@@ -116,6 +117,10 @@ def randomizeTextures(grid):
                     img = pygame.image.load('forest3.png')
                     grid[row][col].setTexture(img)
 
+def surroundedByLand(grid, row, col):
+    if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile) and isinstance(grid[row - 1][col - 1], landTile) and isinstance(grid[row - 1][col + 1], landTile) and isinstance(grid[row + 1][col - 1], landTile) and isinstance(grid[row + 1][col + 1], landTile)):
+        return True
+    return False
 
 
 
@@ -138,8 +143,6 @@ def randomizeTextures(grid):
 
 
 
-
-#karu beta and legoatie suffered while making this
 #Gives Proper Coastal Texture To All Land Tiles
 def fixTextures(grid):
     for row in range(29):
