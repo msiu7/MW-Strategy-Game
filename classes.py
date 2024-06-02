@@ -48,24 +48,41 @@ class landTile(tile):
     def returnID(self):
         return self.ID
 
+    def setCoastal(self):
+        self.isCoastal = True
+    
+    def checkIfCoastal(self):
+        if isCoastal:
+            return True
+        return False
+
 class mountainTile(landTile):
 
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.image = pygame.image.load('mountain.png')
+        self.stoneProduction = 0
+        self.goldProduction = 0
+
+    # def setProduction(self):
+        
+
+    # def setProduction(self, newProduction):
+        
 
 class forestTile(landTile):
 
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.image = pygame.image.load('forest.png')
+        self.woodProduction = 0
+        self.foodProduction = 0
+
+    # def setProduction(self):
 
 
 
-
-
-
-
+    # def setProduction(self, newProduction):
 
 
 

@@ -152,61 +152,79 @@ def fixTextures(grid):
                 if  (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col - 1], oceanTile) and isinstance(grid[row][col + 1], landTile)):                
                     img = pygame.image.load('CoastL.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], oceanTile) and isinstance(grid[row][col - 1], landTile)):
                     img = pygame.image.load('CoastR.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], oceanTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile)):
                     img = pygame.image.load('CoastT.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], oceanTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile)):
                     img = pygame.image.load('CoastB.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], oceanTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], oceanTile) and isinstance(grid[row][col - 1], landTile)):
                     img = pygame.image.load('CoastTR.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], oceanTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], oceanTile)):
                     img = pygame.image.load('CoastBL.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], oceanTile) and isinstance(grid[row][col + 1], oceanTile) and isinstance(grid[row][col - 1], landTile)):
                     img = pygame.image.load('CoastBR.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], oceanTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], oceanTile)):
                     img = pygame.image.load('CoastTL.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], oceanTile) and isinstance(grid[row][col + 1], oceanTile) and isinstance(grid[row][col - 1], oceanTile)):
                     img = pygame.image.load('Coast3B.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], oceanTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], oceanTile) and isinstance(grid[row][col - 1], oceanTile)):
                     img = pygame.image.load('Coast3T.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], oceanTile) and isinstance(grid[row + 1][col], oceanTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], oceanTile)):
                     img = pygame.image.load('Coast3L.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], oceanTile) and isinstance(grid[row + 1][col], oceanTile) and isinstance(grid[row][col + 1], oceanTile) and isinstance(grid[row][col - 1], landTile)):
                     img = pygame.image.load('Coast3R.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], oceanTile) and isinstance(grid[row + 1][col], oceanTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile)):
                     img = pygame.image.load('CoastPH.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], oceanTile) and isinstance(grid[row][col - 1], oceanTile)):
                     img = pygame.image.load('CoastPV.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile)
                 and isinstance(grid[row - 1][col - 1], landTile) and isinstance(grid[row - 1][col + 1], landTile) and isinstance(grid[row + 1][col - 1], oceanTile) and isinstance(grid[row + 1][col + 1], landTile)):
                     img = pygame.image.load('CoastDBL.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile)
                 and isinstance(grid[row - 1][col - 1], landTile) and isinstance(grid[row - 1][col + 1], landTile) and isinstance(grid[row + 1][col - 1], landTile) and isinstance(grid[row + 1][col + 1], oceanTile)):
                     img = pygame.image.load('CoastDBR.png')
-                    grid[row][col].setTexture(img)             
+                    grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()          
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile)
                 and isinstance(grid[row - 1][col - 1], oceanTile) and isinstance(grid[row - 1][col + 1], landTile) and isinstance(grid[row + 1][col - 1], landTile) and isinstance(grid[row + 1][col + 1], landTile)):
                     img = pygame.image.load('CoastDTL.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile)
                 and isinstance(grid[row - 1][col - 1], landTile) and isinstance(grid[row - 1][col + 1], oceanTile) and isinstance(grid[row + 1][col - 1], landTile) and isinstance(grid[row + 1][col + 1], landTile)):
                     img = pygame.image.load('CoastDTR.png')
                     grid[row][col].setTexture(img)
+                    grid[row][col].setCoastal()
 
 #Drawing UI Buttons
 def drawUI(screen1, backgroundUI, endturn):
