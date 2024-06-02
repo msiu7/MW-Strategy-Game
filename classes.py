@@ -50,7 +50,8 @@ class landTile(tile):
 
     def setCoastal(self):
         self.isCoastal = True
-    
+        self.brickProduction = 0
+        
     def checkIfCoastal(self):
         if isCoastal:
             return True
