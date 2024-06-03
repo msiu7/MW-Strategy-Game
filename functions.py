@@ -130,22 +130,8 @@ def checkTotalMountain(grid):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #Gives Proper Coastal Texture To All Land Tiles
-def fixTextures(grid):
+def fixCoastalTextures(grid):
     for row in range(29):
         for col in range(49):
             if isinstance(grid[row][col], landTile):
@@ -225,20 +211,64 @@ def fixTextures(grid):
                     img = pygame.image.load('CoastDTR.png')
                     grid[row][col].setTexture(img)
                     grid[row][col].setCoastal()
+            
+def fixMountainTextures(grid):
+    for row in range(29):
+        for col in range(49):  
+            if isinstance(grid[row][col], mountainTile):
+                if  (not isinstance(grid[row - 1][col], mountainTile) and not isinstance(grid[row + 1][col], mountainTile) and isinstance(grid[row][col - 1], mountainTile) and not isinstance(grid[row][col + 1], mountainTile)):                
+                    img = pygame.image.load('MountainL.png')
+                    grid[row][col].setTexture(img)
+                if (not isinstance(grid[row - 1][col], mountainTile) and not isinstance(grid[row + 1][col], mountainTile) and isinstance(grid[row][col + 1], mountainTile) and not isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainR.png')
+                    grid[row][col].setTexture(img)
+                if (isinstance(grid[row - 1][col], mountainTile) and not isinstance(grid[row + 1][col], mountainTile) and not isinstance(grid[row][col + 1], mountainTile) and not isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainT.png')
+                    grid[row][col].setTexture(img)
+                if (not isinstance(grid[row - 1][col], mountainTile) and isinstance(grid[row + 1][col], mountainTile) and not isinstance(grid[row][col + 1], mountainTile) and not isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainB.png')
+                    grid[row][col].setTexture(img)
+                if (isinstance(grid[row - 1][col], mountainTile) and not isinstance(grid[row + 1][col], mountainTile) and isinstance(grid[row][col + 1], mountainTile) and not isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainTR.png')
+                    grid[row][col].setTexture(img)
+                if (not isinstance(grid[row - 1][col], mountainTile) and isinstance(grid[row + 1][col], mountainTile) and not isinstance(grid[row][col + 1], mountainTile) and isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainBL.png')
+                    grid[row][col].setTexture(img)
+                if (not isinstance(grid[row - 1][col], mountainTile) and isinstance(grid[row + 1][col], mountainTile) and isinstance(grid[row][col + 1], mountainTile) and not isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainBR.png')
+                    grid[row][col].setTexture(img)
+                if (isinstance(grid[row - 1][col], mountainTile) and not isinstance(grid[row + 1][col], mountainTile) and not isinstance(grid[row][col + 1], mountainTile) and isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainTL.png')
+                    grid[row][col].setTexture(img)
+                if (not isinstance(grid[row - 1][col], mountainTile) and isinstance(grid[row + 1][col], mountainTile) and isinstance(grid[row][col - 1], mountainTile) and isinstance(grid[row][col + 1], mountainTile)):
+                    img = pygame.image.load('Mountain3B.png')
+                    grid[row][col].setTexture(img)
+                if (isinstance(grid[row - 1][col], mountainTile) and not isinstance(grid[row + 1][col], mountainTile) and isinstance(grid[row][col + 1], mountainTile) and isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('Mountain3T.png')
+                    grid[row][col].setTexture(img)
+                if (isinstance(grid[row - 1][col], mountainTile) and isinstance(grid[row + 1][col], mountainTile) and not isinstance(grid[row][col + 1], mountainTile) and isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('Mountain3L.png')
+                    grid[row][col].setTexture(img)
+                if (isinstance(grid[row - 1][col], mountainTile) and isinstance(grid[row + 1][col], mountainTile) and isinstance(grid[row][col + 1], mountainTile) and not isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('Mountain3R.png')
+                    grid[row][col].setTexture(img)
+                if (not isinstance(grid[row - 1][col], mountainTile) and not isinstance(grid[row + 1][col], mountainTile) and isinstance(grid[row][col + 1],mountainTile) and isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainH.png')
+                    grid[row][col].setTexture(img)
+                if (isinstance(grid[row - 1][col], mountainTile) and isinstance(grid[row + 1][col], mountainTile) and not isinstance(grid[row][col + 1], mountainTile) and not isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainV.png')
+                    grid[row][col].setTexture(img)
+                if (isinstance(grid[row - 1][col], mountainTile) and isinstance(grid[row + 1][col], mountainTile) and isinstance(grid[row][col + 1], mountainTile) and isinstance(grid[row][col - 1], mountainTile)):
+                    img = pygame.image.load('MountainA.png')
+                    grid[row][col].setTexture(img)
+
+
 
 #Drawing UI Buttons
 def drawUI(screen1, backgroundUI, endturn):
     pygame.draw.rect(screen1, (211, 182, 131), backgroundUI)
     pygame.draw.rect(screen1, (0, 0, 0), endturn)
     
-
-
-
-
-
-
-
-
 
 #Develop Forest
 def CreateForest(grid):

@@ -88,7 +88,7 @@ while running0:
     pygame.display.update()
 
 for a in range(numplayers):
-    players.append(player(str(a+1), "placeholdercolor"))
+    players.append(player(str(a+1), str(a+1)))
 currentplayer = players[currentplayerindex] 
 
 
@@ -148,15 +148,15 @@ for row in range(30):
     y += 25
 removeIsolatedOcean(grid)
 print(checkTotalLand(grid))
-fixTextures(grid)
+fixCoastalTextures(grid)
 for a in range(75):
     CreateForest(grid)
 while checkTotalMountain(grid) < 60:
     CreateMountains(grid)
 randomizeTextures(grid)
-
+fixMountainTextures(grid)
 #Giving all Land Tiles an ID
-counter = 0
+counter = -1
 for row in range(30):
     for col in range(50):
             counter += 1
@@ -244,6 +244,16 @@ while running1:
             if tiley < 749:
                 screen1.blit(wowzer, (tilex, tiley))
     
+    
+
+
+
+
+
+    #for a in range(0, len(players))
+    currentplayer.addBordering()
+    currentplayer.drawBorders(screen1)
+
     pygame.display.update()
 
 
