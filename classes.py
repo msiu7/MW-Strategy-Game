@@ -189,40 +189,132 @@ class player:
     def drawBorders(self, screen):
         
         for a in range(0, len(self.borderingTerritories)):
-            #for bordering right and top unowned tiles
-             
-            if (self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1) and not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1) and not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50) and self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50)):
+            #Surrounded
+            if ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
                 #width,height
-                right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 20, (self.borderingTerritories[a] // 50) * 25, 5, 25)
-                top = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 25, 5)
+                right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                top = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 25, 2)
+                left = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
                 pygame.draw.rect(screen, (self.rgb), right)
-                pygame.draw.rect(screen,(self.rgb),top)
-                
-                
+                pygame.draw.rect(screen,(self.rgb), top) 
+                pygame.draw.rect(screen, (self.rgb), bottom)
+                pygame.draw.rect(screen,(self.rgb), left)  
             
-    #         #if 
             
-    #         if (not self.doesTileBelongToPlayer((self.borderingTerritories[a]) + 1) and not self.doesTileBelongToPlayer((self.borderingTerritories[a]) - 50) ):
-    #            rectangleeewangle = 
-               
-               
-    #            #code to set texture
+            # left, top, right
+            elif ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                top = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 25, 2)
+                left = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                pygame.draw.rect(screen, (self.rgb), right)
+                pygame.draw.rect(screen, (self.rgb), top)
+                pygame.draw.rect(screen, (self.rgb), left)
 
-    #         #for bordering right and bottom unowned tiles   
-    #         if (not self.doesTileBelongToPlayer((self.borderingTerritories[a]) + 1) and not self.doesTileBelongToPlayer((self.borderingTerritories[a]) + 50)):
-    #             #code to set texture
+            # left, bottom, right
+            elif ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
+                left = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                pygame.draw.rect(screen, (self.rgb), right)
+                pygame.draw.rect(screen, (self.rgb), bottom)
+                pygame.draw.rect(screen, (self.rgb), left)
+                
+            # top, bottom, right
+            elif ((self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                top = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 25, 2)
+                bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
+                right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                pygame.draw.rect(screen, (self.rgb), top)
+                pygame.draw.rect(screen, (self.rgb), bottom)
+                pygame.draw.rect(screen, (self.rgb), right)
+
+            # top, bottom, left
+            elif ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                top = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 25, 2)
+                bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
+                left = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                pygame.draw.rect(screen, (self.rgb), top)
+                pygame.draw.rect(screen, (self.rgb), bottom)
+                pygame.draw.rect(screen, (self.rgb), left)
             
-    #         #for bordering left and top unowned tiles 
-    #         if (not self.doesTileBelongToPlayer((self.borderingTerritories[a]) - 1) and not self.doesTileBelongToPlayer((self.borderingTerritories[a]) - 50)):    
-    #             #code to set texture
             
-    #         #for bordering left and bottom unowned tile
-    #         if (not self.doesTileBelongToPlayer((self.borderingTerritories[a]) - 1) and not self.doesTileBelongToPlayer((self.borderingTerritories[a]) + 50)):
-    #             #code to set texture
-      
-    #         if (not self.doesTileBelongToPlayer((self.borderingTerritories[a]) - 1) and not self.doesTileBelongToPlayer((self.borderingTerritories[a]) + 50) and ):
-    #             #code to set texture
+            # right, top
+            elif ((self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                top = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 25, 2)
+                pygame.draw.rect(screen, (self.rgb), right)
+                pygame.draw.rect(screen, (self.rgb), top)
             
+
+            # left, top
+            elif ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                left = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                top = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 25, 2)
+                pygame.draw.rect(screen, (self.rgb), left)
+                pygame.draw.rect(screen, (self.rgb), top)
+                
+            # left, bottom
+            elif ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                left = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
+                pygame.draw.rect(screen, (self.rgb), left)
+                pygame.draw.rect(screen, (self.rgb), bottom)       
+
+            # right, bottom
+            elif ((self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
+                pygame.draw.rect(screen, (self.rgb), right)
+                pygame.draw.rect(screen, (self.rgb), bottom)
+
+            # top, bottom
+            elif ((self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                top = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 25, 2)
+                bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
+                pygame.draw.rect(screen, (self.rgb), top)
+                pygame.draw.rect(screen, (self.rgb), bottom)
+                
+            # left, right
+            elif ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                left = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                pygame.draw.rect(screen, (self.rgb), left)
+                pygame.draw.rect(screen, (self.rgb), right)
+
+            # left
+            elif ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                left = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                pygame.draw.rect(screen, (self.rgb), left)
+            
+            # right
+            elif ((self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
+                pygame.draw.rect(screen, (self.rgb), right)
+            
+            # top
+            elif ((self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                top = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25, 25, 2)
+                pygame.draw.rect(screen, (self.rgb), top)
+
+            # bottom
+            elif ((self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
+                #width,height
+                bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
+                pygame.draw.rect(screen, (self.rgb), bottom)
       
 
         

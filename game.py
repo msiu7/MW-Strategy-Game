@@ -179,7 +179,11 @@ yesExpand = pygame.Rect(525, 800, 50, 50)
 noExpand = pygame.Rect(725, 800, 50, 50)
 #Game Loop
 running1 = True
+
 while running1:  
+    
+    
+    
     #currentplayer = players[currentplayerindex]    
     #Hovering Mouse
     mouse_pos = pygame.mouse.get_pos()  
@@ -196,6 +200,7 @@ while running1:
     pygame.draw.rect(screen1, (21, 173, 41), yesExpand)
     pygame.draw.rect(screen1,(2, 24, 97), noExpand)
     
+
     #All User inputs work through this 
     waitingForSecond = False
     for event in pygame.event.get():
@@ -204,8 +209,10 @@ while running1:
         
         #hell starts here (spaghetti code, still not completely working as it should)
         if event.type == pygame.MOUSEBUTTONDOWN:
+            
             while not waitingForSecond:
             #Expansion
+                
                 if event.pos[1]//25 < 30:
                     x = event.pos[0]//25
                     y = event.pos[1]//25
@@ -214,10 +221,12 @@ while running1:
             while waitingForSecond:  
                 if yesExpand.collidepoint(event.pos): 
                     currentplayer.addTerritoryToPlayer(grid[y][x].getID())
-                    if currentplayerindex == 0:
-                        grid[y][x].setTexture(pygame.image.load('red.png'))
-                    if currentplayerindex == 1:
-                        grid[y][x].setTexture(pygame.image.load('blue.jpg'))
+                    
+                    
+                    # if currentplayerindex == 0:
+                    #     grid[y][x].setTexture(pygame.image.load('red.png'))
+                    # if currentplayerindex == 1:
+                    #     grid[y][x].setTexture(pygame.image.load('blue.jpg'))
                 if noExpand.collidepoint(event.pos):
                     screen1.fill(Background_color)
                 waitingForSecond = False
@@ -231,7 +240,7 @@ while running1:
                     turnnumber += 1
                 currentplayer = players[currentplayerindex]
                         
-
+    
     text = pygame.font.SysFont("Arial", 30)
     textdraw = text.render(f"Player:{currentplayer.name}", True, (0, 0, 0))
     textturnnumber = text.render(f"Turn #{turnnumber}", True, (0, 0, 0))
@@ -251,9 +260,9 @@ while running1:
 
 
     #for a in range(0, len(players))
-    currentplayer.addBordering()
     currentplayer.drawBorders(screen1)
-
+    currentplayer.addBordering()
+    
     pygame.display.update()
 
 
