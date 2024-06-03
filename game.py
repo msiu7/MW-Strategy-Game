@@ -254,9 +254,9 @@ while running1:
 
 
 
-    #for a in range(0, len(players))
-    currentplayer.drawBorders(screen1)
-    currentplayer.addBordering()
+    for a in range(0, len(players)):
+        players[a].drawBorders(screen1)
+        players[a].addBordering()
     
     pygame.display.update()
 
