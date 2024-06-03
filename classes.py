@@ -178,7 +178,7 @@ class player:
         self.borderingTerritories = []
         a = len(self.territories)
         b = 0
-        while (b < a - 1):
+        while (b < a):
 
             c = self.territories[b]
             if not (self.doesTileBelongToPlayer(c - 1) and self.doesTileBelongToPlayer(c + 1) and self.doesTileBelongToPlayer(c - 50) and self.doesTileBelongToPlayer(c + 50)):

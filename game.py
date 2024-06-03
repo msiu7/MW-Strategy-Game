@@ -222,11 +222,6 @@ while running1:
                 if yesExpand.collidepoint(event.pos): 
                     currentplayer.addTerritoryToPlayer(grid[y][x].getID())
                     
-                    
-                    # if currentplayerindex == 0:
-                    #     grid[y][x].setTexture(pygame.image.load('red.png'))
-                    # if currentplayerindex == 1:
-                    #     grid[y][x].setTexture(pygame.image.load('blue.jpg'))
                 if noExpand.collidepoint(event.pos):
                     screen1.fill(Background_color)
                 waitingForSecond = False
