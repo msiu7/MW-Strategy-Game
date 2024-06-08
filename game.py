@@ -161,7 +161,7 @@ for row in range(30):
     for col in range(50):
             counter += 1
             grid[row][col].setID(counter)
-
+giveTilesProduction(grid)
 #Creating Buttons
 
     #Background for UI Bar
@@ -175,16 +175,11 @@ expansionmode = pygame.Rect(1050, 750, 100, 100)
 
     #Ask If User Wants to Expand Button
 
-yesExpand = pygame.Rect(525, 800, 50, 50)
-noExpand = pygame.Rect(725, 800, 50, 50)
 #Game Loop
 running1 = True
 
 while running1:  
     
-    
-    
-    #currentplayer = players[currentplayerindex]    
     #Hovering Mouse
     mouse_pos = pygame.mouse.get_pos()  
     my = mouse_pos[1] // 25 
@@ -197,8 +192,7 @@ while running1:
     #Recreating Screen
     screen1.fill(Background_color)
     drawUI(screen1, backgroundUI, endturn)
-    pygame.draw.rect(screen1, (21, 173, 41), yesExpand)
-    pygame.draw.rect(screen1,(2, 24, 97), noExpand)
+    
     
 
     #All User inputs work through this 
@@ -208,23 +202,57 @@ while running1:
             running1 = False
         
         #hell starts here (spaghetti code, still not completely working as it should)
+        
         if event.type == pygame.MOUSEBUTTONDOWN:
-            
-            while not waitingForSecond:
-            #Expansion
+            if event.pos[1] // 25 < 30:
                 
-                if event.pos[1]//25 < 30:
-                    x = event.pos[0]//25
-                    y = event.pos[1]//25
                 waitingForSecond = True
-                      
-            while waitingForSecond:  
-                if yesExpand.collidepoint(event.pos): 
-                    currentplayer.addTerritoryToPlayer(grid[y][x].getID())
+                x = event.pos[0] // 25
+                y = event.pos[1] // 25
+                # Draw a pop-up rectangle
+    
+                if grid[y][x].getCol() < 25:
+                    if grid[y][x].getRow() < 15:
+                        popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 100, 100)
+                        yesExpand = pygame.Rect((x * 25) + 25, (y * 25) + 115, 50, 10)
+                        noExpand = pygame.Rect((x * 25) + 75, (y * 25) + 115, 50, 10)
+                    else:
+                        popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 125, 100, 100)
+                        yesExpand = pygame.Rect((x * 25) + 25, (y * 25) - 35, 50, 10)
+                        noExpand = pygame.Rect((x * 25) + 75, (y * 25) - 35, 50, 10)
+                else:
+                    if grid[y][x].getRow() < 15:
+                        popuprect = pygame.Rect((x * 25) - 125, (y * 25) + 25, 100, 100)
+                        yesExpand = pygame.Rect((x * 25) - 125, (y * 25) + 115, 50, 10)
+                        noExpand = pygame.Rect((x * 25) - 75, (y * 25) + 115, 50, 10) 
+                    else:
+                        popuprect = pygame.Rect((x * 25) - 125, (y * 25) - 125, 100, 100)
+                        yesExpand = pygame.Rect((x * 25) - 125, (y * 25) - 35, 50, 10)
+                        noExpand = pygame.Rect((x * 25) - 75, (y * 25) - 35, 50, 10) 
+                
+                
+                while waitingForSecond:
                     
-                if noExpand.collidepoint(event.pos):
-                    screen1.fill(Background_color)
-                waitingForSecond = False
+                    for row in range(30):
+                        for col in range(50):
+                            grid[row][col].draw(screen1)
+                    
+      
+                    
+                    pygame.draw.rect(screen1, (211, 182, 131), popuprect)
+                    pygame.draw.rect(screen1, (34, 227, 50), yesExpand)
+                    pygame.draw.rect(screen1, (209, 27, 27), noExpand)
+                    pygame.display.update()
+                    for event in pygame.event.get():
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            if yesExpand.collidepoint(event.pos): 
+                                currentplayer.addTerritoryToPlayer(grid[y][x].getID())
+                            if noExpand.collidepoint(event.pos):
+                                screen1.fill(Background_color)
+                            waitingForSecond = False
+                
+                
+        
             
             
             #Player Turn Cycling
@@ -235,7 +263,7 @@ while running1:
                     turnnumber += 1
                 currentplayer = players[currentplayerindex]
                         
-    
+    #player count display
     text = pygame.font.SysFont("Arial", 30)
     textdraw = text.render(f"Player:{currentplayer.name}", True, (0, 0, 0))
     textturnnumber = text.render(f"Turn #{turnnumber}", True, (0, 0, 0))
@@ -249,11 +277,6 @@ while running1:
                 screen1.blit(wowzer, (tilex, tiley))
     
     
-
-
-
-
-
     for a in range(0, len(players)):
         players[a].drawBorders(screen1)
         players[a].addBordering()

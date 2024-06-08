@@ -21,12 +21,12 @@ class tile:
     def getID(self):
         return self.ID
 
-    def getRow(self, id):
-        row = (id - 1) // 50
+    def getRow(self):
+        row = (self.ID - 1) // 50
         return row
     
-    def getCol(self, id):
-        col = (id - 1) % 50
+    def getCol(self):
+        col = (self.ID - 1) % 50
         return col
 
     def setTexture(self, texture):
@@ -38,6 +38,7 @@ class landTile(tile):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.image = pygame.image.load('land.png')
+        self.isCoastal = False
     
     def getCordsx(self):
         return (self.x)
@@ -53,9 +54,17 @@ class landTile(tile):
         self.brickProduction = 0
         
     def checkIfCoastal(self):
-        if isCoastal:
+        if self.isCoastal:
             return True
         return False
+
+    def setCoastalProduction(self):
+        self.brickProduction = random.randint(1, 5)
+        self.foodProduction = random.randint(1, 5)
+        self.tileValue = (self.brickProduction + self.foodProduction) * 10
+
+    def returnValue(self):
+        return self.tileValue
 
 class mountainTile(landTile):
 
@@ -65,15 +74,13 @@ class mountainTile(landTile):
         self.stoneProduction = 0
         self.goldProduction = 0
 
-    #def setProduction(self):
-    #    if checkIfCoastal = true:
-    #       self.brickProduction = random.randint(1, 10)    
-    #       self.stoneProduction = random.randint(1, 5)
-    #       self.goldProduction = random.randint(1, 5)
-    #       self.tileValue += (brickProduction + stoneProduction + goldProduction) * 10
+    def setProduction(self):    
+          self.stoneProduction = random.randint(1, 5)
+          self.goldProduction = random.randint(1, 5)
+          self.tileValue = (self.stoneProduction + self.goldProduction) * 10
 
-    # def returnValue(self)
-    #     return self.tileValue  
+    def returnValue(self):
+        return self.tileValue  
     
         
 
@@ -89,15 +96,13 @@ class forestTile(landTile):
         self.woodProduction = 0
         self.foodProduction = 0
 
-    #def setProduction(self):
-    #    if checkIfCoastal = true:
-    #       self.brickProduction = random.randint(1, 10)    
-    #       self.stoneProduction = random.randint(1, 5)
-    #       self.goldProduction = random.randint(1, 5)
-    #       self.tileValue += (brickProduction + stoneProduction + goldProduction) * 10
+    def setProduction(self):  
+          self.woodProduction = random.randint(1, 5)
+          self.foodProduction = random.randint(1, 5)
+          self.tileValue = (self.woodProduction + self.foodProduction) * 10
 
-    # def returnValue(self)
-    #     return self.tileValue  
+    def returnValue(self):
+        return self.tileValue  
 
         
 

@@ -293,3 +293,15 @@ def CreateForest(grid):
             col -= 1
         else:
             col += 1
+
+def giveTilesProduction(grid):
+    for row in range(30):
+        for col in range(50):
+            if isinstance(grid[row][col], landTile):
+                if (grid[row][col].checkIfCoastal()):
+                    grid[row][col].setCoastalProduction()
+                if isinstance(grid[row][col], forestTile):
+                    grid[row][col].setProduction()
+                if isinstance(grid[row][col], mountainTile):
+                    grid[row][col].setProduction()
+        
