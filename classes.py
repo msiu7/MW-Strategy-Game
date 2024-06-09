@@ -39,7 +39,10 @@ class landTile(tile):
         super().__init__(x, y, width, height)
         self.image = pygame.image.load('land.png')
         self.isCoastal = False
-    
+        self.tileValue = 0
+        self.brickProduction = 0
+        self.foodProduction = 0
+
     def getCordsx(self):
         return (self.x)
 
@@ -49,19 +52,46 @@ class landTile(tile):
     def returnID(self):
         return self.ID
 
-    def setCoastal(self):
-        self.isCoastal = True
-        self.brickProduction = 0
-        
-    def checkIfCoastal(self):
-        if self.isCoastal:
-            return True
-        return False
+    def returnValue(self):
+        return self.tileValue
 
-    def setCoastalProduction(self):
+class plainsTile(landTile):
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height)
+        self.image = pygame.image.load('land.png')
+        self.foodProduction = 0
+        
+
+    def setProduction(self):    
+        self.foodProduction = random.randint(1, 10)
+        self.tileValue = (self.foodProduction) * 10
+
+    def returnValue(self):
+        return self.tileValue  
+    
+    def returnProduction1(self):
+        return (f"Food Production: {self.foodProduction}")
+    
+    def returnProduction2(self):
+        return (f"")
+    
+class coastalTile(landTile):
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height)
+        self.image = pygame.image.load('land.png')
+        self.foodProduction = 0
+        self.brickProduction = 0 
+    
+    def setProduction(self):
         self.brickProduction = random.randint(1, 5)
         self.foodProduction = random.randint(1, 5)
         self.tileValue = (self.brickProduction + self.foodProduction) * 10
+
+    def returnProduction1(self):
+        return (f"Brick Production: {self.brickProduction}")
+
+    def returnProduction2(self):
+        return (f"Food Production: {self.foodProduction}")
 
     def returnValue(self):
         return self.tileValue
@@ -82,7 +112,11 @@ class mountainTile(landTile):
     def returnValue(self):
         return self.tileValue  
     
-        
+    def returnProduction1(self):
+        return (f"Stone Production: {self.stoneProduction}")
+
+    def returnProduction2(self):
+        return (f"Gold Production: {self.goldProduction}")
 
     # def setProduction(self, newProduction):
    
@@ -104,8 +138,11 @@ class forestTile(landTile):
     def returnValue(self):
         return self.tileValue  
 
-        
-
+    def returnProduction1(self):
+        return (f"Wood Production: {self.woodProduction}")
+    
+    def returnProduction2(self):
+        return (f"Food Production: {self.foodProduction}")
     # def setProduction(self, newProduction):
   
 

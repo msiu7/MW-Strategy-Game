@@ -153,6 +153,7 @@ for a in range(75):
     CreateForest(grid)
 while checkTotalMountain(grid) < 60:
     CreateMountains(grid)
+createPlainsTiles(grid)
 randomizeTextures(grid)
 fixMountainTextures(grid)
 #Giving all Land Tiles an ID
@@ -177,9 +178,10 @@ expansionmode = pygame.Rect(1050, 750, 100, 100)
 
 #Game Loop
 running1 = True
-
-while running1:  
+ 
+while running1:
     
+    popupText = pygame.font.SysFont("Arial", 10)
     #Hovering Mouse
     mouse_pos = pygame.mouse.get_pos()  
     my = mouse_pos[1] // 25 
@@ -210,26 +212,54 @@ while running1:
                 x = event.pos[0] // 25
                 y = event.pos[1] // 25
                 # Draw a pop-up rectangle
-    
+
+                cost = popupText.render(f"Cost: {grid[y][x].returnValue()} Gold", True, (0, 0, 0))
+                production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
+                production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
+                
+                production1YPosition = 0
+                production2YPosition = 0
+                
+                costXPosition = 0
+                costYPosition = 0 
+                
                 if grid[y][x].getCol() < 25:
                     if grid[y][x].getRow() < 15:
                         popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 100, 100)
                         yesExpand = pygame.Rect((x * 25) + 25, (y * 25) + 115, 50, 10)
                         noExpand = pygame.Rect((x * 25) + 75, (y * 25) + 115, 50, 10)
+                        costXPosition = x * 25 + 27
+                        costYPosition = y * 25 + 25
+                        production1YPosition = y * 25 + 37
+                        production2YPosition = y * 25 + 49
                     else:
                         popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 125, 100, 100)
                         yesExpand = pygame.Rect((x * 25) + 25, (y * 25) - 35, 50, 10)
                         noExpand = pygame.Rect((x * 25) + 75, (y * 25) - 35, 50, 10)
+                        costXPosition = x * 25 + 27
+                        costYPosition = y * 25 - 125
+                        production1YPosition = y * 25 - 113
+                        production2YPosition = y * 25 - 101
                 else:
                     if grid[y][x].getRow() < 15:
                         popuprect = pygame.Rect((x * 25) - 125, (y * 25) + 25, 100, 100)
                         yesExpand = pygame.Rect((x * 25) - 125, (y * 25) + 115, 50, 10)
-                        noExpand = pygame.Rect((x * 25) - 75, (y * 25) + 115, 50, 10) 
+                        noExpand = pygame.Rect((x * 25) - 75, (y * 25) + 115, 50, 10)
+                        costXPosition = x * 25 - 123
+                        costYPosition = y * 25 + 25
+                        production1YPosition = y * 25 + 37
+                        production2YPosition = y * 25 + 49
                     else:
                         popuprect = pygame.Rect((x * 25) - 125, (y * 25) - 125, 100, 100)
                         yesExpand = pygame.Rect((x * 25) - 125, (y * 25) - 35, 50, 10)
-                        noExpand = pygame.Rect((x * 25) - 75, (y * 25) - 35, 50, 10) 
+                        noExpand = pygame.Rect((x * 25) - 75, (y * 25) - 35, 50, 10)
+                        costXPosition = x * 25 - 123
+                        costYPosition = y * 25 - 125
+                        production1YPosition = y * 25 - 113
+                        production2YPosition = y * 25 - 101
                 
+                
+
                 
                 while waitingForSecond:
                     
@@ -242,6 +272,9 @@ while running1:
                     pygame.draw.rect(screen1, (211, 182, 131), popuprect)
                     pygame.draw.rect(screen1, (34, 227, 50), yesExpand)
                     pygame.draw.rect(screen1, (209, 27, 27), noExpand)
+                    screen1.blit(cost, (costXPosition, costYPosition))
+                    screen1.blit(production1, (costXPosition, production1YPosition))
+                    screen1.blit(production2, (costXPosition, production2YPosition))
                     pygame.display.update()
                     for event in pygame.event.get():
                         if event.type == pygame.MOUSEBUTTONDOWN:
