@@ -75,6 +75,9 @@ class plainsTile(landTile):
     def returnProduction2(self):
         return (f"")
     
+    def returnFoodProduction(self):
+        return self.foodProduction
+
 class coastalTile(landTile):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
@@ -95,6 +98,12 @@ class coastalTile(landTile):
 
     def returnValue(self):
         return self.tileValue
+    
+    def returnFoodProduction(self):
+        return self.foodProduction
+    
+    def returnBrickProduction(self):
+        return self.brickProduction
 
 class mountainTile(landTile):
 
@@ -117,6 +126,12 @@ class mountainTile(landTile):
 
     def returnProduction2(self):
         return (f"Gold Production: {self.goldProduction}")
+    
+    def returnStoneProduction(self):
+        return self.stoneProduction
+    
+    def returnGoldProduction(self):
+        return self.goldProduction
 
     # def setProduction(self, newProduction):
    
@@ -143,6 +158,13 @@ class forestTile(landTile):
     
     def returnProduction2(self):
         return (f"Food Production: {self.foodProduction}")
+
+    def returnFoodProduction(self):
+        return self.foodProduction
+
+    def returnWoodProduction(self):
+        return self.woodProduction
+
     # def setProduction(self, newProduction):
   
 
@@ -171,6 +193,8 @@ class player:
         self.color = color
         self.borderingTerritories = []
         
+        
+        
         if color == '1':
             self.rgb = (255, 18, 5)
         if color == '2': 
@@ -191,11 +215,40 @@ class player:
         #Game mechanics related variables
         self.population = 0
         self.army = 0
+        self.goldperturn = 0
+        self.woodperturn = 0
+        self.stoneperturn = 0
+        self.foodperturn = 0
+        self.brickperturn = 0
         self.gold = 0
         self.wood = 0
         self.stone = 0
         self.food = 0
+        self.brick = 0
 
+
+
+    def updateProductionValues(self, grid):
+        for a in range(0, len(self.territories)):
+            if (isinstance(grid[self.territories[a].getRow()][self.territories[a].getCol()], forestTile)):
+                self.woodperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnWoodProduction()
+                self.foodperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnFoodProduction()
+            if (isinstance(grid[self.territories[a].getRow()][self.territories[a].getCol()], mountainTile)):
+                self.stoneperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnStoneProduction()
+                self.goldperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnGoldProduction()
+            if (isinstance(grid[self.territories[a].getRow()][self.territories[a].getCol()], coastalTile)):
+                self.brickperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnBrickProduction()
+                self.foodperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnFoodProduction()
+            if (isinstance(grid[self.territories[a].getRow()][self.territories[a].getCol()], plainsTile)):
+                self.foodperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnFoodProduction()
+
+    def addProductionToTotal(self):
+        self.gold += self.goldperturn
+        self.wood += self.woodperturn
+        self.stone += self.stoneperturn 
+        self.food += self.foodperturn
+        self.brick += self.brickperturn 
+    
     def addTerritoryToPlayer(self, id):
         self.territories.append(id)
 
@@ -358,6 +411,34 @@ class player:
                 bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
                 pygame.draw.rect(screen, (self.rgb), bottom)
       
+    def getGold(self):
+        return self.gold
+    
+    def subtractGold(self, amount):
+        self.gold -= amount
+    
+    def getWood(self):
+        return self.wood
 
+    def subtractWood(self, amount):
+        self.wood -= amount
+
+    def getStone(self):
+        return self.stone
+    
+    def subtractStone(self, amount):
+        self.stone -= amount
         
-   
+    def getFood(self):
+        return self.food
+    
+    def subtractFood(self, amount):
+        self.food -= amount
+    
+    def getBrick(self):
+        return self.brick
+    
+    def subtractBrick(self, amount):
+        self.brick -= amount
+        
+  

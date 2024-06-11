@@ -202,6 +202,7 @@ def fixCoastalTextures(grid):
                     grid[row][col].setTexture(img)
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile)
                 and isinstance(grid[row - 1][col - 1], landTile) and isinstance(grid[row - 1][col + 1], landTile) and isinstance(grid[row + 1][col - 1], landTile) and isinstance(grid[row + 1][col + 1], oceanTile)):
+                    grid[row][col] = coastalTile(col*25, row*25, 25, 25)
                     img = pygame.image.load('CoastDBR.png')
                     grid[row][col].setTexture(img)         
                 if (isinstance(grid[row - 1][col], landTile) and isinstance(grid[row + 1][col], landTile) and isinstance(grid[row][col + 1], landTile) and isinstance(grid[row][col - 1], landTile)
@@ -271,7 +272,23 @@ def fixMountainTextures(grid):
 def drawUI(screen1, backgroundUI, endturn):
     pygame.draw.rect(screen1, (211, 182, 131), backgroundUI)
     pygame.draw.rect(screen1, (0, 0, 0), endturn)
+
+
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Develop Forest
 def CreateForest(grid):

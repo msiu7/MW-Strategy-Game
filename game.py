@@ -178,7 +178,7 @@ expansionmode = pygame.Rect(1050, 750, 100, 100)
 
 #Game Loop
 running1 = True
- 
+resourcedisplay1 = False 
 while running1:
     
     popupText = pygame.font.SysFont("Arial", 10)
@@ -195,6 +195,15 @@ while running1:
     screen1.fill(Background_color)
     drawUI(screen1, backgroundUI, endturn)
     
+    #Resource option
+    resourcetab = pygame.Rect(1050, 750, 100, 100)
+    pygame.draw.rect(screen1, (12, 69, 153), resourcetab)
+    
+    #Resource display
+    if resourcedisplay1:
+                    
+            resourcedisplay = pygame.Rect(200, 0, 850, 100)
+            pygame.draw.rect(screen1, (12, 69, 153), resourcedisplay)
     
 
     #All User inputs work through this 
@@ -203,16 +212,21 @@ while running1:
         if event.type == pygame.QUIT:
             running1 = False
         
-        #hell starts here (spaghetti code, still not completely working as it should)
+        
+        
         
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.pos[1] // 25 < 30:
                 
-                waitingForSecond = True
+                
                 x = event.pos[0] // 25
                 y = event.pos[1] // 25
                 # Draw a pop-up rectangle
-
+                unownedWaitingForSecond = True
+                for a in range(0, len(players)):
+                    if players[a].doesTileBelongToPlayer(grid[y][x].getID()):
+                        unownedWaitingForSecond = False
+                        break
                 cost = popupText.render(f"Cost: {grid[y][x].returnValue()} Gold", True, (0, 0, 0))
                 production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
                 production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
@@ -221,7 +235,9 @@ while running1:
                 production2YPosition = 0
                 
                 costXPosition = 0
-                costYPosition = 0 
+                costYPosition = 0
+            
+                    
                 
                 if grid[y][x].getCol() < 25:
                     if grid[y][x].getRow() < 15:
@@ -261,13 +277,13 @@ while running1:
                 
 
                 
-                while waitingForSecond:
+                while unownedWaitingForSecond:
                     
                     for row in range(30):
                         for col in range(50):
                             grid[row][col].draw(screen1)
                     
-      
+
                     
                     pygame.draw.rect(screen1, (211, 182, 131), popuprect)
                     pygame.draw.rect(screen1, (34, 227, 50), yesExpand)
@@ -279,18 +295,25 @@ while running1:
                     for event in pygame.event.get():
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if yesExpand.collidepoint(event.pos): 
+                                
+                                
                                 currentplayer.addTerritoryToPlayer(grid[y][x].getID())
+                            
                             if noExpand.collidepoint(event.pos):
                                 screen1.fill(Background_color)
-                            waitingForSecond = False
+                            unownedWaitingForSecond = False
                 
                 
-        
-            
-            
+            if resourcedisplay1: 
+                if resourcetab.collidepoint(event.pos):
+                    resourcedisplay1 = False
+            if not resourcedisplay1:         
+                if resourcetab.collidepoint(event.pos):
+                    resourcedisplay1 = True 
             #Player Turn Cycling
             if endturn.collidepoint(event.pos):
                 currentplayerindex += 1
+                currentplayer.addProductionToTotal()
                 if currentplayerindex == numplayers:
                     currentplayerindex = 0
                     turnnumber += 1
@@ -313,6 +336,37 @@ while running1:
     for a in range(0, len(players)):
         players[a].drawBorders(screen1)
         players[a].addBordering()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     pygame.display.update()
 
