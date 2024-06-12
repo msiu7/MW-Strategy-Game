@@ -17,22 +17,6 @@ from functions import *
 #Create textures for settlement, village, city, mine, farmland?
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #Player and Territory Management
 usedIDs = []
 players = []
@@ -199,11 +183,7 @@ while running1:
     resourcetab = pygame.Rect(1050, 750, 100, 100)
     pygame.draw.rect(screen1, (12, 69, 153), resourcetab)
     
-    #Resource display
-    if resourcedisplay1:
-                    
-            resourcedisplay = pygame.Rect(200, 0, 850, 100)
-            pygame.draw.rect(screen1, (12, 69, 153), resourcedisplay)
+    
     
 
     #All User inputs work through this 
@@ -294,11 +274,9 @@ while running1:
                     pygame.display.update()
                     for event in pygame.event.get():
                         if event.type == pygame.MOUSEBUTTONDOWN:
-                            if yesExpand.collidepoint(event.pos): 
-                                
-                                
+                            if yesExpand.collidepoint(event.pos):                           
                                 currentplayer.addTerritoryToPlayer(grid[y][x].getID())
-                            
+                                currentplayer.updateProductionValues(grid)
                             if noExpand.collidepoint(event.pos):
                                 screen1.fill(Background_color)
                             unownedWaitingForSecond = False
@@ -307,9 +285,11 @@ while running1:
             if resourcedisplay1: 
                 if resourcetab.collidepoint(event.pos):
                     resourcedisplay1 = False
-            if not resourcedisplay1:         
+                    
+            elif not resourcedisplay1:         
                 if resourcetab.collidepoint(event.pos):
-                    resourcedisplay1 = True 
+                    resourcedisplay1 = True
+                    print("screen")
             #Player Turn Cycling
             if endturn.collidepoint(event.pos):
                 currentplayerindex += 1
@@ -318,13 +298,17 @@ while running1:
                     currentplayerindex = 0
                     turnnumber += 1
                 currentplayer = players[currentplayerindex]
+                resourcedisplay1 = False
+                
+
+
                         
     #player count display
     text = pygame.font.SysFont("Arial", 30)
-    textdraw = text.render(f"Player:{currentplayer.name}", True, (0, 0, 0))
+    textdraw = text.render(f"Player: {currentplayer.name}", True, (0, 0, 0))
     textturnnumber = text.render(f"Turn #{turnnumber}", True, (0, 0, 0))
-    screen1.blit(textdraw, (1, 800))
-    screen1.blit(textturnnumber, (1, 825))
+    screen1.blit(textdraw, (10, 760))
+    screen1.blit(textturnnumber, (10, 810))
 
     for row in range(30):
         for col in range(50):
@@ -337,60 +321,49 @@ while running1:
         players[a].drawBorders(screen1)
         players[a].addBordering()
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    #Resource display
+    if resourcedisplay1:
+            #popupText = pygame.font.SysFont("Arial", 10)
+            resourcedisplay = pygame.Rect(200, 25, 850, 100)
+            pygame.draw.rect(screen1, (211, 182, 131), resourcedisplay)
+            #Icons/Labels
+            perTurnLabel = text.render(f"Per Turn:", True, (0, 0, 0))
+            screen1.blit(perTurnLabel, (300, 60))
+            totalLabel = text.render(f"Total:", True, (0, 0, 0))
+            screen1.blit(totalLabel, (300, 90))
+            resourcesLabel = text.render(f"Resources:", True, (0, 0, 0))
+            screen1.blit(resourcesLabel, (300, 30))
+            goldIcon = text.render(f"Gold", True, (0, 0, 0))
+            screen1.blit(goldIcon, (475, 30))
+            brickIcon = text.render(f"Brick", True, (0, 0, 0))
+            screen1.blit(brickIcon, (575, 30))
+            foodIcon = text.render(f"Food", True, (0, 0, 0))
+            screen1.blit(foodIcon, (675, 30))
+            stoneIcon = text.render(f"Stone", True, (0, 0, 0))
+            screen1.blit(stoneIcon, (775, 30))
+            woodIcon = text.render(f"Wood", True, (0, 0, 0))
+            screen1.blit(woodIcon, (875, 30))
+            
+            totalGold = text.render(f"{currentplayer.getGold()}", True, (0, 0, 0))
+            screen1.blit(totalGold, (475, 90))
+            totalBrick = text.render(f"{currentplayer.getBrick()}", True, (0, 0, 0))
+            screen1.blit(totalBrick, (575, 90))
+            totalFood = text.render(f"{currentplayer.getFood()}", True, (0, 0, 0))
+            screen1.blit(totalFood, (675, 90))
+            totalStone = text.render(f"{currentplayer.getStone()}", True, (0, 0, 0))
+            screen1.blit(totalStone, (775, 90))
+            totalWood = text.render(f"{currentplayer.getWood()}", True, (0, 0, 0))
+            screen1.blit(totalWood, (875, 90))
+            
+            goldPerTurn = text.render(f"{currentplayer.goldperturn}", True, (0, 0, 0))
+            screen1.blit(goldPerTurn, (475, 60))
+            brickPerTurn = text.render(f"{currentplayer.brickperturn}", True, (0, 0, 0))
+            screen1.blit(brickPerTurn, (575, 60))
+            foodPerTurn = text.render(f"{currentplayer.foodperturn}", True, (0, 0, 0))
+            screen1.blit(foodPerTurn, (675, 60))
+            stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
+            screen1.blit(stonePerTurn, (775, 60))
+            woodPerTurn = text.render(f"{currentplayer.woodperturn}", True, (0, 0, 0))
+            screen1.blit(woodPerTurn, (875, 60))
     
     pygame.display.update()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

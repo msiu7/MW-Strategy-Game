@@ -441,4 +441,5 @@ class player:
     def subtractBrick(self, amount):
         self.brick -= amount
         
+        
   
