@@ -17,6 +17,8 @@ from functions import *
 #Create textures for settlement, village, city, mine, farmland?
 
 
+
+
 #Player and Territory Management
 usedIDs = []
 players = []
@@ -28,6 +30,10 @@ pygame.init()
 Background_color = (48, 55, 191)
 SCREEN_WIDTH = 1250
 SCREEN_HEIGHT = 850
+text = pygame.font.SysFont("Arial", 30)
+text1 = pygame.font.SysFont("Arial", 45)
+text2 = pygame.font.SysFont("Arial", 45)
+text3 = pygame.font.SysFont("Arial", 5)
 screen0 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 screen0.fill(Background_color)
 rect2 = pygame.Rect(200, 200, 100, 100)
@@ -40,7 +46,18 @@ pygame.draw.rect(screen0,(153, 32, 28),rect3)
 pygame.draw.rect(screen0,(153, 32, 28),rect4)
 pygame.draw.rect(screen0,(153, 32, 28),rect5)
 pygame.draw.rect(screen0, (153, 32, 28), rect6)
-
+instruction = text2.render("SELECT THE AMOUNT OF PLAYERS IN YOU GAME!!!", True, (255, 255, 255))
+screen0.blit(instruction, (50, 100))
+twoplayer = text1.render("2", True, (255, 255, 255))
+screen0.blit(twoplayer, (240, 225))
+threeplayer = text1.render("3", True, (255, 255, 255))
+screen0.blit(threeplayer, (660, 225))
+fourplayer = text1.render("4", True, (255, 255, 255))
+screen0.blit(fourplayer, (1085, 225))
+fiveplayer = text1.render("5", True, (255, 255, 255))
+screen0.blit(fiveplayer, (447, 675))
+sixplayer = text1.render("6", True, ((255, 255, 255)))
+screen0.blit(sixplayer, (873, 675))
 pygame.display.flip()
 numplayers = 0
 running0 = True 
@@ -158,212 +175,249 @@ endturn = pygame.Rect(1150, 750, 100, 100)
     #Expansion View
 expansionmode = pygame.Rect(1050, 750, 100, 100)
 
+    #Population View
+populationview = pygame.Rect(950, 750, 100, 100)
+
+    #Military View
+militaryview = pygame.Rect(850, 750, 100, 100)
+
+
     #Ask If User Wants to Expand Button
+    #ultimate super dooper awesome loop!!!!!!!!!!
+gaming = True
+while gaming:
 
 #Game Loop
-running1 = True
-resourcedisplay1 = False 
-while running1:
-    
-    popupText = pygame.font.SysFont("Arial", 10)
-    #Hovering Mouse
-    mouse_pos = pygame.mouse.get_pos()  
-    my = mouse_pos[1] // 25 
-    mx = mouse_pos[0] // 25
-    if my < 30:
-        tilex = grid[my][mx].getCordsx() 
-        tiley = grid[my][mx].getCordsy()
-    wowzer = pygame.image.load('white.png')
-    
-    #Recreating Screen
-    screen1.fill(Background_color)
-    drawUI(screen1, backgroundUI, endturn)
-    
-    #Resource option
-    resourcetab = pygame.Rect(1050, 750, 100, 100)
-    pygame.draw.rect(screen1, (12, 69, 153), resourcetab)
-    
-    
-    
-
-    #All User inputs work through this 
-    waitingForSecond = False
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running1 = False
+    running1 = True
+    battleview = False
+    popview = False
+    resourcedisplay1 = False 
+    while running1:
         
+        popupText = pygame.font.SysFont("Arial", 10)
+        #Hovering Mouse
+        mouse_pos = pygame.mouse.get_pos()  
+        my = mouse_pos[1] // 25 
+        mx = mouse_pos[0] // 25
+        if my < 30:
+            tilex = grid[my][mx].getCordsx() 
+            tiley = grid[my][mx].getCordsy()
+        wowzer = pygame.image.load('white.png')
         
+        #Recreating Screen
+        screen1.fill(Background_color)
+        drawUI(screen1, backgroundUI, endturn)
+        pygame.draw.rect(screen1, (29, 158, 29), populationview)
         
+        #Resource option
+        resourcetab = pygame.Rect(1050, 750, 100, 100)
+        pygame.draw.rect(screen1, (12, 69, 153), resourcetab)
         
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.pos[1] // 25 < 30:
-                
-                
-                x = event.pos[0] // 25
-                y = event.pos[1] // 25
-                # Draw a pop-up rectangle
-                unownedWaitingForSecond = True
-                for a in range(0, len(players)):
-                    if players[a].doesTileBelongToPlayer(grid[y][x].getID()):
-                        unownedWaitingForSecond = False
-                        break
-                cost = popupText.render(f"Cost: {grid[y][x].returnValue()} Gold", True, (0, 0, 0))
-                production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
-                production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
-                
-                production1YPosition = 0
-                production2YPosition = 0
-                
-                costXPosition = 0
-                costYPosition = 0
+        #All User inputs work through this 
+        waitingForSecond = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running1 = False
             
+            
+            
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if militaryview.collidepoint(event.pos):
+                    battleview = True
+                    running1 = False
+                if populationview.collidepoint(event.pos):
+                    popview = True
+                    running1 = False
+                if event.pos[1] // 25 < 30:
                     
-                
-                if grid[y][x].getCol() < 25:
-                    if grid[y][x].getRow() < 15:
-                        popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 100, 100)
-                        yesExpand = pygame.Rect((x * 25) + 25, (y * 25) + 115, 50, 10)
-                        noExpand = pygame.Rect((x * 25) + 75, (y * 25) + 115, 50, 10)
-                        costXPosition = x * 25 + 27
-                        costYPosition = y * 25 + 25
-                        production1YPosition = y * 25 + 37
-                        production2YPosition = y * 25 + 49
-                    else:
-                        popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 125, 100, 100)
-                        yesExpand = pygame.Rect((x * 25) + 25, (y * 25) - 35, 50, 10)
-                        noExpand = pygame.Rect((x * 25) + 75, (y * 25) - 35, 50, 10)
-                        costXPosition = x * 25 + 27
-                        costYPosition = y * 25 - 125
-                        production1YPosition = y * 25 - 113
-                        production2YPosition = y * 25 - 101
-                else:
-                    if grid[y][x].getRow() < 15:
-                        popuprect = pygame.Rect((x * 25) - 125, (y * 25) + 25, 100, 100)
-                        yesExpand = pygame.Rect((x * 25) - 125, (y * 25) + 115, 50, 10)
-                        noExpand = pygame.Rect((x * 25) - 75, (y * 25) + 115, 50, 10)
-                        costXPosition = x * 25 - 123
-                        costYPosition = y * 25 + 25
-                        production1YPosition = y * 25 + 37
-                        production2YPosition = y * 25 + 49
-                    else:
-                        popuprect = pygame.Rect((x * 25) - 125, (y * 25) - 125, 100, 100)
-                        yesExpand = pygame.Rect((x * 25) - 125, (y * 25) - 35, 50, 10)
-                        noExpand = pygame.Rect((x * 25) - 75, (y * 25) - 35, 50, 10)
-                        costXPosition = x * 25 - 123
-                        costYPosition = y * 25 - 125
-                        production1YPosition = y * 25 - 113
-                        production2YPosition = y * 25 - 101
-                
-                
-
-                
-                while unownedWaitingForSecond:
                     
-                    for row in range(30):
-                        for col in range(50):
-                            grid[row][col].draw(screen1)
-                    
-
-                    
-                    pygame.draw.rect(screen1, (211, 182, 131), popuprect)
-                    pygame.draw.rect(screen1, (34, 227, 50), yesExpand)
-                    pygame.draw.rect(screen1, (209, 27, 27), noExpand)
-                    screen1.blit(cost, (costXPosition, costYPosition))
-                    screen1.blit(production1, (costXPosition, production1YPosition))
-                    screen1.blit(production2, (costXPosition, production2YPosition))
-                    pygame.display.update()
-                    for event in pygame.event.get():
-                        if event.type == pygame.MOUSEBUTTONDOWN:
-                            if yesExpand.collidepoint(event.pos):                           
-                                currentplayer.addTerritoryToPlayer(grid[y][x].getID())
-                                currentplayer.updateProductionValues(grid)
-                            if noExpand.collidepoint(event.pos):
-                                screen1.fill(Background_color)
+                    x = event.pos[0] // 25
+                    y = event.pos[1] // 25
+                    # Draw a pop-up rectangle
+                    unownedWaitingForSecond = True
+                    for a in range(0, len(players)):
+                        if players[a].doesTileBelongToPlayer(grid[y][x].getID()):
                             unownedWaitingForSecond = False
-                
-                
-            if resourcedisplay1: 
-                if resourcetab.collidepoint(event.pos):
-                    resourcedisplay1 = False
+                            break
+                    cost = popupText.render(f"Cost: {grid[y][x].returnValue()} Gold", True, (0, 0, 0))
+                    production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
+                    production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
                     
-            elif not resourcedisplay1:         
-                if resourcetab.collidepoint(event.pos):
-                    resourcedisplay1 = True
-                    print("screen")
-            #Player Turn Cycling
-            if endturn.collidepoint(event.pos):
-                currentplayerindex += 1
-                currentplayer.addProductionToTotal()
-                if currentplayerindex == numplayers:
-                    currentplayerindex = 0
-                    turnnumber += 1
-                currentplayer = players[currentplayerindex]
-                resourcedisplay1 = False
+                    production1YPosition = 0
+                    production2YPosition = 0
+                    
+                    costXPosition = 0
+                    costYPosition = 0
                 
+                        
+                    
+                    if grid[y][x].getCol() < 25:
+                        if grid[y][x].getRow() < 15:
+                            popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 100, 100)
+                            yesExpand = pygame.Rect((x * 25) + 25, (y * 25) + 115, 50, 10)
+                            noExpand = pygame.Rect((x * 25) + 75, (y * 25) + 115, 50, 10)
+                            costXPosition = x * 25 + 27
+                            costYPosition = y * 25 + 25
+                            production1YPosition = y * 25 + 37
+                            production2YPosition = y * 25 + 49
+                        else:
+                            popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 125, 100, 100)
+                            yesExpand = pygame.Rect((x * 25) + 25, (y * 25) - 35, 50, 10)
+                            noExpand = pygame.Rect((x * 25) + 75, (y * 25) - 35, 50, 10)
+                            costXPosition = x * 25 + 27
+                            costYPosition = y * 25 - 125
+                            production1YPosition = y * 25 - 113
+                            production2YPosition = y * 25 - 101
+                    else:
+                        if grid[y][x].getRow() < 15:
+                            popuprect = pygame.Rect((x * 25) - 125, (y * 25) + 25, 100, 100)
+                            yesExpand = pygame.Rect((x * 25) - 125, (y * 25) + 115, 50, 10)
+                            noExpand = pygame.Rect((x * 25) - 75, (y * 25) + 115, 50, 10)
+                            costXPosition = x * 25 - 123
+                            costYPosition = y * 25 + 25
+                            production1YPosition = y * 25 + 37
+                            production2YPosition = y * 25 + 49
+                        else:
+                            popuprect = pygame.Rect((x * 25) - 125, (y * 25) - 125, 100, 100)
+                            yesExpand = pygame.Rect((x * 25) - 125, (y * 25) - 35, 50, 10)
+                            noExpand = pygame.Rect((x * 25) - 75, (y * 25) - 35, 50, 10)
+                            costXPosition = x * 25 - 123
+                            costYPosition = y * 25 - 125
+                            production1YPosition = y * 25 - 113
+                            production2YPosition = y * 25 - 101
+                    
+                    
 
+                    
+                    while unownedWaitingForSecond:
+                        
+                        for row in range(30):
+                            for col in range(50):
+                                grid[row][col].draw(screen1)
+                        
 
                         
-    #player count display
-    text = pygame.font.SysFont("Arial", 30)
-    textdraw = text.render(f"Player: {currentplayer.name}", True, (0, 0, 0))
-    textturnnumber = text.render(f"Turn #{turnnumber}", True, (0, 0, 0))
-    screen1.blit(textdraw, (10, 760))
-    screen1.blit(textturnnumber, (10, 810))
+                        pygame.draw.rect(screen1, (211, 182, 131), popuprect)
+                        pygame.draw.rect(screen1, (34, 227, 50), yesExpand)
+                        pygame.draw.rect(screen1, (209, 27, 27), noExpand)
+                        screen1.blit(cost, (costXPosition, costYPosition))
+                        screen1.blit(production1, (costXPosition, production1YPosition))
+                        screen1.blit(production2, (costXPosition, production2YPosition))
+                        pygame.display.update()
+                        for event in pygame.event.get():
+                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                if yesExpand.collidepoint(event.pos):
+                                    if currentplayer.getGold() >= grid[y][x].returnValue():
+                                        if currentplayer.checkExpandable(grid[y][x].getID(), grid):
+                                            currentplayer.subtractGold(grid[y][x].returnValue())                           
+                                            currentplayer.addTerritoryToPlayer(grid[y][x].getID())
+                                            currentplayer.updateProductionValues(grid)
+                                if noExpand.collidepoint(event.pos):
+                                    screen1.fill(Background_color)
+                                unownedWaitingForSecond = False
+                    
+                    
+                if resourcedisplay1: 
+                    if resourcetab.collidepoint(event.pos):
+                        resourcedisplay1 = False
+                        
+                elif not resourcedisplay1:         
+                    if resourcetab.collidepoint(event.pos):
+                        resourcedisplay1 = True
+                #Player Turn Cycling
+                if endturn.collidepoint(event.pos):
+                    currentplayerindex += 1
+                    currentplayer.addProductionToTotal()
+                    if currentplayerindex == numplayers:
+                        currentplayerindex = 0
+                        turnnumber += 1
+                    currentplayer = players[currentplayerindex]
+                    resourcedisplay1 = False
+                    
 
-    for row in range(30):
-        for col in range(50):
-            grid[row][col].draw(screen1)
-            if tiley < 749:
-                screen1.blit(wowzer, (tilex, tiley))
+
+                            
+        #player count display
+        
+        textdraw = text.render(f"Player: {currentplayer.name}", True, (0, 0, 0))
+        textturnnumber = text.render(f"Turn #{turnnumber}", True, (0, 0, 0))
+        screen1.blit(textdraw, (10, 760))
+        screen1.blit(textturnnumber, (10, 810))
+
+        for row in range(30):
+            for col in range(50):
+                grid[row][col].draw(screen1)
+                if tiley < 749:
+                    screen1.blit(wowzer, (tilex, tiley))
+        
+        
+        for a in range(0, len(players)):
+            players[a].drawBorders(screen1)
+            players[a].addBordering()
+        
+        #Resource display
+        if resourcedisplay1:
+                #popupText = pygame.font.SysFont("Arial", 10)
+                resourcedisplay = pygame.Rect(200, 25, 850, 100)
+                pygame.draw.rect(screen1, (211, 182, 131), resourcedisplay)
+                #Icons/Labels
+                perTurnLabel = text.render(f"Per Turn:", True, (0, 0, 0))
+                screen1.blit(perTurnLabel, (300, 60))
+                totalLabel = text.render(f"Total:", True, (0, 0, 0))
+                screen1.blit(totalLabel, (300, 90))
+                resourcesLabel = text.render(f"Resources:", True, (0, 0, 0))
+                screen1.blit(resourcesLabel, (300, 30))
+                goldIcon = text.render(f"Gold", True, (0, 0, 0))
+                screen1.blit(goldIcon, (475, 30))
+                brickIcon = text.render(f"Brick", True, (0, 0, 0))
+                screen1.blit(brickIcon, (575, 30))
+                foodIcon = text.render(f"Food", True, (0, 0, 0))
+                screen1.blit(foodIcon, (675, 30))
+                stoneIcon = text.render(f"Stone", True, (0, 0, 0))
+                screen1.blit(stoneIcon, (775, 30))
+                woodIcon = text.render(f"Wood", True, (0, 0, 0))
+                screen1.blit(woodIcon, (875, 30))
+                
+                totalGold = text.render(f"{currentplayer.getGold()}", True, (0, 0, 0))
+                screen1.blit(totalGold, (475, 90))
+                totalBrick = text.render(f"{currentplayer.getBrick()}", True, (0, 0, 0))
+                screen1.blit(totalBrick, (575, 90))
+                totalFood = text.render(f"{currentplayer.getFood()}", True, (0, 0, 0))
+                screen1.blit(totalFood, (675, 90))
+                totalStone = text.render(f"{currentplayer.getStone()}", True, (0, 0, 0))
+                screen1.blit(totalStone, (775, 90))
+                totalWood = text.render(f"{currentplayer.getWood()}", True, (0, 0, 0))
+                screen1.blit(totalWood, (875, 90))
+                
+                goldPerTurn = text.render(f"{currentplayer.goldperturn}", True, (0, 0, 0))
+                screen1.blit(goldPerTurn, (475, 60))
+                brickPerTurn = text.render(f"{currentplayer.brickperturn}", True, (0, 0, 0))
+                screen1.blit(brickPerTurn, (575, 60))
+                foodPerTurn = text.render(f"{currentplayer.foodperturn}", True, (0, 0, 0))
+                screen1.blit(foodPerTurn, (675, 60))
+                stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
+                screen1.blit(stonePerTurn, (775, 60))
+                woodPerTurn = text.render(f"{currentplayer.woodperturn}", True, (0, 0, 0))
+                screen1.blit(woodPerTurn, (875, 60))
+                
+        pygame.display.update()
     
-    
-    for a in range(0, len(players)):
-        players[a].drawBorders(screen1)
-        players[a].addBordering()
-    
-    #Resource display
-    if resourcedisplay1:
-            #popupText = pygame.font.SysFont("Arial", 10)
-            resourcedisplay = pygame.Rect(200, 25, 850, 100)
-            pygame.draw.rect(screen1, (211, 182, 131), resourcedisplay)
-            #Icons/Labels
-            perTurnLabel = text.render(f"Per Turn:", True, (0, 0, 0))
-            screen1.blit(perTurnLabel, (300, 60))
-            totalLabel = text.render(f"Total:", True, (0, 0, 0))
-            screen1.blit(totalLabel, (300, 90))
-            resourcesLabel = text.render(f"Resources:", True, (0, 0, 0))
-            screen1.blit(resourcesLabel, (300, 30))
-            goldIcon = text.render(f"Gold", True, (0, 0, 0))
-            screen1.blit(goldIcon, (475, 30))
-            brickIcon = text.render(f"Brick", True, (0, 0, 0))
-            screen1.blit(brickIcon, (575, 30))
-            foodIcon = text.render(f"Food", True, (0, 0, 0))
-            screen1.blit(foodIcon, (675, 30))
-            stoneIcon = text.render(f"Stone", True, (0, 0, 0))
-            screen1.blit(stoneIcon, (775, 30))
-            woodIcon = text.render(f"Wood", True, (0, 0, 0))
-            screen1.blit(woodIcon, (875, 30))
-            
-            totalGold = text.render(f"{currentplayer.getGold()}", True, (0, 0, 0))
-            screen1.blit(totalGold, (475, 90))
-            totalBrick = text.render(f"{currentplayer.getBrick()}", True, (0, 0, 0))
-            screen1.blit(totalBrick, (575, 90))
-            totalFood = text.render(f"{currentplayer.getFood()}", True, (0, 0, 0))
-            screen1.blit(totalFood, (675, 90))
-            totalStone = text.render(f"{currentplayer.getStone()}", True, (0, 0, 0))
-            screen1.blit(totalStone, (775, 90))
-            totalWood = text.render(f"{currentplayer.getWood()}", True, (0, 0, 0))
-            screen1.blit(totalWood, (875, 90))
-            
-            goldPerTurn = text.render(f"{currentplayer.goldperturn}", True, (0, 0, 0))
-            screen1.blit(goldPerTurn, (475, 60))
-            brickPerTurn = text.render(f"{currentplayer.brickperturn}", True, (0, 0, 0))
-            screen1.blit(brickPerTurn, (575, 60))
-            foodPerTurn = text.render(f"{currentplayer.foodperturn}", True, (0, 0, 0))
-            screen1.blit(foodPerTurn, (675, 60))
-            stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
-            screen1.blit(stonePerTurn, (775, 60))
-            woodPerTurn = text.render(f"{currentplayer.woodperturn}", True, (0, 0, 0))
-            screen1.blit(woodPerTurn, (875, 60))
-    
-    pygame.display.update()
+    screen2 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+    while popview:
+        print("4")
+        for a in range(0, len(currentplayer.territories)):
+            temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25, ((currentplayer.territories[a]) // 50) * 25, 10, 10)
+            pygame.draw.rect(screen2, (0, 0, 0), temprect)
+            popnumbers = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].population}", True, (255, 255, 255))
+            screen2.blit(popnumbers, ((((currentplayer.territories[a]) % 50) * 25), ((currentplayer.territories[a]) // 50) * 25))
+        currentplayer.drawBorders(screen2)
+        pygame.display.update()
+                    
+    #while battleview:
+        #screen3 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT)) 
+        #screen3.fill(Background_color)
+
+
+
+        

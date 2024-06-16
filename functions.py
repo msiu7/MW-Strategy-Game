@@ -336,4 +336,5 @@ def giveTilesProduction(grid):
                     grid[row][col].setProduction()
                 if isinstance(grid[row][col], plainsTile):
                     grid[row][col].setProduction()
-        
+
+    

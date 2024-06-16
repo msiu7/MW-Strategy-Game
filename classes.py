@@ -11,6 +11,7 @@ class tile:
         self.ID = 0
         self.width = width
         self.height = height
+        self.population = 0
     
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
@@ -64,7 +65,7 @@ class plainsTile(landTile):
 
     def setProduction(self):    
         self.foodProduction = random.randint(1, 10)
-        self.tileValue = (self.foodProduction) * 10
+        self.tileValue = (self.foodProduction) * 5
 
     def returnValue(self):
         return self.tileValue  
@@ -88,7 +89,7 @@ class coastalTile(landTile):
     def setProduction(self):
         self.brickProduction = random.randint(1, 5)
         self.foodProduction = random.randint(1, 5)
-        self.tileValue = (self.brickProduction + self.foodProduction) * 10
+        self.tileValue = (self.brickProduction + self.foodProduction) * 5
 
     def returnProduction1(self):
         return (f"Brick Production: {self.brickProduction}")
@@ -116,7 +117,7 @@ class mountainTile(landTile):
     def setProduction(self):    
           self.stoneProduction = random.randint(1, 5)
           self.goldProduction = random.randint(1, 5)
-          self.tileValue = (self.stoneProduction + self.goldProduction) * 10
+          self.tileValue = (self.stoneProduction + self.goldProduction) * 5
 
     def returnValue(self):
         return self.tileValue  
@@ -148,7 +149,7 @@ class forestTile(landTile):
     def setProduction(self):  
           self.woodProduction = random.randint(1, 5)
           self.foodProduction = random.randint(1, 5)
-          self.tileValue = (self.woodProduction + self.foodProduction) * 10
+          self.tileValue = (self.woodProduction + self.foodProduction) * 5
 
     def returnValue(self):
         return self.tileValue  
@@ -220,7 +221,7 @@ class player:
         self.stoneperturn = 0
         self.foodperturn = 0
         self.brickperturn = 0
-        self.gold = 0
+        self.gold = 1000
         self.wood = 0
         self.stone = 0
         self.food = 0
@@ -230,17 +231,17 @@ class player:
 
     def updateProductionValues(self, grid):
         for a in range(0, len(self.territories)):
-            if (isinstance(grid[self.territories[a].getRow()][self.territories[a].getCol()], forestTile)):
-                self.woodperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnWoodProduction()
-                self.foodperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnFoodProduction()
-            if (isinstance(grid[self.territories[a].getRow()][self.territories[a].getCol()], mountainTile)):
-                self.stoneperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnStoneProduction()
-                self.goldperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnGoldProduction()
-            if (isinstance(grid[self.territories[a].getRow()][self.territories[a].getCol()], coastalTile)):
-                self.brickperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnBrickProduction()
-                self.foodperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnFoodProduction()
-            if (isinstance(grid[self.territories[a].getRow()][self.territories[a].getCol()], plainsTile)):
-                self.foodperturn += grid[self.territories[a].getRow()][self.territories[a].getCol()].returnFoodProduction()
+            if (isinstance(grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50], forestTile)):
+                self.woodperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnWoodProduction()
+                self.foodperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnFoodProduction()
+            if (isinstance(grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50], mountainTile)):
+                self.stoneperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnStoneProduction()
+                self.goldperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnGoldProduction()
+            if (isinstance(grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50], coastalTile)):
+                self.brickperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnBrickProduction()
+                self.foodperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnFoodProduction()
+            if (isinstance(grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50], plainsTile)):
+                self.foodperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnFoodProduction()
 
     def addProductionToTotal(self):
         self.gold += self.goldperturn
@@ -259,14 +260,17 @@ class player:
         return False
 
     def checkExpandable(self, id, grid):
-        if (self.doesTileBelongToPlayer(grid[(self.getRow(id))-1][self.getCol(id)].getID())):
-            return True
-        if (self.doesTileBelongToPlayer(grid[(self.getRow(id))+1][self.getCol(id)].getID())):
-            return True
-        if (self.doesTileBelongToPlayer(grid[self.getRow(id)][(self.getCol(id))-1].getID())):
-            return True
-        if (self.doesTileBelongToPlayer(grid[self.getRow(id)][(self.getCol(id))+1].getID())):
-            return True
+        if len(self.territories) == 0:
+            return True    
+        for a in range(0, len(self.borderingTerritories)):       
+            if (self.borderingTerritories[a] == id - 1):
+                return True
+            elif (self.borderingTerritories[a] == id + 1):
+                return True
+            elif (self.borderingTerritories[a] == id - 50):
+                return True
+            elif (self.borderingTerritories[a] == id + 50):
+                return True
         return False
 
     def addBordering(self):
