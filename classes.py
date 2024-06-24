@@ -11,7 +11,7 @@ class tile:
         self.ID = 0
         self.width = width
         self.height = height
-        self.population = 0
+        
     
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
@@ -43,6 +43,24 @@ class landTile(tile):
         self.tileValue = 0
         self.brickProduction = 0
         self.foodProduction = 0
+        self.population = 0
+        self.limitingpop = 100
+        self.populationperturn = self.population * (1-(self.population/self.limitingpop))
+    
+    def updatePopulationPerTurn(self):
+        
+        #Dependent on Player as a whole first, then if indivudal tile has food production there is a bonus
+        # if food consumption>food stored, negative population growth
+        #food cost for expansion maybe
+        
+        
+        
+        if (self.foodProduction !=  0):
+            self.populationperturn = (1 + (self.foodProduction/2)) * self.population * (1-(self.population/self.limitingpop))
+        else:
+            self.populationperturn = self.population * (1-(self.population/self.limitingpop))
+
+
 
     def getCordsx(self):
         return (self.x)
@@ -55,6 +73,15 @@ class landTile(tile):
 
     def returnValue(self):
         return self.tileValue
+    
+    def manuallyAddPopulation(self, numpop):
+        self.population += numpop
+
+    def autoAddPopulation(self):
+        self.population += self.populationperturn
+   
+    def getPopulation(self):
+        return self.population
 
 class plainsTile(landTile):
     def __init__(self, x, y, width, height):
@@ -243,6 +270,12 @@ class player:
             if (isinstance(grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50], plainsTile)):
                 self.foodperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnFoodProduction()
 
+    def totalPlayerPopulation(self, grid):
+        self.population = 0
+        for a in range(0, len(self.territories)):   
+            self.population += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].getPopulation()
+                
+
     def addProductionToTotal(self):
         self.gold += self.goldperturn
         self.wood += self.woodperturn
@@ -252,6 +285,9 @@ class player:
     
     def addTerritoryToPlayer(self, id):
         self.territories.append(id)
+
+    def returnNumTerritories(self):
+        return len(self.territories)
 
     def doesTileBelongToPlayer(self, id):
         for a in range(0, len(self.territories)):

@@ -33,7 +33,7 @@ SCREEN_HEIGHT = 850
 text = pygame.font.SysFont("Arial", 30)
 text1 = pygame.font.SysFont("Arial", 45)
 text2 = pygame.font.SysFont("Arial", 45)
-text3 = pygame.font.SysFont("Arial", 5)
+text3 = pygame.font.SysFont("Arial", 10)
 screen0 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 screen0.fill(Background_color)
 rect2 = pygame.Rect(200, 200, 100, 100)
@@ -313,6 +313,7 @@ while gaming:
                                             currentplayer.subtractGold(grid[y][x].returnValue())                           
                                             currentplayer.addTerritoryToPlayer(grid[y][x].getID())
                                             currentplayer.updateProductionValues(grid)
+                                            grid[y][x].manuallyAddPopulation(1)
                                 if noExpand.collidepoint(event.pos):
                                     screen1.fill(Background_color)
                                 unownedWaitingForSecond = False
@@ -329,6 +330,8 @@ while gaming:
                 if endturn.collidepoint(event.pos):
                     currentplayerindex += 1
                     currentplayer.addProductionToTotal()
+                    for a in range(0, len(currentplayer.territories)):
+                        grid[(currentplayer.territories[a] - 1) // 50][(currentplayer.territories[a] - 1) % 50].autoAddPopulation()
                     if currentplayerindex == numplayers:
                         currentplayerindex = 0
                         turnnumber += 1
@@ -405,14 +408,20 @@ while gaming:
     
     screen2 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     while popview:
-        print("4")
+        
+        for row in range(30):
+            for col in range(50):
+                grid[row][col].draw(screen2)
         for a in range(0, len(currentplayer.territories)):
-            temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25, ((currentplayer.territories[a]) // 50) * 25, 10, 10)
-            pygame.draw.rect(screen2, (0, 0, 0), temprect)
+            temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
+            pygame.draw.rect(screen2, (211, 182, 131), temprect)
             popnumbers = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].population}", True, (255, 255, 255))
-            screen2.blit(popnumbers, ((((currentplayer.territories[a]) % 50) * 25), ((currentplayer.territories[a]) // 50) * 25))
+            screen2.blit(popnumbers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen2)
-        pygame.display.update()
+        pygame.display.flip()
+
+        
+       
                     
     #while battleview:
         #screen3 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT)) 
