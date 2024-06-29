@@ -23,11 +23,11 @@ class tile:
         return self.ID
 
     def getRow(self):
-        row = (self.ID - 1) // 50
+        row = (self.ID // 50) 
         return row
     
     def getCol(self):
-        col = (self.ID - 1) % 50
+        col = (self.ID) % 50 
         return col
 
     def setTexture(self, texture):
@@ -45,22 +45,13 @@ class landTile(tile):
         self.foodProduction = 0
         self.population = 0
         self.limitingpop = 100
-        self.populationperturn = self.population * (1-(self.population/self.limitingpop))
+        self.populationperturn = 0
     
-    def updatePopulationPerTurn(self):
+    def updatePopulationPerTurn(self, player):
         
-        #Dependent on Player as a whole first, then if indivudal tile has food production there is a bonus
-        # if food consumption>food stored, negative population growth
-        #food cost for expansion maybe
-        
-        
-        
-        if (self.foodProduction !=  0):
-            self.populationperturn = (1 + (self.foodProduction/2)) * self.population * (1-(self.population/self.limitingpop))
-        else:
-            self.populationperturn = self.population * (1-(self.population/self.limitingpop))
-
-
+        food_availability_factor = player.foodperturn / player.getFoodConsumption()
+        logistic_growth_factor = 1 - (self.population / self.limitingpop)
+        self.populationperturn = self.population * food_availability_factor * logistic_growth_factor
 
     def getCordsx(self):
         return (self.x)
@@ -76,10 +67,12 @@ class landTile(tile):
     
     def manuallyAddPopulation(self, numpop):
         self.population += numpop
+        #self.population = round(self.population)
 
     def autoAddPopulation(self):
         self.population += self.populationperturn
-   
+        #self.population = round(self.population)
+
     def getPopulation(self):
         return self.population
 
@@ -253,28 +246,50 @@ class player:
         self.stone = 0
         self.food = 0
         self.brick = 0
+        self.foodConsumption = 0
 
-
-
+    def updateFoodConsumption(self):
+        self.foodConsumption = self.population * 2
+    def consumeFood(self):
+        self.updateFoodConsumption()
+        self.food -= self.foodConsumption
+    
     def updateProductionValues(self, grid):
+        self.woodperturn = 0
+        self.stoneperturn = 0
+        self.goldperturn = 0
+        self.foodperturn = 0
+        self.brickperturn = 0
         for a in range(0, len(self.territories)):
-            if (isinstance(grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50], forestTile)):
-                self.woodperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnWoodProduction()
-                self.foodperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnFoodProduction()
-            if (isinstance(grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50], mountainTile)):
-                self.stoneperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnStoneProduction()
-                self.goldperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnGoldProduction()
-            if (isinstance(grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50], coastalTile)):
-                self.brickperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnBrickProduction()
-                self.foodperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnFoodProduction()
-            if (isinstance(grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50], plainsTile)):
-                self.foodperturn += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].returnFoodProduction()
+            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], forestTile)):
+                self.woodperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].returnWoodProduction()
+                self.foodperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].returnFoodProduction()
+            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], mountainTile)):
+                self.stoneperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].returnStoneProduction()
+                self.goldperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].returnGoldProduction()
+            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50 ], coastalTile)):
+                self.brickperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].returnBrickProduction()
+                self.foodperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].returnFoodProduction()
+            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50 ], plainsTile)):
+                self.foodperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].returnFoodProduction()
 
     def totalPlayerPopulation(self, grid):
         self.population = 0
         for a in range(0, len(self.territories)):   
-            self.population += grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50].getPopulation()
+            self.population += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].getPopulation()
                 
+    def updatePopulation(self, grid):
+        #for a in range(0, len(self.territories)):
+            #grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50 + 1].manuallyAddPopulation(1)
+
+        for a in range(0, len(self.territories)):
+            grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
+        for a in range(0, len(self.territories)):
+            grid[(self.territories[a]) // 50][(self.territories[a] ) % 50].updatePopulationPerTurn(self)  
+        
+     
+
+
 
     def addProductionToTotal(self):
         self.gold += self.goldperturn
@@ -481,5 +496,6 @@ class player:
     def subtractBrick(self, amount):
         self.brick -= amount
         
-        
+    def getFoodConsumption(self):
+        return self.foodConsumption
   
