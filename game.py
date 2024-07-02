@@ -335,8 +335,9 @@ while gaming:
                     currentplayer.updateProductionValues(grid)
                     currentplayer.addProductionToTotal()
                     currentplayer.totalPlayerPopulation(grid)
+                    currentplayer.starvation()
                     currentplayer.updateFoodConsumption()
-
+                    
                     currentplayer.updatePopulation(grid)
                     
                     currentplayer.consumeFood()
