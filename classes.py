@@ -48,11 +48,15 @@ class landTile(tile):
         self.populationperturn = 0
     
     def updatePopulationPerTurn(self, player):
-        #if player.food < 0 or player.foodperturn < 0:
-            #self.limitingpop = 1
-        food_availability_factor = player.foodperturn / player.getFoodConsumption()
-        logistic_growth_factor = 1 - (self.population / self.limitingpop)
-        self.populationperturn = self.population * food_availability_factor * logistic_growth_factor
+        if player.food <= 0:
+            
+            food_availability_factor = player.getFood() - player.getFoodConsumption()
+            logistic_growth_factor = 1 - (self.population / self.limitingpop)
+            self.populationperturn = self.population * food_availability_factor * logistic_growth_factor
+        if player.food > 0:    
+            food_availability_factor = player.foodperturn / player.getFoodConsumption()
+            logistic_growth_factor = 1 - (self.population / self.limitingpop)
+            self.populationperturn = self.population * food_availability_factor * logistic_growth_factor
 
     def getCordsx(self):
         return (self.x)
@@ -251,9 +255,14 @@ class player:
 
     def updateFoodConsumption(self):
         self.foodConsumption = self.population * 0.5
+
     def consumeFood(self):
         self.updateFoodConsumption()
         self.food -= self.foodConsumption
+
+    def starvation(self):
+        if self.food < self.foodConsumption:
+            self.food = 0
     
     def updateProductionValues(self, grid):
         self.woodperturn = 0
