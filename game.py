@@ -315,8 +315,8 @@ while gaming:
                                             currentplayer.subtractGold(grid[y][x].returnValue())                           
                                             currentplayer.addTerritoryToPlayer(grid[y][x].getID())
                                             currentplayer.updateProductionValues(grid)
-                                            currentplayer.totalPlayerPopulation(grid)
                                             grid[y][x].manuallyAddPopulation(1)
+                                            currentplayer.totalPlayerPopulation(grid)
                                 if noExpand.collidepoint(event.pos):
                                     screen1.fill(Background_color)
                                 unownedWaitingForSecond = False
@@ -332,14 +332,15 @@ while gaming:
                 #Player Turn Cycling
                 if endturn.collidepoint(event.pos):
                     currentplayerindex += 1
+                    currentplayer.updateProductionValues(grid)
                     currentplayer.addProductionToTotal()
-                    currentplayer.updateFoodConsumption()
-                    currentplayer.updatePopulation(grid)
                     currentplayer.totalPlayerPopulation(grid)
-                    
-                   
+                    currentplayer.updateFoodConsumption()
 
+                    currentplayer.updatePopulation(grid)
+                    
                     currentplayer.consumeFood()
+                    
                     if currentplayerindex == numplayers:
                         currentplayerindex = 0
                         turnnumber += 1
@@ -405,7 +406,7 @@ while gaming:
                 screen1.blit(goldPerTurn, (475, 60))
                 brickPerTurn = text.render(f"{currentplayer.brickperturn}", True, (0, 0, 0))
                 screen1.blit(brickPerTurn, (575, 60))
-                foodPerTurn = text.render(f"{currentplayer.foodperturn}", True, (0, 0, 0))
+                foodPerTurn = text.render(f"{currentplayer.foodperturn - currentplayer.foodConsumption}", True, (0, 0, 0))
                 screen1.blit(foodPerTurn, (675, 60))
                 stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
                 screen1.blit(stonePerTurn, (775, 60))
@@ -416,7 +417,6 @@ while gaming:
     
     screen2 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     while popview:
-        
         for row in range(30):
             for col in range(50):
                 grid[row][col].draw(screen2)

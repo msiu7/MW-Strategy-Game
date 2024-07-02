@@ -48,7 +48,8 @@ class landTile(tile):
         self.populationperturn = 0
     
     def updatePopulationPerTurn(self, player):
-        
+        #if player.food < 0 or player.foodperturn < 0:
+            #self.limitingpop = 1
         food_availability_factor = player.foodperturn / player.getFoodConsumption()
         logistic_growth_factor = 1 - (self.population / self.limitingpop)
         self.populationperturn = self.population * food_availability_factor * logistic_growth_factor
@@ -67,11 +68,11 @@ class landTile(tile):
     
     def manuallyAddPopulation(self, numpop):
         self.population += numpop
-        #self.population = round(self.population)
+        self.population = round(self.population)
 
     def autoAddPopulation(self):
         self.population += self.populationperturn
-        #self.population = round(self.population)
+        self.population = round(self.population)
 
     def getPopulation(self):
         return self.population
@@ -249,7 +250,7 @@ class player:
         self.foodConsumption = 0
 
     def updateFoodConsumption(self):
-        self.foodConsumption = self.population * 2
+        self.foodConsumption = self.population * 0.5
     def consumeFood(self):
         self.updateFoodConsumption()
         self.food -= self.foodConsumption
@@ -279,8 +280,6 @@ class player:
             self.population += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].getPopulation()
                 
     def updatePopulation(self, grid):
-        #for a in range(0, len(self.territories)):
-            #grid[(self.territories[a] - 1) // 50][(self.territories[a] - 1) % 50 + 1].manuallyAddPopulation(1)
 
         for a in range(0, len(self.territories)):
             grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
