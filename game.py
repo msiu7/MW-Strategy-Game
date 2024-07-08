@@ -335,7 +335,7 @@ while gaming:
                     currentplayer.updateProductionValues(grid)
                     currentplayer.addProductionToTotal()
                     currentplayer.totalPlayerPopulation(grid)
-                    currentplayer.starvation()
+                
                     currentplayer.updateFoodConsumption()
                     
                     currentplayer.updatePopulation(grid)
@@ -440,7 +440,4 @@ while gaming:
     #while battleview:
         #screen3 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT)) 
         #screen3.fill(Background_color)
-
-
-
         
