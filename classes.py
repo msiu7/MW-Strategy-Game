@@ -1,6 +1,7 @@
 import pygame
 import random
 from array import *
+import math
 
 #Base Superclass
 class tile:
@@ -53,19 +54,25 @@ class landTile(tile):
         nextturnfood = player.food + player.foodperturn - player.foodConsumption
         #logistic_growth_factor = 1 - (self.population / self.limitingpop)
         if player.food > 0 and nextturnfood > 0: 
-            self.populationperturn = player.food / nextturnfood
-        elif player.food == 0 and self.nextturnfood != 0:
+            self.populationperturn = nextturnfood / player.food
+            print("6")
+        elif player.food == 0 and nextturnfood != 0:
             if nextturnfood > 0:
                 self.populationperturn = 0
+                print("5")
             else: 
                 self.populationperturn = -1
-        elif player.food != 0 and self.nextturnfood == 0:
-            if player.food >= player.population * 2:
-                self.populationperturn = 0
-            else:
-                self.populationperturn = -1
+                print("4")
+        elif player.food != 0 and nextturnfood == 0:
+            self.populationperturn = 0
+            print("3")
+        elif player.food != 0 and nextturnfood < 0:
+            self.populationperturn = -1
+            print("2")
         else: 
-            populationperturn = -1
+            populationperturn = 0
+            print("1")
+        print(f"pop:{self.population} && popperturn:{self.populationperturn} && {player.foodConsumption} && {nextturnfood}")
         
 
         #if player.food < player.getFoodConsumption():
@@ -88,11 +95,11 @@ class landTile(tile):
     
     def manuallyAddPopulation(self, numpop):
         self.population += numpop
-        self.population = round(self.population)
-
+        self.population = math.trunc(self.population)
+        
     def autoAddPopulation(self):
         self.population += self.populationperturn
-        self.population = round(self.population)
+        self.population =  math.trunc(self.population)
 
     def getPopulation(self):
         return self.population
@@ -303,16 +310,18 @@ class player:
             self.population += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].getPopulation()
                 
     def updatePopulation(self, grid):
-
-        for a in range(0, len(self.territories)):
-            grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
         for a in range(0, len(self.territories)):
             grid[(self.territories[a]) // 50][(self.territories[a] ) % 50].updatePopulationPerTurn(self)  
+        for a in range(0, len(self.territories)):
+            grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
+          
         for a in range(0, len(self.territories)):
             if (grid[(self.territories[a]) // 50][(self.territories[a]) % 50].getPopulation() <= 0):
                 self.subtractTerritoryFromPlayer(self.territories[a])
                 a -= 1    
     
+   
+
     def addProductionToTotal(self):
         self.gold += self.goldperturn
         self.wood += self.woodperturn
@@ -364,7 +373,7 @@ class player:
     def drawBorders(self, screen):
         
         for a in range(0, len(self.borderingTerritories)):
-            #Surrounded
+            #SurFued
             if ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
                 #width,height
                 right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
