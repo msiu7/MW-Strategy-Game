@@ -332,16 +332,17 @@ while gaming:
                 #Player Turn Cycling
                 if endturn.collidepoint(event.pos):
                     currentplayerindex += 1
-                    currentplayer.updateProductionValues(grid)
-                    currentplayer.addProductionToTotal()
+                
                     currentplayer.totalPlayerPopulation(grid)
                 
                     currentplayer.updateFoodConsumption()
                     
                     currentplayer.updatePopulation(grid)
+                    currentplayer.addProductionToTotal()
                     
                     currentplayer.consumeFood()
-                    
+                    currentplayer.totalPlayerPopulation(grid)
+                    currentplayer.updateFoodConsumption()
                     if currentplayerindex == numplayers:
                         currentplayerindex = 0
                         turnnumber += 1
@@ -407,6 +408,7 @@ while gaming:
                 screen1.blit(goldPerTurn, (475, 60))
                 brickPerTurn = text.render(f"{currentplayer.brickperturn}", True, (0, 0, 0))
                 screen1.blit(brickPerTurn, (575, 60))
+                currentplayer.updateFoodConsumption()
                 foodPerTurn = text.render(f"{currentplayer.foodperturn - currentplayer.foodConsumption}", True, (0, 0, 0))
                 screen1.blit(foodPerTurn, (675, 60))
                 stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
