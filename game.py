@@ -212,6 +212,9 @@ while gaming:
         #Resource option
         resourcetab = pygame.Rect(1050, 750, 100, 100)
         pygame.draw.rect(screen1, (12, 69, 153), resourcetab)
+
+        #Military Option
+        pygame.draw.rect(screen1, (139, 124, 124), militaryview)
         
         #All User inputs work through this 
         waitingForSecond = False
@@ -237,6 +240,20 @@ while gaming:
                     x = event.pos[0] // 25
                     y = event.pos[1] // 25
                     # Draw a pop-up rectangle
+                    
+                    #for 
+                    #
+                    #
+                    #
+                    #
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     unownedWaitingForSecond = True
                     for a in range(0, len(players)):
                         if players[a].doesTileBelongToPlayer(grid[y][x].getID()):
@@ -253,42 +270,51 @@ while gaming:
                     costYPosition = 0
                 
                         
-                    
-                    if grid[y][x].getCol() < 25:
-                        if grid[y][x].getRow() < 15:
-                            popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 100, 100)
-                            yesExpand = pygame.Rect((x * 25) + 25, (y * 25) + 115, 50, 10)
-                            noExpand = pygame.Rect((x * 25) + 75, (y * 25) + 115, 50, 10)
-                            costXPosition = x * 25 + 27
-                            costYPosition = y * 25 + 25
-                            production1YPosition = y * 25 + 37
-                            production2YPosition = y * 25 + 49
-                        else:
-                            popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 125, 100, 100)
-                            yesExpand = pygame.Rect((x * 25) + 25, (y * 25) - 35, 50, 10)
-                            noExpand = pygame.Rect((x * 25) + 75, (y * 25) - 35, 50, 10)
-                            costXPosition = x * 25 + 27
-                            costYPosition = y * 25 - 125
-                            production1YPosition = y * 25 - 113
-                            production2YPosition = y * 25 - 101
+                    if currentplayer.doesTileBelongToPlayer(grid[y][x].getID()):
+                       print("yes")
+
+
+
+
+
+
+
                     else:
-                        if grid[y][x].getRow() < 15:
-                            popuprect = pygame.Rect((x * 25) - 125, (y * 25) + 25, 100, 100)
-                            yesExpand = pygame.Rect((x * 25) - 125, (y * 25) + 115, 50, 10)
-                            noExpand = pygame.Rect((x * 25) - 75, (y * 25) + 115, 50, 10)
-                            costXPosition = x * 25 - 123
-                            costYPosition = y * 25 + 25
-                            production1YPosition = y * 25 + 37
-                            production2YPosition = y * 25 + 49
+                        if grid[y][x].getCol() < 25:
+                            if grid[y][x].getRow() < 15:
+                                popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 100, 100)
+                                yesExpand = pygame.Rect((x * 25) + 25, (y * 25) + 115, 50, 10)
+                                noExpand = pygame.Rect((x * 25) + 75, (y * 25) + 115, 50, 10)
+                                costXPosition = x * 25 + 27
+                                costYPosition = y * 25 + 25
+                                production1YPosition = y * 25 + 37
+                                production2YPosition = y * 25 + 49
+                            else:
+                                popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 125, 100, 100)
+                                yesExpand = pygame.Rect((x * 25) + 25, (y * 25) - 35, 50, 10)
+                                noExpand = pygame.Rect((x * 25) + 75, (y * 25) - 35, 50, 10)
+                                costXPosition = x * 25 + 27
+                                costYPosition = y * 25 - 125
+                                production1YPosition = y * 25 - 113
+                                production2YPosition = y * 25 - 101
                         else:
-                            popuprect = pygame.Rect((x * 25) - 125, (y * 25) - 125, 100, 100)
-                            yesExpand = pygame.Rect((x * 25) - 125, (y * 25) - 35, 50, 10)
-                            noExpand = pygame.Rect((x * 25) - 75, (y * 25) - 35, 50, 10)
-                            costXPosition = x * 25 - 123
-                            costYPosition = y * 25 - 125
-                            production1YPosition = y * 25 - 113
-                            production2YPosition = y * 25 - 101
-                    
+                            if grid[y][x].getRow() < 15:
+                                popuprect = pygame.Rect((x * 25) - 125, (y * 25) + 25, 100, 100)
+                                yesExpand = pygame.Rect((x * 25) - 125, (y * 25) + 115, 50, 10)
+                                noExpand = pygame.Rect((x * 25) - 75, (y * 25) + 115, 50, 10)
+                                costXPosition = x * 25 - 123
+                                costYPosition = y * 25 + 25
+                                production1YPosition = y * 25 + 37
+                                production2YPosition = y * 25 + 49
+                            else:
+                                popuprect = pygame.Rect((x * 25) - 125, (y * 25) - 125, 100, 100)
+                                yesExpand = pygame.Rect((x * 25) - 125, (y * 25) - 35, 50, 10)
+                                noExpand = pygame.Rect((x * 25) - 75, (y * 25) - 35, 50, 10)
+                                costXPosition = x * 25 - 123
+                                costYPosition = y * 25 - 125
+                                production1YPosition = y * 25 - 113
+                                production2YPosition = y * 25 - 101
+                        
                     
 
                     
@@ -314,9 +340,12 @@ while gaming:
                                         if currentplayer.checkExpandable(grid[y][x].getID(), grid):
                                             currentplayer.subtractGold(grid[y][x].returnValue())                           
                                             currentplayer.addTerritoryToPlayer(grid[y][x].getID())
-                                            currentplayer.updateProductionValues(grid)
                                             grid[y][x].manuallyAddPopulation(1)
                                             currentplayer.totalPlayerPopulation(grid)
+                                            currentplayer.updateFunctionalProductionValues(grid)
+                                            currentplayer.updateProductionValues(grid)
+                                            
+                                            
                                 if noExpand.collidepoint(event.pos):
                                     screen1.fill(Background_color)
                                 unownedWaitingForSecond = False
@@ -332,17 +361,7 @@ while gaming:
                 #Player Turn Cycling
                 if endturn.collidepoint(event.pos):
                     currentplayerindex += 1
-                
-                    currentplayer.totalPlayerPopulation(grid)
-                
-                    currentplayer.updateFoodConsumption()
-                    
-                    currentplayer.updatePopulation(grid)
-                    currentplayer.addProductionToTotal()
-                    
-                    currentplayer.consumeFood()
-                    currentplayer.totalPlayerPopulation(grid)
-                    currentplayer.updateFoodConsumption()
+                    currentplayer.endTurnSequence(grid)
                     if currentplayerindex == numplayers:
                         currentplayerindex = 0
                         turnnumber += 1
@@ -438,8 +457,24 @@ while gaming:
                     running1 = True
             
        
-                    
-    #while battleview:
-        #screen3 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT)) 
-        #screen3.fill(Background_color)
+    screen3 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+    #  = pygame.Rect(1050, 750, 100, 100)              
+    while battleview:
+        for row in range(30):
+            for col in range(50):
+                grid[row][col].draw(screen3)
+        for a in range(0, len(currentplayer.territories)):
+            temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
+            pygame.draw.rect(screen3, (211, 182, 131), temprect)
+            popsoldiers = text3.render(f"{int(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].stationedsoldiers)}", True, (255, 255, 255))
+            screen3.blit(popsoldiers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
+        currentplayer.drawBorders(screen3)
+        pygame.draw.rect(screen3, (29, 158, 29), militaryview)
+        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if militaryview.collidepoint(event.pos):
+                    battleview = False
+                    running1 = True
+        
         
