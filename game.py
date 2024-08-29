@@ -259,19 +259,68 @@ while gaming:
                         if players[a].doesTileBelongToPlayer(grid[y][x].getID()):
                             unownedWaitingForSecond = False
                             break
+                    
                     cost = popupText.render(f"Cost: {grid[y][x].returnValue()} Gold", True, (0, 0, 0))
                     production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
                     production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
                     
                     production1YPosition = 0
                     production2YPosition = 0
-                    
+                    productionXposition = 0
                     costXPosition = 0
                     costYPosition = 0
                 
-                        
+                    tilePopup = False
                     if currentplayer.doesTileBelongToPlayer(grid[y][x].getID()):
-                       print("yes")
+                       tilePopup = True                 
+                       if grid[y][x].getCol() < 25:
+                            if grid[y][x].getRow() < 15:
+                                popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 150, 150)
+                                productionXposition = x * 25 + 27
+                                production1YPosition = y * 25 + 37
+                                production2YPosition = y * 25 + 49
+                            else:
+                                popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 125, 150, 150)
+                                productionXposition = x * 25 + 27
+                                production1YPosition = y * 25 - 113
+                                production2YPosition = y * 25 - 101
+                       else:
+                            if grid[y][x].getRow() < 15:
+                                popuprect = pygame.Rect((x * 25) - 125, (y * 25) + 25, 150, 150)
+                                productionXposition = x * 25 - 123
+                                production1YPosition = y * 25 + 37
+                                production2YPosition = y * 25 + 49
+                            else:
+                                popuprect = pygame.Rect((x * 25) - 125, (y * 25) - 125, 150, 150)
+                                productionXposition = x * 25 - 123
+                                production1YPosition = y * 25 - 113
+                                production2YPosition = y * 25 - 101
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -317,6 +366,26 @@ while gaming:
                         
                     
 
+                    while tilePopup:
+
+                        for row in range(30):
+                            for col in range(50):
+                                grid[row][col].draw(screen1)
+
+                        pygame.draw.rect(screen1, (211, 182, 131), popuprect)
+                        screen1.blit(production1, (productionXposition, production1YPosition))
+                        screen1.blit(production2, (productionXposition, production2YPosition))
+                        screen1.blit(wowzer, (x*25, y*25))
+                        pygame.display.update()
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     
                     while unownedWaitingForSecond:
                         
