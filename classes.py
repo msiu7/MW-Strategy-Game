@@ -2,6 +2,38 @@ import pygame
 import random
 from array import *
 import math
+import numpy
+
+
+class population:
+
+    def __init__ (self):
+        self.type = "unemployed"
+        self.tilex = 1000
+        self.tiley = 1000
+        self.playerindex = 1000
+
+class civilian(population):
+
+    def __init__ (self):
+        super().__init__(self)
+        self.type = "civilian"
+
+
+class farmer(civilian):
+
+    def __init__ (self):
+        super().__init__(self)
+        self.type = "farmer"
+
+class soldier(population):
+
+    def __init__ (self):
+        super().__init__(self)
+        self.type = "self"
+
+
+
 
 #Base Superclass
 class tile:
@@ -47,7 +79,7 @@ class landTile(tile):
         self.goldProduction = 0
         self.stoneProduction = 0
         self.woodProduction = 0
-        self.population = 0
+        #self.population = 0
         self.functionalWoodProduction = 0
         self.functionalBrickProduction = 0
         self.functionalGoldProduction = 0
@@ -55,7 +87,9 @@ class landTile(tile):
         self.functionalFoodProduction = 0
         self.limitingpop = 100
         self.populationperturn = 0
-        self.stationedsoldiers = 0
+        self.population = []
+        self.civilians = []
+        self.soldiers = []
     
     def updatePopulationPerTurn(self, player):
 
@@ -90,11 +124,11 @@ class landTile(tile):
             #self.populationperturn = 1
     
     def updateFunctionalProduction(self):
-        self.functionalWoodProduction = self.woodProduction * self.population
-        self.functionalBrickProduction = self.brickProduction * self.population
-        self.functionalGoldProduction = self.goldProduction * self.population
-        self.functionalStoneProduction = self.stoneProduction * self.population
-        self.functionalFoodProduction = self.foodProduction * self.population
+        self.functionalWoodProduction = self.woodProduction * len(self.population)
+        self.functionalBrickProduction = self.brickProduction * len(self.population)
+        self.functionalGoldProduction = self.goldProduction * len(self.population)
+        self.functionalStoneProduction = self.stoneProduction * len(self.population)
+        self.functionalFoodProduction = self.foodProduction * len(self.population)
 
     def getCordsx(self):
         return (self.x)
@@ -109,12 +143,19 @@ class landTile(tile):
         return self.tileValue
     
     def manuallyAddPopulation(self, numpop):
-        self.population += numpop
-        self.population = math.trunc(self.population)
+        numtrnc = math.trunc(numpop)
+        for a in range(numtrnc):
+            self.population.append(population())
         
     def autoAddPopulation(self):
-        self.population += self.populationperturn
-        self.population =  math.trunc(self.population)
+        ppttrnc = math.trunc(self.populationperturn)
+        if ppttrnc > 0:
+            for a in range(ppttrnc):
+                self.population.append(population())
+        elif ppttrnc < 0:
+            for a in range(abs(ppttrnc)):
+                self.population.remove(self.population[len(self.population)-1])
+
 
     def getPopulation(self):
         return self.population
@@ -277,8 +318,9 @@ class player:
 
         
         #Game mechanics related variables
-        self.population = 0
-        self.army = 0
+        #self.population = 0
+        self.population = []
+        self.army = []
         self.goldperturn = 0
         self.woodperturn = 0
         self.stoneperturn = 0
@@ -292,7 +334,7 @@ class player:
         self.foodConsumption = 0
 
     def updateFoodConsumption(self):
-        self.foodConsumption = self.population * 4
+        self.foodConsumption = len(self.population) * 4
 
     def consumeFood(self):
         self.updateFoodConsumption()
@@ -330,10 +372,11 @@ class player:
                 self.foodperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
 
     def totalPlayerPopulation(self, grid):
-        self.population = 0
-        for a in range(0, len(self.territories)):   
-            self.population += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].getPopulation()
-                
+        self.population = []
+        for a in range(0, len(self.territories)):
+            for b in range(0, len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)):   
+                self.population.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])
+
     def updatePopulation(self, grid):
         for a in range(0, len(self.territories)):
             grid[(self.territories[a]) // 50][(self.territories[a]) % 50].updatePopulationPerTurn(self)  
@@ -341,7 +384,7 @@ class player:
             grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
           
         for a in range(0, len(self.territories)):
-            if (grid[(self.territories[a]) // 50][(self.territories[a]) % 50].getPopulation() <= 0):
+            if (len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population) == 0):
                 self.subtractTerritoryFromPlayer(self.territories[a])
                 a -= 1 
 
@@ -572,5 +615,9 @@ class player:
         self.updateFunctionalProductionValues(grid)
         self.updateProductionValues(grid)
         self.updateFoodConsumption()
-        print (self.foodperturn)
-  
+        print(self.foodperturn)
+        print(f"Total Player Population: {len(self.population)}")
+        for a in range(len(self.population)):
+            print(self.population[a])
+
+
