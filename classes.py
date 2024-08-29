@@ -2,35 +2,37 @@ import pygame
 import random
 from array import *
 import math
-import numpy
-
 
 class population:
 
-    def __init__ (self):
+    def __init__ (self, tilerow, tilecol):
         self.type = "unemployed"
-        self.tilex = 1000
-        self.tiley = 1000
-        self.playerindex = 1000
-
+        self.tilerow = tilerow
+        self.tilecol = tilecol
+    
+    def movePopulation(self, tilerow1, tilecol1, tilerow2, tilecol2, grid):
+        grid[tilerow2][tilecol2].population.append(grid[tilerow1][tilecol1].population[len(grid[tilerow1][tilecol1].population)-1])
+        grid[tilerow1][tilecol1].population.remove(grid[tilerow1][tilecol1].population[len(grid[tilerow1][tilecol1].population)-1])
+        grid[tilerow2][tilecol2].population[len(grid[tilerow2][tilecol2].population)].tilerow = tilerow2
+        grid[tilerow2][tilecol2].population[len(grid[tilerow2][tilecol2].population)].tilecol = tilecol2
+    
 class civilian(population):
 
-    def __init__ (self):
+    def __init__ (self, tilerow, tilecol):
         super().__init__(self)
         self.type = "civilian"
 
-
 class farmer(civilian):
 
-    def __init__ (self):
+    def __init__ (self, tilerow, tilecol):
         super().__init__(self)
         self.type = "farmer"
 
 class soldier(population):
 
-    def __init__ (self):
+    def __init__ (self, tilerow, tilecol):
         super().__init__(self)
-        self.type = "self"
+        self.type = "soldier"
 
 
 
@@ -79,13 +81,11 @@ class landTile(tile):
         self.goldProduction = 0
         self.stoneProduction = 0
         self.woodProduction = 0
-        #self.population = 0
         self.functionalWoodProduction = 0
         self.functionalBrickProduction = 0
         self.functionalGoldProduction = 0
         self.functionalStoneProduction = 0 
         self.functionalFoodProduction = 0
-        self.limitingpop = 100
         self.populationperturn = 0
         self.population = []
         self.civilians = []
@@ -95,7 +95,6 @@ class landTile(tile):
 
             
         nextturnfood = player.food + player.foodperturn - player.foodConsumption
-        #logistic_growth_factor = 1 - (self.population / self.limitingpop)
         if player.food > 0 and nextturnfood > 0: 
             self.populationperturn = nextturnfood / player.food
             
@@ -116,12 +115,6 @@ class landTile(tile):
             populationperturn = 0
             
         print(f"pop:{self.population} && popperturn:{self.populationperturn} && {player.foodConsumption} && {nextturnfood}")
-        
-
-        #if player.food < player.getFoodConsumption():
-            #self.populationperturn = -1
-        #if player.food >= player.getFoodConsumption():
-            #self.populationperturn = 1
     
     def updateFunctionalProduction(self):
         self.functionalWoodProduction = self.woodProduction * len(self.population)
@@ -145,17 +138,16 @@ class landTile(tile):
     def manuallyAddPopulation(self, numpop):
         numtrnc = math.trunc(numpop)
         for a in range(numtrnc):
-            self.population.append(population())
+            self.population.append(population(self.getRow, self.getCol))
         
     def autoAddPopulation(self):
         ppttrnc = math.trunc(self.populationperturn)
         if ppttrnc > 0:
             for a in range(ppttrnc):
-                self.population.append(population())
+                self.population.append(population(self.getRow, self.getCol))
         elif ppttrnc < 0:
             for a in range(abs(ppttrnc)):
                 self.population.remove(self.population[len(self.population)-1])
-
 
     def getPopulation(self):
         return self.population
@@ -164,9 +156,7 @@ class plainsTile(landTile):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.image = pygame.image.load('land.png')
-        #self.foodProduction = 0
         
-
     def setProduction(self):    
         self.foodProduction = random.randint(1, 10)
         self.tileValue = (self.foodProduction) * 5
@@ -187,9 +177,7 @@ class coastalTile(landTile):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.image = pygame.image.load('land.png')
-        #self.foodProduction = 0
-        #self.brickProduction = 0 
-    
+
     def setProduction(self):
         self.brickProduction = random.randint(1, 5)
         self.foodProduction = random.randint(1, 5)
@@ -215,8 +203,6 @@ class mountainTile(landTile):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.image = pygame.image.load('mountain.png')
-        #self.stoneProduction = 0
-        #self.goldProduction = 0
 
     def setProduction(self):    
           self.stoneProduction = random.randint(1, 5)
@@ -236,19 +222,13 @@ class mountainTile(landTile):
         return self.stoneProduction
     
     def returnGoldProduction(self):
-        return self.goldProduction
-
-    # def setProduction(self, newProduction):
-   
-        
+        return self.goldProduction 
 
 class forestTile(landTile):
 
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.image = pygame.image.load('forest.png')
-        #self.woodProduction = 0
-        #self.foodProduction = 0
 
     def setProduction(self):  
           self.woodProduction = random.randint(1, 5)
@@ -269,10 +249,6 @@ class forestTile(landTile):
 
     def returnWoodProduction(self):
         return self.woodProduction
-
-    # def setProduction(self, newProduction):
-  
-
 
 #Subclass Ocean Tile
 class oceanTile(tile):
@@ -318,7 +294,6 @@ class player:
 
         
         #Game mechanics related variables
-        #self.population = 0
         self.population = []
         self.army = []
         self.goldperturn = 0
@@ -378,15 +353,38 @@ class player:
                 self.population.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])
 
     def updatePopulation(self, grid):
+        count = 0
         for a in range(0, len(self.territories)):
             grid[(self.territories[a]) // 50][(self.territories[a]) % 50].updatePopulationPerTurn(self)  
         for a in range(0, len(self.territories)):
             grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
-          
-        for a in range(0, len(self.territories)):
+            count += len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)
+        if count == 0 and len(self.territories) > 0:
+            b = random.randint(0, len(self.territories)-1)
+            grid[(self.territories[b]) // 50][(self.territories[b]) % 50].manuallyAddPopulation(1)
+        numzero = 0
+        numpos = 0  
+        zero = []
+        for a in range(len(self.territories)):
             if (len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population) == 0):
-                self.subtractTerritoryFromPlayer(self.territories[a])
-                a -= 1 
+                numzero += 1
+                zero.append(self.territories[a])
+            else:
+                numpos += 1
+        if numpos > 0:
+            for a in range(len(zero)):
+                self.subtractTerritoryFromPlayer(zero[a])
+        else:
+            for a in range(len(zero)-1):
+                self.subtractTerritoryFromPlayer(zero[a])
+                self.territories[0].manuallyAddPopulation(1)
+
+            
+
+        print(f"Numzero: {numzero}, Numpos: {numpos}")
+                #self.subtractTerritoryFromPlayer(self.territories[a])
+                #a-=1
+                #print(f"a value:{a}")
 
 
     
@@ -403,7 +401,9 @@ class player:
         self.territories.append(id)
 
     def subtractTerritoryFromPlayer(self, id):
-        self.territories.remove(id)
+        if len(self.territories) > 1:
+            self.territories.remove(id)
+        #print(len(self.territories))
 
     def returnNumTerritories(self):
         return len(self.territories)
@@ -619,5 +619,8 @@ class player:
         print(f"Total Player Population: {len(self.population)}")
         for a in range(len(self.population)):
             print(self.population[a])
+
+
+
 
 
