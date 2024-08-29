@@ -445,7 +445,7 @@ while gaming:
         for a in range(0, len(currentplayer.territories)):
             temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
             pygame.draw.rect(screen2, (211, 182, 131), temprect)
-            popnumbers = text3.render(f"{int(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].population)}", True, (255, 255, 255))
+            popnumbers = text3.render(f"{len(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].population)}", True, (255, 255, 255))
             screen2.blit(popnumbers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen2)
         pygame.draw.rect(screen2, (29, 158, 29), populationview)
@@ -466,7 +466,7 @@ while gaming:
         for a in range(0, len(currentplayer.territories)):
             temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
             pygame.draw.rect(screen3, (211, 182, 131), temprect)
-            popsoldiers = text3.render(f"{int(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].stationedsoldiers)}", True, (255, 255, 255))
+            popsoldiers = text3.render(f"{len(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].soldiers)}", True, (255, 255, 255))
             screen3.blit(popsoldiers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen3)
         pygame.draw.rect(screen3, (29, 158, 29), militaryview)
