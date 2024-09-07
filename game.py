@@ -239,13 +239,7 @@ while gaming:
                     
                     x = event.pos[0] // 25
                     y = event.pos[1] // 25
-                    # Draw a pop-up rectangle
-                    
-                    #for 
-                    #
-                    #
-                    #
-                    #
+
                     
                     
                     
@@ -261,40 +255,63 @@ while gaming:
                             break
                     
                     cost = popupText.render(f"Cost: {grid[y][x].returnValue()} Gold", True, (0, 0, 0))
+                    goToManage = popupText.render(f"Manage Population", True, (0, 0, 0))
                     production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
                     production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
-                    
+                    civiliansTile = popupText.render(f"Civilians: {len(grid[y][x].civilians)}", True, (0, 0, 0))
+                    soldiersTile = popupText.render(f"Soldiers: {len(grid[y][x].soldiers)}", True, (0, 0, 0))
                     production1YPosition = 0
                     production2YPosition = 0
                     productionXposition = 0
                     costXPosition = 0
                     costYPosition = 0
-                
+                    goToManageYPosition = 0
+
                     tilePopup = False
                     if currentplayer.doesTileBelongToPlayer(grid[y][x].getID()):
                        tilePopup = True                 
                        if grid[y][x].getCol() < 25:
                             if grid[y][x].getRow() < 15:
                                 popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 150, 150)
-                                productionXposition = x * 25 + 27
+                                exitButton = pygame.Rect((x * 25) + 25, (y * 25) + 150, 150, 25)
+                                goToManageButton = pygame.Rect((x * 25) + 50, (y * 25) + 115, 100, 25)
+                                productionXposition = x * 25 + 55
                                 production1YPosition = y * 25 + 37
-                                production2YPosition = y * 25 + 49
+                                production2YPosition = y * 25 + 51
+                                civiliansTileYPosition = y * 25 + 63
+                                soldiersTileYPosition = y * 25 + 75
+                                goToManageYPosition = y * 25 + 120
                             else:
-                                popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 125, 150, 150)
-                                productionXposition = x * 25 + 27
-                                production1YPosition = y * 25 - 113
-                                production2YPosition = y * 25 - 101
+                                popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 150, 150, 150)
+                                exitButton = pygame.Rect((x * 25) + 25, (y * 25) - 25, 150, 25)
+                                goToManageButton = pygame.Rect((x * 25) + 50, (y * 25) - 60, 100, 25)
+                                productionXposition = x * 25 + 55
+                                production1YPosition = y * 25 - 120
+                                production2YPosition = y * 25 - 135
+                                civiliansTileYPosition = y * 25 - 107
+                                soldiersTileYPosition = y * 25 - 93
+                                goToManageYPosition = y * 25 - 55
                        else:
                             if grid[y][x].getRow() < 15:
-                                popuprect = pygame.Rect((x * 25) - 125, (y * 25) + 25, 150, 150)
+                                popuprect = pygame.Rect((x * 25) - 150, (y * 25) + 25, 150, 150)
+                                exitButton = pygame.Rect((x * 25) - 150, (y * 25) + 150, 150, 25)
+                                goToManageButton = pygame.Rect((x * 25) - 128, (y * 25) + 115, 100, 25)
                                 productionXposition = x * 25 - 123
                                 production1YPosition = y * 25 + 37
                                 production2YPosition = y * 25 + 49
+                                civiliansTileYPosition = y * 25 + 61
+                                soldiersTileYPosition = y * 25 + 73
+                                goToManageYPosition = y * 25 + 120
                             else:
-                                popuprect = pygame.Rect((x * 25) - 125, (y * 25) - 125, 150, 150)
+                                popuprect = pygame.Rect((x * 25) - 150, (y * 25) - 150, 150, 150)
+                                exitButton = pygame.Rect((x * 25) - 150, (y * 25) - 25, 150, 25)
+                                goToManageButton = pygame.Rect((x * 25) - 128, (y * 25) - 60, 100, 25)
                                 productionXposition = x * 25 - 123
-                                production1YPosition = y * 25 - 113
-                                production2YPosition = y * 25 - 101
+                                production1YPosition = y * 25 - 120
+                                production2YPosition = y * 25 - 135
+                                civiliansTileYPosition = y * 25 - 107
+                                soldiersTileYPosition = y * 25 - 93
+                                goToManageYPosition = y * 25 - 55
 
 
 
@@ -373,17 +390,32 @@ while gaming:
                                 grid[row][col].draw(screen1)
 
                         pygame.draw.rect(screen1, (211, 182, 131), popuprect)
+                        pygame.draw.rect(screen1, (209, 27, 27), exitButton)
+                        pygame.draw.rect(screen1, (255, 255, 255), goToManageButton)
+                        managescreen = pygame.Rect(125, 125, 1000, 600)
                         screen1.blit(production1, (productionXposition, production1YPosition))
                         screen1.blit(production2, (productionXposition, production2YPosition))
+                        screen1.blit(civiliansTile, (productionXposition, civiliansTileYPosition))
+                        screen1.blit(soldiersTile, (productionXposition, soldiersTileYPosition))
+                        screen1.blit(goToManage, (productionXposition, goToManageYPosition))
                         screen1.blit(wowzer, (x*25, y*25))
+                        
                         pygame.display.update()
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+                        for event in pygame.event.get():
+                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                if exitButton.collidepoint(event.pos):
+                                    screen1.fill(Background_color)
+                                    tilePopup = False
+                                    break
+                                if goToManageButton.collidepoint(event.pos):
+                                    isManagingPopulation = True
+                                    while isManagingPopulation:
+                                        for row in range(30):
+                                            for col in range(50):
+                                                grid[row][col].draw(screen1)
+                                        pygame.draw.rect(screen1, (211, 182, 131), managescreen)
+                                        pygame.display.update()
                     
                     
                     

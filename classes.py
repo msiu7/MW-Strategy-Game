@@ -15,7 +15,7 @@ class population:
         grid[tilerow1][tilecol1].population.remove(grid[tilerow1][tilecol1].population[len(grid[tilerow1][tilecol1].population)-1])
         grid[tilerow2][tilecol2].population[len(grid[tilerow2][tilecol2].population)].tilerow = tilerow2
         grid[tilerow2][tilecol2].population[len(grid[tilerow2][tilecol2].population)].tilecol = tilecol2
-    
+        
 class civilian(population):
 
     def __init__ (self, tilerow, tilecol):
@@ -30,10 +30,28 @@ class farmer(civilian):
 
 class soldier(population):
 
-    def __init__ (self, tilerow, tilecol):
+    def __init__(self, x, y):
+        
         super().__init__(self)
         self.type = "soldier"
 
+class war (population):
+    def __init__(self):
+        super().__init__(self)
+        self.atwar = False
+        self.selection = False
+        self.xy = 0
+        
+
+    def warselection(self):
+        self.selection = True
+        while self.selection == True:
+          self.xy = event.pos()
+        
+    def warbegin(self):
+        self.atwar = True
+        
+        
 
 
 
@@ -90,6 +108,26 @@ class landTile(tile):
         self.population = []
         self.civilians = []
         self.soldiers = []
+
+    def popToSoldier(index):
+        self.population[index] = soldier()
+        self.soldiers.append(self.population[index])     
+
+    def popToCivilian(index):
+        self.population[index] = civilian()
+        self.civilians.append(self.population[index])
+
+    def civToSoldier(index):
+        self.civilians[index] = soldier()
+        self.soldiers.append(self.civilians[index])
+        self.civilians.remove(self.population[index])
+
+    def solToCivilian(index):
+        self.soldiers[index] = civilian()
+        self.civilians.append(self.soldiers[index])
+        self.soldiers.remove(self.civilians[index])
+
+    
     
     def updatePopulationPerTurn(self, player):
 
@@ -295,7 +333,8 @@ class player:
         
         #Game mechanics related variables
         self.population = []
-        self.army = []
+        self.civilians = []
+        self.soldiers = []
         self.goldperturn = 0
         self.woodperturn = 0
         self.stoneperturn = 0
@@ -307,6 +346,7 @@ class player:
         self.food = 0
         self.brick = 0
         self.foodConsumption = 0
+        
 
     def updateFoodConsumption(self):
         self.foodConsumption = len(self.population) * 4
@@ -348,9 +388,16 @@ class player:
 
     def totalPlayerPopulation(self, grid):
         self.population = []
+        self.civilians = []
+        self.soldiers = []
         for a in range(0, len(self.territories)):
             for b in range(0, len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)):   
                 self.population.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])
+                if grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b].type == "civilian":
+                    self.civilians.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])
+                if grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b].type == "soldier":
+                    self.soldiers.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])
+                    
 
     def updatePopulation(self, grid):
         count = 0
@@ -387,7 +434,14 @@ class player:
                 #print(f"a value:{a}")
 
 
+        #diplomacy class
+    class diplomacy:
+        def __init__(self)
     
+    class opinion(diplomacy):
+        def __init__(self, )
+          self.opinion = 0
+
    
 
     def addProductionToTotal(self):
@@ -569,6 +623,9 @@ class player:
                 #width,height
                 bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
                 pygame.draw.rect(screen, (self.rgb), bottom)
+
+
+
       
     def getGold(self):
         return self.gold
@@ -619,8 +676,5 @@ class player:
         print(f"Total Player Population: {len(self.population)}")
         for a in range(len(self.population)):
             print(self.population[a])
-
-
-
 
 
