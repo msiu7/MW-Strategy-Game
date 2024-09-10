@@ -428,19 +428,13 @@ class player:
 
             
 
-        print(f"Numzero: {numzero}, Numpos: {numpos}")
+        #print(f"Numzero: {numzero}, Numpos: {numpos}")
                 #self.subtractTerritoryFromPlayer(self.territories[a])
                 #a-=1
                 #print(f"a value:{a}")
 
 
-        #diplomacy class
-    class diplomacy:
-        def __init__(self)
-    
-    class opinion(diplomacy):
-        def __init__(self, )
-          self.opinion = 0
+
 
    
 
@@ -677,4 +671,9 @@ class player:
         for a in range(len(self.population)):
             print(self.population[a])
 
-
+#class diplomacy:
+ #   def __init__(self)
+    
+#class opinion(diplomacy):
+#   def __init__(self, )
+#        self.opinion = 0

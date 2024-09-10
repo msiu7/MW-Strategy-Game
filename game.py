@@ -313,38 +313,6 @@ while gaming:
                                 soldiersTileYPosition = y * 25 - 93
                                 goToManageYPosition = y * 25 - 55
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     else:
                         if grid[y][x].getCol() < 25:
                             if grid[y][x].getRow() < 15:
