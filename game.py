@@ -190,7 +190,7 @@ while gaming:
 #Game Loop
     running1 = True
     battleview = False
-    popview = False
+    civview = False
     resourcedisplay1 = False 
     while running1:
         
@@ -223,7 +223,7 @@ while gaming:
             if event.type == pygame.QUIT:
                 gaming = False
                 running1 = False
-                popview = False
+                civview = False
             
             
             
@@ -233,7 +233,7 @@ while gaming:
                     battleview = True
                     running1 = False
                 if populationview.collidepoint(event.pos):
-                    popview = True
+                    civview = True
                     running1 = False
                 if event.pos[1] // 25 < 30:
                     
@@ -532,6 +532,8 @@ while gaming:
                 brickPerTurn = text.render(f"{currentplayer.brickperturn}", True, (0, 0, 0))
                 screen1.blit(brickPerTurn, (575, 60))
                 currentplayer.updateFoodConsumption()
+                currentplayer.updateFunctionalProductionValues(grid)
+                currentplayer.updateProductionValues(grid)
                 foodPerTurn = text.render(f"{currentplayer.foodperturn - currentplayer.foodConsumption}", True, (0, 0, 0))
                 screen1.blit(foodPerTurn, (675, 60))
                 stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
@@ -542,14 +544,14 @@ while gaming:
         pygame.display.update()
     
     screen2 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-    while popview:
+    while civview:
         for row in range(30):
             for col in range(50):
                 grid[row][col].draw(screen2)
         for a in range(0, len(currentplayer.territories)):
             temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
             pygame.draw.rect(screen2, (211, 182, 131), temprect)
-            popnumbers = text3.render(f"{len(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].population)}", True, (255, 255, 255))
+            popnumbers = text3.render(f"{len(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].civilians)}", True, (255, 255, 255))
             screen2.blit(popnumbers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen2)
         pygame.draw.rect(screen2, (29, 158, 29), populationview)
@@ -557,7 +559,7 @@ while gaming:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if populationview.collidepoint(event.pos):
-                    popview = False
+                    civview = False
                     running1 = True
             
        
