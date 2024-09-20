@@ -159,11 +159,11 @@ class landTile(tile):
         print(f"pop:{self.population} && popperturn:{self.populationperturn} && {player.foodConsumption} && {nextturnfood}")
     
     def updateFunctionalProduction(self):
-        self.functionalWoodProduction = self.woodProduction * len(self.population)
-        self.functionalBrickProduction = self.brickProduction * len(self.population)
-        self.functionalGoldProduction = self.goldProduction * len(self.population)
-        self.functionalStoneProduction = self.stoneProduction * len(self.population)
-        self.functionalFoodProduction = self.foodProduction * len(self.population)
+        self.functionalWoodProduction = self.woodProduction * len(self.civilians)
+        self.functionalBrickProduction = self.brickProduction * len(self.civilians)
+        self.functionalGoldProduction = self.goldProduction * len(self.civilians)
+        self.functionalStoneProduction = self.stoneProduction * len(self.civilians)
+        self.functionalFoodProduction = self.foodProduction * len(self.civilians)
 
     def getCordsx(self):
         return (self.x)
