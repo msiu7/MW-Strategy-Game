@@ -19,21 +19,25 @@ class population:
 class civilian(population):
 
     def __init__ (self, tilerow, tilecol):
-        super().__init__(self)
+        super().__init__(tilerow, tilecol)
         self.type = "civilian"
+        self.tilerow = tilerow
+        self.tilecol = tilecol
 
 class farmer(civilian):
 
     def __init__ (self, tilerow, tilecol):
-        super().__init__(self)
+        super().__init__(tilerow, tilecol)
         self.type = "farmer"
 
 class soldier(population):
 
-    def __init__(self, x, y):
+    def __init__(self, tilerow, tilecol):
         
-        super().__init__(self)
+        super().__init__(tilerow, tilecol)
         self.type = "soldier"
+        self.tilerow = tilerow
+        self.tilecol = tilecol
 
 class war (population):
     def __init__(self):
@@ -109,23 +113,23 @@ class landTile(tile):
         self.civilians = []
         self.soldiers = []
 
-    def popToSoldier(index):
-        self.population[index] = soldier()
+    def popToSoldier(self, index, row, col):
+        self.population[index] = soldier(row, col)
         self.soldiers.append(self.population[index])     
 
-    def popToCivilian(index):
-        self.population[index] = civilian()
+    def popToCivilian(self, index, row, col):
+        self.population[index] = civilian(row, col)
         self.civilians.append(self.population[index])
 
-    def civToSoldier(index):
-        self.civilians[index] = soldier()
+    def civToSoldier(self, index, row, col):
+        self.civilians[index] = soldier(row, col)
         self.soldiers.append(self.civilians[index])
-        self.civilians.remove(self.population[index])
+        self.civilians.pop(index)
 
-    def solToCivilian(index):
-        self.soldiers[index] = civilian()
+    def solToCivilian(self, index, row, col):
+        self.soldiers[index] = civilian(row, col)
         self.civilians.append(self.soldiers[index])
-        self.soldiers.remove(self.civilians[index])
+        self.soldiers.pop(index)
 
     
     

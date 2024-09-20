@@ -195,6 +195,7 @@ while gaming:
     while running1:
         
         popupText = pygame.font.SysFont("Arial", 10)
+        bigText = pygame.font.SysFont("Arial", 30)
         #Hovering Mouse
         mouse_pos = pygame.mouse.get_pos()  
         my = mouse_pos[1] // 25 
@@ -360,7 +361,7 @@ while gaming:
                         pygame.draw.rect(screen1, (211, 182, 131), popuprect)
                         pygame.draw.rect(screen1, (209, 27, 27), exitButton)
                         pygame.draw.rect(screen1, (255, 255, 255), goToManageButton)
-                        managescreen = pygame.Rect(125, 125, 1000, 600)
+                        managescreen = pygame.Rect(225, 225, 800, 300)
                         screen1.blit(production1, (productionXposition, production1YPosition))
                         screen1.blit(production2, (productionXposition, production2YPosition))
                         screen1.blit(civiliansTile, (productionXposition, civiliansTileYPosition))
@@ -377,14 +378,48 @@ while gaming:
                                     tilePopup = False
                                     break
                                 if goToManageButton.collidepoint(event.pos):
+                                                  
                                     isManagingPopulation = True
                                     while isManagingPopulation:
                                         for row in range(30):
                                             for col in range(50):
                                                 grid[row][col].draw(screen1)
+                                        unemployedTile = bigText.render(f"Unemployed: {len(grid[y][x].population) - len(grid[y][x].civilians)-len(grid[y][x].soldiers)}", True, (0, 0, 0))
+                                        civiliansTile = bigText.render(f"Civilians: {len(grid[y][x].civilians)}", True, (0, 0, 0))
+                                        soldiersTile = bigText.render(f"Soldiers: {len(grid[y][x].soldiers)}", True, (0, 0, 0))
+                                        exitButton = pygame.Rect(975, 225, 50, 50)
                                         pygame.draw.rect(screen1, (211, 182, 131), managescreen)
+                                        screen1.blit(civiliansTile, (235, 230))
+                                        screen1.blit(soldiersTile, (235, 355))
+                                        screen1.blit(unemployedTile, (235, 470))
+                                        poptociv = pygame.Rect(495, 465, 200, 50)
+                                        poptosol = pygame.Rect(715, 465, 200, 50)
+                                        soltociv = pygame.Rect(600, 355, 200, 50)
+                                        civtosol = pygame.Rect(600, 230, 200, 50)
+                                        pygame.draw.rect(screen1, (255, 0, 0), exitButton)
+                                        pygame.draw.rect(screen1, (255, 255, 255), poptociv)
+                                        pygame.draw.rect(screen1, (255, 255, 255), poptosol)
+                                        pygame.draw.rect(screen1, (255, 255, 255), soltociv)
+                                        pygame.draw.rect(screen1, (255, 255, 255), civtosol)
                                         pygame.display.update()
-                    
+                                        for event in pygame.event.get():
+                                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                                if exitButton.collidepoint(event.pos):
+                                                    isManagingPopulation = False
+                                                    tilePopup = False
+                                                    break
+                                                if poptociv.collidepoint(event.pos):
+                                                    if len(grid[y][x].population) - len(grid[y][x].civilians) - len(grid[y][x].soldiers)  > 0:
+                                                        grid[y][x].popToCivilian(0, y, x)
+                                                if poptosol.collidepoint(event.pos):
+                                                    if len(grid[y][x].population) - len(grid[y][x].civilians) - len(grid[y][x].soldiers)  > 0:
+                                                        grid[y][x].popToSoldier(0, y, x)
+                                                if soltociv.collidepoint(event.pos):
+                                                    if len(grid[y][x].soldiers) > 0:  
+                                                        grid[y][x].solToCivilian(0, y, x)  
+                                                if civtosol.collidepoint(event.pos):
+                                                    if len(grid[y][x].civilians) > 0:
+                                                        grid[y][x].civToSoldier(0, y, x)
                     
                     
                     while unownedWaitingForSecond:
