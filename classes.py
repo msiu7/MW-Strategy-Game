@@ -10,11 +10,11 @@ class population:
         self.tilerow = tilerow
         self.tilecol = tilecol
     
-    def movePopulation(self, tilerow1, tilecol1, tilerow2, tilecol2, grid):
-        grid[tilerow2][tilecol2].population.append(grid[tilerow1][tilecol1].population[len(grid[tilerow1][tilecol1].population)-1])
-        grid[tilerow1][tilecol1].population.remove(grid[tilerow1][tilecol1].population[len(grid[tilerow1][tilecol1].population)-1])
-        grid[tilerow2][tilecol2].population[len(grid[tilerow2][tilecol2].population)].tilerow = tilerow2
-        grid[tilerow2][tilecol2].population[len(grid[tilerow2][tilecol2].population)].tilecol = tilecol2
+    def movePopulation(self, index, tilerow1, tilecol1, tilerow2, tilecol2, grid):
+        grid[tilerow2][tilecol2].population.append(self)
+        grid[tilerow1][tilecol1].population.pop(index)
+        self.tilerow = tilerow2
+        self.tilecol = tilecol2
         
 class civilian(population):
 
@@ -23,12 +23,12 @@ class civilian(population):
         self.type = "civilian"
         self.tilerow = tilerow
         self.tilecol = tilecol
-
-class farmer(civilian):
-
-    def __init__ (self, tilerow, tilecol):
-        super().__init__(tilerow, tilecol)
-        self.type = "farmer"
+    
+    def moveCivilian(self, index, tilerow1, tilecol1, tilerow2, tilecol2, grid):
+        grid[tilerow2][tilecol2].civilians.append(self)
+        grid[tilerow1][tilecol1].civilians.pop(index)
+        self.tilerow = tilerow2
+        self.tilecol = tilecol2
 
 class soldier(population):
 
@@ -38,6 +38,12 @@ class soldier(population):
         self.type = "soldier"
         self.tilerow = tilerow
         self.tilecol = tilecol
+
+    def moveSoldier(self, index, tilerow1, tilecol1, tilerow2, tilecol2, grid):
+        grid[tilerow2][tilecol2].soldiers.append(self)
+        grid[tilerow1][tilecol1].soldiers.pop(index)
+        self.tilerow = tilerow2
+        self.tilecol = tilecol2
 
 class war (population):
     def __init__(self):
@@ -465,6 +471,19 @@ class player:
             if id == self.territories[a]:
                 return True
         return False
+    
+    def checkAdjacencyForMovement(self, id1, id2):
+        if(self.doesTileBelongToPlayer(id1) and self.doesTileBelongToPlayer(id2)):
+            if (id1 == id2 - 1):
+                return True
+            elif (id1 == id2 + 1):
+                return True
+            elif (id1 == id2 - 50):
+                return True
+            elif (id1 == id2 + 50):
+                return True
+        return False    
+        
 
     def checkExpandable(self, id, grid):
         if len(self.territories) == 0:
