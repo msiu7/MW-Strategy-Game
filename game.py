@@ -181,6 +181,10 @@ populationview = pygame.Rect(950, 750, 100, 100)
     #Military View
 militaryview = pygame.Rect(850, 750, 100, 100)
 
+    #Move Population Mode Button
+movePopButtonMode = pygame.Rect(750, 750, 100, 100)
+moveMode = pygame.Rect(775, 800, 50, 25)
+
 
     #Ask If User Wants to Expand Button
     #ultimate super dooper awesome loop!!!!!!!!!!
@@ -191,7 +195,8 @@ while gaming:
     running1 = True
     battleview = False
     civview = False
-    resourcedisplay1 = False 
+    resourcedisplay1 = False
+    movePopMode = False 
     while running1:
         
         popupText = pygame.font.SysFont("Arial", 10)
@@ -555,12 +560,63 @@ while gaming:
             screen2.blit(popnumbers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen2)
         pygame.draw.rect(screen2, (29, 158, 29), populationview)
+        pygame.draw.rect(screen2, (114, 9, 219), movePopButtonMode)
+        popOnOrOff = text.render(("Move:"), True, (255, 255, 255))
+        if movePopMode == False:
+            print(0)
+            pygame.draw.rect(screen2, (255, 0, 0), moveMode)
+        else:
+            print(1)
+            pygame.draw.rect(screen2, (0, 255, 0), moveMode)
+        screen2.blit(popOnOrOff, (760, 760))
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if populationview.collidepoint(event.pos):
                     civview = False
                     running1 = True
+                if movePopButtonMode.collidepoint(event.pos):
+                    if movePopMode == True:
+                        movePopMode = False
+                        pygame.draw.rect(screen2, (255, 0, 0), moveMode)
+                    else:
+                        movePopMode = True
+                        pygame.draw.rect(screen2, (0, 255, 0), moveMode)
+                    pygame.display.flip()
+        while movePopMode == True:
+            
+            waitingforclick = True
+            while waitingforclick:
+                for a in range(0, len(currentplayer.territories)):
+                    temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
+                    pygame.draw.rect(screen2, (211, 182, 131), temprect)
+                    popcivilians = text3.render(f"{len(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].civilians)}", True, (255, 255, 255))
+                    screen2.blit(popcivilians, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
+                    pygame.display.flip()
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if event.pos[1] // 25 < 30:
+                            tilecol1 = event.pos[0] // 25
+                            tilerow1 = event.pos[1] // 25
+                            print("click1")
+                            waitingforclick2 = True
+                            while waitingforclick2: 
+                                for event in pygame.event.get():
+                                    if event.type == pygame.MOUSEBUTTONDOWN:
+                                        if event.pos[1] // 25 < 30:
+                                            tilecol2 = event.pos[0] // 25
+                                            tilerow2 = event.pos[1] // 25
+                                            print("click2")
+                                            if (len(grid[tilerow1][tilecol1].civilians) > 1 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
+                                                grid[tilerow1][tilecol1].civilians[len(grid[tilerow1][tilecol1].civilians)-1].moveCivilian(len(grid[tilerow1][tilecol1].civilians)-1, tilerow1, tilecol1, tilerow2, tilecol2, grid)
+                                            waitingforclick = False
+                                            waitingforclick2 = False
+                        elif movePopButtonMode.collidepoint(event.pos):
+                            movePopMode = False
+                            waitingforclick = False
+                        
+                
+
             
        
     screen3 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
@@ -575,12 +631,62 @@ while gaming:
             popsoldiers = text3.render(f"{len(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].soldiers)}", True, (255, 255, 255))
             screen3.blit(popsoldiers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen3)
-        pygame.draw.rect(screen3, (29, 158, 29), militaryview)
+        pygame.draw.rect(screen3, (139, 124, 124), militaryview)
+        pygame.draw.rect(screen3, (114, 9, 219), movePopButtonMode)
+        popOnOrOff = text.render(("Move:"), True, (255, 255, 255))
+        if movePopMode == False:
+            print(0)
+            pygame.draw.rect(screen3, (255, 0, 0), moveMode)
+        else:
+            print(1)
+            pygame.draw.rect(screen3, (0, 255, 0), moveMode)
+        screen3.blit(popOnOrOff, (760, 760))
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if militaryview.collidepoint(event.pos):
                     battleview = False
                     running1 = True
-        
-        
+                if movePopButtonMode.collidepoint(event.pos):
+                    if movePopMode == True:
+                        movePopMode = False
+                        pygame.draw.rect(screen3, (255, 0, 0), moveMode)
+                    else:
+                        movePopMode = True
+                        pygame.draw.rect(screen3, (0, 255, 0), moveMode)
+                    pygame.display.flip()
+        while movePopMode == True:
+            
+            waitingforclick = True
+            while waitingforclick:
+                for a in range(0, len(currentplayer.territories)):
+                    temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
+                    pygame.draw.rect(screen3, (211, 182, 131), temprect)
+                    popsoldiers = text3.render(f"{len(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].soldiers)}", True, (255, 255, 255))
+                    screen3.blit(popsoldiers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
+                    pygame.display.flip()
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if event.pos[1] // 25 < 30:
+                            tilecol1 = event.pos[0] // 25
+                            tilerow1 = event.pos[1] // 25
+                            print("click1")
+                            waitingforclick2 = True
+                            while waitingforclick2: 
+                                for event in pygame.event.get():
+                                    if event.type == pygame.MOUSEBUTTONDOWN:
+                                        if event.pos[1] // 25 < 30:
+                                            tilecol2 = event.pos[0] // 25
+                                            tilerow2 = event.pos[1] // 25
+                                            print("click2")
+                                            if (len(grid[tilerow1][tilecol1].soldiers) > 0 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
+                                                grid[tilerow1][tilecol1].soldiers[len(grid[tilerow1][tilecol1].soldiers)-1].moveSoldier(len(grid[tilerow1][tilecol1].soldiers)-1, tilerow1, tilecol1, tilerow2, tilecol2, grid)
+                                            waitingforclick = False
+                                            waitingforclick2 = False
+                        elif movePopButtonMode.collidepoint(event.pos):
+                            movePopMode = False
+                            waitingforclick = False
+                        
+                
+
+            
