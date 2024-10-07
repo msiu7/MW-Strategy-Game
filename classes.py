@@ -9,41 +9,16 @@ class population:
         self.type = "unemployed"
         self.tilerow = tilerow
         self.tilecol = tilecol
+        #type list: "unemployed", "civilian", "soldier"
     
     def movePopulation(self, index, tilerow1, tilecol1, tilerow2, tilecol2, grid):
         grid[tilerow2][tilecol2].population.append(self)
         grid[tilerow1][tilecol1].population.pop(index)
         self.tilerow = tilerow2
         self.tilecol = tilecol2
-        
-class civilian(population):
 
-    def __init__ (self, tilerow, tilecol):
-        super().__init__(tilerow, tilecol)
-        self.type = "civilian"
-        self.tilerow = tilerow
-        self.tilecol = tilecol
-    
-    def moveCivilian(self, index, tilerow1, tilecol1, tilerow2, tilecol2, grid):
-        grid[tilerow2][tilecol2].civilians.append(self)
-        grid[tilerow1][tilecol1].civilians.pop(index)
-        self.tilerow = tilerow2
-        self.tilecol = tilecol2
-
-class soldier(population):
-
-    def __init__(self, tilerow, tilecol):
-        
-        super().__init__(tilerow, tilecol)
-        self.type = "soldier"
-        self.tilerow = tilerow
-        self.tilecol = tilecol
-
-    def moveSoldier(self, index, tilerow1, tilecol1, tilerow2, tilecol2, grid):
-        grid[tilerow2][tilecol2].soldiers.append(self)
-        grid[tilerow1][tilecol1].soldiers.pop(index)
-        self.tilerow = tilerow2
-        self.tilecol = tilecol2
+    def changeType(self, newtype):
+        self.type = newtype
 
 class war (population):
     def __init__(self):
@@ -116,29 +91,38 @@ class landTile(tile):
         self.functionalFoodProduction = 0
         self.populationperturn = 0
         self.population = []
-        self.civilians = []
-        self.soldiers = []
 
-    def popToSoldier(self, index, row, col):
-        self.population[index] = soldier(row, col)
-        self.soldiers.append(self.population[index])     
+    def popToNewType(self, index, newtype):
+        population[index].changeType(newtype)  
 
-    def popToCivilian(self, index, row, col):
-        self.population[index] = civilian(row, col)
-        self.civilians.append(self.population[index])
+    def getCivLength(self):
+        count = 0
+        for a in range(len(self.population)):
+            if self.population[a].type == "civilian":
+                count += 1
+        return count
 
-    def civToSoldier(self, index, row, col):
-        self.civilians[index] = soldier(row, col)
-        self.soldiers.append(self.civilians[index])
-        self.civilians.pop(index)
-
-    def solToCivilian(self, index, row, col):
-        self.soldiers[index] = civilian(row, col)
-        self.civilians.append(self.soldiers[index])
-        self.soldiers.pop(index)
-
+    def getSolLength(self):
+        count = 0
+        for a in range(len(self.population)):
+            if self.population[a].type == "soldier":
+                count += 1
+        return count
     
+    def getUnemployedLength(self):
+        count = 0
+        for a in range(len(self.population)):
+            if self.population[a].type == "unemployed":
+                count += 1
+        return count 
     
+    def findIndexOfType(self, type):
+        for a in range(len(self.population)):
+            if self.population[a].type == type:
+                return a
+        return -1
+
+
     def updatePopulationPerTurn(self, player):
 
             
@@ -165,11 +149,11 @@ class landTile(tile):
         print(f"pop:{self.population} && popperturn:{self.populationperturn} && {player.foodConsumption} && {nextturnfood}")
     
     def updateFunctionalProduction(self):
-        self.functionalWoodProduction = self.woodProduction * len(self.civilians)
-        self.functionalBrickProduction = self.brickProduction * len(self.civilians)
-        self.functionalGoldProduction = self.goldProduction * len(self.civilians)
-        self.functionalStoneProduction = self.stoneProduction * len(self.civilians)
-        self.functionalFoodProduction = self.foodProduction * len(self.civilians)
+        self.functionalWoodProduction = self.woodProduction * self.getCivLength()
+        self.functionalBrickProduction = self.brickProduction * self.getCivLength()
+        self.functionalGoldProduction = self.goldProduction * self.getCivLength()
+        self.functionalStoneProduction = self.stoneProduction * self.getCivLength()
+        self.functionalFoodProduction = self.foodProduction * self.getCivLength()
 
     def getCordsx(self):
         return (self.x)
@@ -343,8 +327,6 @@ class player:
         
         #Game mechanics related variables
         self.population = []
-        self.civilians = []
-        self.soldiers = []
         self.goldperturn = 0
         self.woodperturn = 0
         self.stoneperturn = 0
@@ -398,16 +380,9 @@ class player:
 
     def totalPlayerPopulation(self, grid):
         self.population = []
-        self.civilians = []
-        self.soldiers = []
         for a in range(0, len(self.territories)):
             for b in range(0, len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)):   
-                self.population.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])
-                if grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b].type == "civilian":
-                    self.civilians.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])
-                if grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b].type == "soldier":
-                    self.soldiers.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])
-                    
+                self.population.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])                  
 
     def updatePopulation(self, grid):
         count = 0
