@@ -564,6 +564,17 @@ while gaming:
         for row in range(30):
             for col in range(50):
                 grid[row][col].draw(screen2)
+        for a in range(0, len(players)):
+            players[a].drawBorders(screen2)
+            players[a].addBordering()
+            if not a == currentplayerindex:
+                for b in range(0, len(players[a].territories)):
+                    for c in range(0, len(currentplayer.territories)):
+                        if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True:
+                            temprect = pygame.Rect(((players[a].territories[b]) % 50) * 25 + 5, ((players[a].territories[b]) // 50) * 25 + 5, 15, 15)
+                            pygame.draw.rect(screen2, (211, 182, 131), temprect)
+                            popnumbers = text3.render(f"{grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].getCivLength()}", True, (255, 255, 255))
+                            screen2.blit(popnumbers, ((((players[a].territories[b]) % 50) * 25) + 10, ((players[a].territories[b]) // 50) * 25 + 5))    
         for a in range(0, len(currentplayer.territories)):
             temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
             pygame.draw.rect(screen2, (211, 182, 131), temprect)
@@ -636,6 +647,17 @@ while gaming:
         for row in range(30):
             for col in range(50):
                 grid[row][col].draw(screen3)
+        for a in range(0, len(players)):
+            players[a].drawBorders(screen3)
+            players[a].addBordering()
+            if not a == currentplayerindex:
+                for b in range(0, len(players[a].territories)):
+                    for c in range(0, len(currentplayer.territories)):
+                        if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True:
+                            temprect = pygame.Rect(((players[a].territories[b]) % 50) * 25 + 5, ((players[a].territories[b]) // 50) * 25 + 5, 15, 15)
+                            pygame.draw.rect(screen3, (211, 182, 131), temprect)
+                            popsoldiers = text3.render(f"{grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].getSolLength()}", True, (255, 255, 255))
+                            screen3.blit(popsoldiers, ((((players[a].territories[b]) % 50) * 25) + 10, ((players[a].territories[b]) // 50) * 25 + 5))    
         for a in range(0, len(currentplayer.territories)):
             temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
             pygame.draw.rect(screen3, (211, 182, 131), temprect)
@@ -692,11 +714,15 @@ while gaming:
                                             print("click2")
                                             if ((len(grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
                                                 grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
+                                            if (not(currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()):
+                                                if (istileowned(tilecol2, tilerow2, players, grid, numplayers)):
+                                                    print("WAMONGUS SUNGUS LUNGUS FUNGUS")
                                             waitingforclick = False
                                             waitingforclick2 = False
                         elif movePopButtonMode.collidepoint(event.pos):
                             movePopMode = False
                             waitingforclick = False
+                    
                         
                 
 
