@@ -273,19 +273,29 @@ def drawUI(screen1, backgroundUI, endturn):
     pygame.draw.rect(screen1, (211, 182, 131), backgroundUI)
     pygame.draw.rect(screen1, (0, 0, 0), endturn)
 
+def istileowned( cordx, cordy,players,grid, numplayers):
+    tilex=cordx
+    tiley=cordy
+    tileid = grid[tiley][tilex].getID()
+    #targettile= grid[tiley][tilex]
+    for y in range (numplayers):
+        for x in range (len(players[y].territories)):
+            if (players[y].territories[x]==tileid):
+                return True 
+            else:
+                return False
+                
 
-    
-
-
-
-
-
-
-
-
-
-
-
+def checkPureAdjacency(id1, id2):
+    if (id1 == id2 - 1):
+        return True
+    elif (id1 == id2 + 1):
+        return True
+    elif (id1 == id2 - 50):
+        return True
+    elif (id1 == id2 + 50):
+        return True
+    return False 
 
 
 
