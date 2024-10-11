@@ -457,9 +457,8 @@ class player:
                 return True
             elif (id1 == id2 + 50):
                 return True
-        return False    
-        
-
+        return False
+   
     def checkExpandable(self, id, grid):
         if len(self.territories) == 0:
             return True    
