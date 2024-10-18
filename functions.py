@@ -282,8 +282,7 @@ def istileowned( cordx, cordy,players,grid, numplayers):
         for x in range (len(players[y].territories)):
             if (players[y].territories[x]==tileid):
                 return True 
-            else:
-                return False
+    return False
                 
 
 def checkPureAdjacency(id1, id2):
