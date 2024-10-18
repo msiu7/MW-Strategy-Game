@@ -715,7 +715,8 @@ while gaming:
                                             if ((len(grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
                                                 grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
                                             if (not(currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()):
-                                                if (istileowned(tilecol2, tilerow2, players, grid, numplayers)):
+                                                print("got through")
+                                                if istileowned(tilecol2, tilerow2, players, grid, numplayers):    
                                                     print("WAMONGUS SUNGUS LUNGUS FUNGUS")
                                             waitingforclick = False
                                             waitingforclick2 = False
