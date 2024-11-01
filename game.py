@@ -260,7 +260,7 @@ while gaming:
                             unownedWaitingForSecond = False
                             break
                     
-                    cost = popupText.render(f"Cost: {grid[y][x].returnValue()} Gold", True, (0, 0, 0))
+                    cost = popupText.render(f"Cost: {grid[y][x].tileValue} Gold", True, (0, 0, 0))
                     goToManage = popupText.render(f"Manage Population", True, (0, 0, 0))
                     production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
                     production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
@@ -456,14 +456,16 @@ while gaming:
                         for event in pygame.event.get():
                             if event.type == pygame.MOUSEBUTTONDOWN:
                                 if yesExpand.collidepoint(event.pos):
-                                    if currentplayer.getGold() >= grid[y][x].returnValue():
+                                    if currentplayer.getGold() >= grid[y][x].tileValue:
                                         if currentplayer.checkExpandable(grid[y][x].getID(), grid):
-                                            currentplayer.subtractGold(grid[y][x].returnValue())                           
-                                            currentplayer.addTerritoryToPlayer(grid[y][x].getID())
-                                            grid[y][x].manuallyAddPopulation(1)
-                                            currentplayer.totalPlayerPopulation(grid)
-                                            currentplayer.updateFunctionalProductionValues(grid)
-                                            currentplayer.updateProductionValues(grid)
+                                            if not(len(currentplayer.territories) == 0 and isinstance(grid[y][x], oceanTile)):
+                                                currentplayer.subtractGold(grid[y][x].tileValue)                           
+                                                currentplayer.addTerritoryToPlayer(grid[y][x].getID())
+                                                if isinstance(grid[y][x],landTile):
+                                                    grid[y][x].manuallyAddPopulation(1)
+                                                currentplayer.totalPlayerPopulation(grid)
+                                                currentplayer.updateFunctionalProductionValues(grid)
+                                                currentplayer.updateProductionValues(grid)
                                             
                                             
                                 if noExpand.collidepoint(event.pos):
@@ -629,8 +631,13 @@ while gaming:
                                             tilecol2 = event.pos[0] // 25
                                             tilerow2 = event.pos[1] // 25
                                             print("click2")
-                                            if ((len(grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
-                                                grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("civilian")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("civilian"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
+                                            #LandTiles always need to have at least 1 population, OceanTiles don't
+                                            if isinstance(grid[tilerow1][tilecol1], landTile):
+                                                if ((len(grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
+                                                    grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("civilian")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("civilian"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
+                                            else:
+                                                if ((len(grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
+                                                    grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("civilian")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("civilian"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
                                             waitingforclick = False
                                             waitingforclick2 = False
                         elif movePopButtonMode.collidepoint(event.pos):
@@ -712,19 +719,27 @@ while gaming:
                                             tilecol2 = event.pos[0] // 25
                                             tilerow2 = event.pos[1] // 25
                                             print("click2")
-                                            if ((len(grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
-                                                grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
-                                            if (not(currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()):
-                                                print("got through")
-                                                if istileowned(tilecol2, tilerow2, players, grid, numplayers):    
-                                                    print("WAMONGUS SUNGUS LUNGUS FUNGUS")
+                                            #LandTiles always need to have at least 1 population, OceanTiles don't
+                                            if isinstance(grid[tilerow1][tilecol1], landTile):
+                                                if ((len(grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
+                                                    grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
+                                                if (not(currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()):
+                                                    print("got through")
+                                                    #check if both tiles are owned, if both are land, and if the attacking player has enough population to invade
+                                                    if istileowned(tilecol2, tilerow2, players, grid, numplayers) and isinstance(grid[tilerow2][tilecol2], landTile) and (len(grid[tilerow1][tilecol1].population)) > 1:    
+                                                        print("LAND BATTLE TIME")
+                                            else:
+                                                if ((len(grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
+                                                    grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
+                                                if (not(currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()):
+                                                    print("got through")
+                                                    if istileowned(tilecol2, tilerow2, players, grid, numplayers):
+                                                        if isinstance(grid[tilerow2][tilecol2], landTile):    
+                                                            print("AMPHIBIOUS ATTACK")
+                                                        else:
+                                                            print("NAVAL BATTLE")   
                                             waitingforclick = False
                                             waitingforclick2 = False
                         elif movePopButtonMode.collidepoint(event.pos):
                             movePopMode = False
                             waitingforclick = False
-                    
-                        
-                
-
-            
