@@ -49,6 +49,28 @@ class tile:
         self.ID = 0
         self.width = width
         self.height = height
+        self.tileValue = 0
+        self.population = []
+        self.brickProduction = 0
+        self.foodProduction = 0
+        self.goldProduction = 0
+        self.stoneProduction = 0
+        self.woodProduction = 0
+        self.functionalWoodProduction = 0
+        self.functionalBrickProduction = 0
+        self.functionalGoldProduction = 0
+        self.functionalStoneProduction = 0 
+        self.functionalFoodProduction = 0
+        self.spelunkingChance = 0
+        self.functionalSpelunkingChance = 0
+
+    def updateFunctionalProduction(self):
+        self.functionalWoodProduction = self.woodProduction * self.getCivLength()
+        self.functionalBrickProduction = self.brickProduction * self.getCivLength()
+        self.functionalGoldProduction = self.goldProduction * self.getCivLength()
+        self.functionalStoneProduction = self.stoneProduction * self.getCivLength()
+        self.functionalFoodProduction = self.foodProduction * self.getCivLength()
+        self.functionalSpelunkingChance = self.spelunkingChance * self.getCivLength()
         
     
     def draw(self, screen):
@@ -70,27 +92,6 @@ class tile:
 
     def setTexture(self, texture):
         self.image = texture
-    
-#Subclass Land Tile 
-class landTile(tile):
-    
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y, width, height)
-        self.image = pygame.image.load('land.png')
-        self.isCoastal = False
-        self.tileValue = 0
-        self.brickProduction = 0
-        self.foodProduction = 0
-        self.goldProduction = 0
-        self.stoneProduction = 0
-        self.woodProduction = 0
-        self.functionalWoodProduction = 0
-        self.functionalBrickProduction = 0
-        self.functionalGoldProduction = 0
-        self.functionalStoneProduction = 0 
-        self.functionalFoodProduction = 0
-        self.populationperturn = 0
-        self.population = []
 
     def popToNewType(self, index, newtype):
         population[index].changeType(newtype)  
@@ -121,7 +122,15 @@ class landTile(tile):
             if self.population[a].type == type:
                 return a
         return -1
-
+    
+#Subclass Land Tile 
+class landTile(tile):
+    
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height)
+        self.image = pygame.image.load('land.png')
+        self.isCoastal = False
+        self.populationperturn = 0
 
     def updatePopulationPerTurn(self, player):
 
@@ -147,13 +156,6 @@ class landTile(tile):
             populationperturn = 0
             
         print(f"pop:{self.population} && popperturn:{self.populationperturn} && {player.foodConsumption} && {nextturnfood}")
-    
-    def updateFunctionalProduction(self):
-        self.functionalWoodProduction = self.woodProduction * self.getCivLength()
-        self.functionalBrickProduction = self.brickProduction * self.getCivLength()
-        self.functionalGoldProduction = self.goldProduction * self.getCivLength()
-        self.functionalStoneProduction = self.stoneProduction * self.getCivLength()
-        self.functionalFoodProduction = self.foodProduction * self.getCivLength()
 
     def getCordsx(self):
         return (self.x)
@@ -163,9 +165,6 @@ class landTile(tile):
     
     def returnID(self):
         return self.ID
-
-    def returnValue(self):
-        return self.tileValue
     
     def manuallyAddPopulation(self, numpop):
         numtrnc = math.trunc(numpop)
@@ -192,9 +191,6 @@ class plainsTile(landTile):
     def setProduction(self):    
         self.foodProduction = random.randint(1, 10)
         self.tileValue = (self.foodProduction) * 5
-
-    def returnValue(self):
-        return self.tileValue  
     
     def returnProduction1(self):
         return (f"Food Production: {self.foodProduction}")
@@ -220,9 +216,6 @@ class coastalTile(landTile):
 
     def returnProduction2(self):
         return (f"Food Production: {self.foodProduction}")
-
-    def returnValue(self):
-        return self.tileValue
     
     def returnFoodProduction(self):
         return self.foodProduction
@@ -239,10 +232,7 @@ class mountainTile(landTile):
     def setProduction(self):    
           self.stoneProduction = random.randint(1, 5)
           self.goldProduction = random.randint(1, 5)
-          self.tileValue = (self.stoneProduction + self.goldProduction) * 5
-
-    def returnValue(self):
-        return self.tileValue  
+          self.tileValue = (self.stoneProduction + self.goldProduction) * 5 
     
     def returnProduction1(self):
         return (f"Stone Production: {self.stoneProduction}")
@@ -267,9 +257,6 @@ class forestTile(landTile):
           self.foodProduction = random.randint(1, 5)
           self.tileValue = (self.woodProduction + self.foodProduction) * 5
 
-    def returnValue(self):
-        return self.tileValue  
-
     def returnProduction1(self):
         return (f"Wood Production: {self.woodProduction}")
     
@@ -291,6 +278,16 @@ class oceanTile(tile):
     
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
+
+    def setProduction(self):    
+        self.spelunkingChance = random.randint(1, 10)
+        self.tileValue = (self.spelunkingChance) * 5
+
+    def returnProduction1(self):
+        return (f"Treasure Chance: {self.spelunkingChance}")
+    
+    def returnProduction2(self):
+        return (f"")
     
     def getCordsx(self):
         return (self.x)
@@ -387,18 +384,23 @@ class player:
     def updatePopulation(self, grid):
         count = 0
         for a in range(0, len(self.territories)):
-            grid[(self.territories[a]) // 50][(self.territories[a]) % 50].updatePopulationPerTurn(self)  
+            if(isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
+                grid[(self.territories[a]) // 50][(self.territories[a]) % 50].updatePopulationPerTurn(self)  
         for a in range(0, len(self.territories)):
-            grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
-            count += len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)
+            if(isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
+                grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
+                count += len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)
         if count == 0 and len(self.territories) > 0:
-            b = random.randint(0, len(self.territories)-1)
+            b = 0
+            #while loop checks if b is an oceanTile, keeps running until territories[b] is a landTile
+            while isinstance(grid[(self.territories[b]) // 50][(self.territories[b]) % 50], oceanTile):
+                b = random.randint(0, len(self.territories)-1)
             grid[(self.territories[b]) // 50][(self.territories[b]) % 50].manuallyAddPopulation(1)
         numzero = 0
         numpos = 0  
         zero = []
         for a in range(len(self.territories)):
-            if (len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population) == 0):
+            if (len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population) == 0) and (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
                 numzero += 1
                 zero.append(self.territories[a])
             else:
