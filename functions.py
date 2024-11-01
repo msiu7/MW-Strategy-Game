@@ -336,14 +336,4 @@ def createPlainsTiles(grid):
 def giveTilesProduction(grid):
     for row in range(30):
         for col in range(50):
-            if isinstance(grid[row][col], landTile):
-                if isinstance(grid[row][col], coastalTile):
-                    grid[row][col].setProduction()
-                if isinstance(grid[row][col], forestTile):
-                    grid[row][col].setProduction()
-                if isinstance(grid[row][col], mountainTile):
-                    grid[row][col].setProduction()
-                if isinstance(grid[row][col], plainsTile):
-                    grid[row][col].setProduction()
-
-    
+            grid[row][col].setProduction()
