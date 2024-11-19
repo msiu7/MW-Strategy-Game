@@ -63,6 +63,7 @@ class tile:
         self.functionalFoodProduction = 0
         self.spelunkingChance = 0
         self.functionalSpelunkingChance = 0
+        self.level = 0
 
     def updateFunctionalProduction(self):
         self.functionalWoodProduction = self.woodProduction * self.getCivLength()
@@ -72,7 +73,42 @@ class tile:
         self.functionalFoodProduction = self.foodProduction * self.getCivLength()
         self.functionalSpelunkingChance = self.spelunkingChance * self.getCivLength()
         
-    
+    def upgradeTile(self, player):
+            if self.level == 0 and player.getGold() >= 50:
+                if isinstance(self, plainsTile):
+                    self.foodProduction * 2
+                    player.subtractGold(50)
+                    self.level += 1
+                if isinstance(self, coastalTile):
+                    self.brickProduction * 2
+                    player.subtractGold(50)
+                    self.level += 1
+                if isinstance(self, mountainTile):
+                    self.stoneProduction * 2
+                    player.subtractGold(50)
+                    self.level += 1
+                if isinstance(self, forestTile):
+                    self.woodProduction * 2
+                    player.subtractGold(50)
+                    self.level += 1
+            if self.level == 1 and player.getGold() >= 100:
+                if isinstance(self, plainsTile):
+                    self.foodProduction * 2
+                    player.subtractGold(100)
+                    self.level += 1
+                if isinstance(self, coastalTile):
+                    self.brickProduction * 2
+                    player.subtractGold(100)
+                    self.level += 1
+                if isinstance(self, mountainTile):
+                    self.stoneProduction * 2
+                    player.subtractGold(100)
+                    self.level += 1
+                if isinstance(self, forestTile):
+                    self.woodProduction * 2
+                    player.subtractGold(100)
+                    self.level += 1
+
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
