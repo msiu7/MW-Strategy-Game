@@ -63,49 +63,21 @@ class tile:
         self.functionalFoodProduction = 0
         self.spelunkingChance = 0
         self.functionalSpelunkingChance = 0
-        self.level = 0
+        self.level = 1
 
     def updateFunctionalProduction(self):
-        self.functionalWoodProduction = self.woodProduction * self.getCivLength()
-        self.functionalBrickProduction = self.brickProduction * self.getCivLength()
-        self.functionalGoldProduction = self.goldProduction * self.getCivLength()
-        self.functionalStoneProduction = self.stoneProduction * self.getCivLength()
-        self.functionalFoodProduction = self.foodProduction * self.getCivLength()
-        self.functionalSpelunkingChance = self.spelunkingChance * self.getCivLength()
+        self.functionalWoodProduction = self.woodProduction * self.getCivLength() * (2**(self.level-1))
+        self.functionalBrickProduction = self.brickProduction * self.getCivLength() * (2**(self.level-1))
+        self.functionalGoldProduction = self.goldProduction * self.getCivLength() * (2**(self.level-1))
+        self.functionalStoneProduction = self.stoneProduction * self.getCivLength() * (2**(self.level-1))
+        self.functionalFoodProduction = self.foodProduction * self.getCivLength() * (2**(self.level-1))
+        self.functionalSpelunkingChance = self.spelunkingChance * self.getCivLength() * (2**(self.level-1))
         
     def upgradeTile(self, player):
-            if self.level == 0 and player.getGold() >= 50:
-                if isinstance(self, plainsTile):
-                    self.foodProduction * 2
+            if self.level == 1 and player.getGold() >= 50:
                     player.subtractGold(50)
                     self.level += 1
-                if isinstance(self, coastalTile):
-                    self.brickProduction * 2
-                    player.subtractGold(50)
-                    self.level += 1
-                if isinstance(self, mountainTile):
-                    self.stoneProduction * 2
-                    player.subtractGold(50)
-                    self.level += 1
-                if isinstance(self, forestTile):
-                    self.woodProduction * 2
-                    player.subtractGold(50)
-                    self.level += 1
-            if self.level == 1 and player.getGold() >= 100:
-                if isinstance(self, plainsTile):
-                    self.foodProduction * 2
-                    player.subtractGold(100)
-                    self.level += 1
-                if isinstance(self, coastalTile):
-                    self.brickProduction * 2
-                    player.subtractGold(100)
-                    self.level += 1
-                if isinstance(self, mountainTile):
-                    self.stoneProduction * 2
-                    player.subtractGold(100)
-                    self.level += 1
-                if isinstance(self, forestTile):
-                    self.woodProduction * 2
+            elif self.level == 2 and player.getGold() >= 100:
                     player.subtractGold(100)
                     self.level += 1
 

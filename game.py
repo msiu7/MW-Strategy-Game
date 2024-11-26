@@ -215,6 +215,12 @@ while gaming:
         drawUI(screen1, backgroundUI, endturn)
         pygame.draw.rect(screen1, (29, 158, 29), populationview)
         
+        #Exit Button
+        exitButton = pygame.Rect(975, 225, 50, 50)
+
+        #Tile Improvement Button
+        upgradeTileButton = pygame.Rect(600, 230, 200, 50)
+        
         #Resource option
         resourcetab = pygame.Rect(1050, 750, 100, 100)
         pygame.draw.rect(screen1, (12, 69, 153), resourcetab)
@@ -263,6 +269,7 @@ while gaming:
                     cost = popupText.render(f"Cost: {grid[y][x].tileValue} Gold", True, (0, 0, 0))
                     goToManage = popupText.render(f"Manage Population", True, (0, 0, 0))
                     goToUpgrade = popupText.render(f"Upgrade Tile", True, (0, 0, 0))
+                    currentLevel = bigText.render(f"Level: {grid[y][x].level}", True, (0, 0, 0))
                     production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
                     production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
                     civiliansTile = popupText.render(f"Civilians: {grid[y][x].getCivLength()}", True, (0, 0, 0))
@@ -383,8 +390,21 @@ while gaming:
                         screen1.blit(soldiersTile, (productionXposition, soldiersTileYPosition))
                         screen1.blit(goToManage, (productionXposition, goToManageYPosition))
                         screen1.blit(goToUpgrade, (productionXposition, goToUpgradeYPosition))
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         screen1.blit(wowzer, (x*25, y*25))
                         
+
+
+
+
+
                         pygame.display.update()
 
                         for event in pygame.event.get():
@@ -393,6 +413,60 @@ while gaming:
                                     screen1.fill(Background_color)
                                     tilePopup = False
                                     break
+      
+                                if goToUpgradeButton.collidepoint(event.pos):
+                                    isUpgradingTile = True
+                                    exitButton = pygame.Rect(975, 225, 50, 50)
+                                    upgradeTileButton = pygame.Rect(600, 300, 200, 50)
+                                    
+                                    clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50", True, (0, 0, 0))
+                                    if grid[y][x].level == 1:
+                                        clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50", True, (0, 0, 0))
+                                    elif grid[y][x].level == 2:
+                                        clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100", True, (0, 0, 0))
+                                    elif grid[y][x].level == 3:
+                                        clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
+                                    
+                                    
+                                    
+                                    while isUpgradingTile:
+                                        for row in range(30):
+                                            for col in range(50):
+                                                grid[row][col].draw(screen1)                                       
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        pygame.draw.rect(screen1, (211, 182, 131), managescreen)
+                                        pygame.draw.rect(screen1, (255, 0, 0), exitButton)
+                                        pygame.draw.rect(screen1, (255, 255, 255), upgradeTileButton)
+                                        screen1.blit(currentLevel, (250, 350))
+                                        screen1.blit(clickToUpgradeTile, (250, 400))
+                                        pygame.display.update()
+ 
+                                        for event in pygame.event.get():
+                                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                                if exitButton.collidepoint(event.pos):
+                                                    isUpgradingTile = False
+                                                    tilePopup = False
+                                                    break
+                                                if upgradeTileButton.collidepoint(event.pos):
+                                                    if grid[y][x].level == 1:
+                                                        if currentplayer.getGold() >= 50:
+                                                            grid[y][x].upgradeTile(currentplayer)
+                                                    elif grid[y][x].level == 2:
+                                                        if currentplayer.getGold() >= 100:
+                                                            grid[y][x].upgradeTile(currentplayer)
+                                                    else:
+                                                        break
+                                                    currentLevel = bigText.render(f"Level: {grid[y][x].level}", True, (0, 0, 0))
+                                                    screen1.blit(currentLevel, (250, 350))
+                                                    
+                                                    pygame.display.update()
+                                                        
+                                
                                 if goToManageButton.collidepoint(event.pos):
                                                   
                                     isManagingPopulation = True
@@ -448,7 +522,7 @@ while gaming:
                                                         print(f"Civ: {grid[y][x].getCivLength()}")
                                                         print(f"Sol:{grid[y][x].getSolLength()}")
                                                         print(f"Un:{grid[y][x].getUnemployedLength()}")                              
-                    
+
                     while unownedWaitingForSecond:
                         
                         for row in range(30):
