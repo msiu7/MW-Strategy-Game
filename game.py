@@ -185,6 +185,9 @@ militaryview = pygame.Rect(850, 750, 100, 100)
 movePopButtonMode = pygame.Rect(750, 750, 100, 100)
 moveMode = pygame.Rect(775, 800, 50, 25)
 
+    #Tile Level View Button
+tileLevelView = pygame.Rect(650, 750, 100, 100)
+
 
     #Ask If User Wants to Expand Button
     #ultimate super dooper awesome loop!!!!!!!!!!
@@ -197,6 +200,7 @@ while gaming:
     civview = False
     resourcedisplay1 = False
     movePopMode = False 
+    levelView = False
     while running1:
         
         popupText = pygame.font.SysFont("Arial", 10)
@@ -227,6 +231,9 @@ while gaming:
 
         #Military Option
         pygame.draw.rect(screen1, (139, 124, 124), militaryview)
+
+        #Tile Level View Option
+        pygame.draw.rect(screen1, (139, 124, 124), tileLevelView)
         
         #All User inputs work through this 
         waitingForSecond = False
@@ -245,6 +252,9 @@ while gaming:
                     running1 = False
                 if populationview.collidepoint(event.pos):
                     civview = True
+                    running1 = False
+                if tileLevelView.collidepoint(event.pos):
+                    levelView = True
                     running1 = False
                 if event.pos[1] // 25 < 30:
                     
@@ -427,17 +437,10 @@ while gaming:
                                     elif grid[y][x].level == 3:
                                         clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
                                     
-                                    
-                                    
                                     while isUpgradingTile:
                                         for row in range(30):
                                             for col in range(50):
-                                                grid[row][col].draw(screen1)                                       
-                                        
-                                        
-                                        
-                                        
-                                        
+                                                grid[row][col].draw(screen1)                                        
                                         
                                         pygame.draw.rect(screen1, (211, 182, 131), managescreen)
                                         pygame.draw.rect(screen1, (255, 0, 0), exitButton)
@@ -456,9 +459,13 @@ while gaming:
                                                     if grid[y][x].level == 1:
                                                         if currentplayer.getGold() >= 50:
                                                             grid[y][x].upgradeTile(currentplayer)
+                                                            clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100", True, (0, 0, 0))
+                                                            pygame.display.update()
                                                     elif grid[y][x].level == 2:
                                                         if currentplayer.getGold() >= 100:
                                                             grid[y][x].upgradeTile(currentplayer)
+                                                            clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
+                                                            pygame.display.update()
                                                     else:
                                                         break
                                                     currentLevel = bigText.render(f"Level: {grid[y][x].level}", True, (0, 0, 0))
@@ -828,3 +835,37 @@ while gaming:
                         elif movePopButtonMode.collidepoint(event.pos):
                             movePopMode = False
                             waitingforclick = False
+
+    screen4 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+    while levelView:                        
+        for row in range(30):
+            for col in range(50):
+                grid[row][col].draw(screen4)
+        for a in range(0, len(players)):
+            players[a].drawBorders(screen4)
+            players[a].addBordering()
+            if not a == currentplayerindex:
+                print("1")
+                for b in range(0, len(players[a].territories)):
+                    print("2")
+                    for c in range(0, len(currentplayer.territories)):
+                        print("3")
+                        if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True:
+                            print("4")
+                            temprect = pygame.Rect(((players[a].territories[b]) % 50) * 25 + 5, ((players[a].territories[b]) // 50) * 25 + 5, 15, 15)
+                            pygame.draw.rect(screen4, (211, 182, 131), temprect)
+                            level = text3.render(f"{grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].level}", True, (255, 255, 255))
+                            screen4.blit(level, ((((players[a].territories[b]) % 50) * 25) + 10, ((players[a].territories[b]) // 50) * 25 + 5))    
+        for a in range(0, len(currentplayer.territories)):
+            temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
+            pygame.draw.rect(screen4, (211, 182, 131), temprect)
+            level = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].level}", True, (255, 255, 255))
+            screen4.blit(level, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
+        currentplayer.drawBorders(screen4)
+        pygame.draw.rect(screen1, (139, 124, 124), tileLevelView)
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if tileLevelView.collidepoint(event.pos):
+                    levelView = False
+                    running1 = True
+        pygame.display.flip()
