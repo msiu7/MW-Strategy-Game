@@ -72,14 +72,6 @@ class tile:
         self.functionalStoneProduction = self.stoneProduction * self.getCivLength() * (2**(self.level-1))
         self.functionalFoodProduction = self.foodProduction * self.getCivLength() * (2**(self.level-1))
         self.functionalSpelunkingChance = self.spelunkingChance * self.getCivLength() * (2**(self.level-1))
-        
-    def upgradeTile(self, player):
-            if self.level == 1 and player.getGold() >= 50:
-                    player.subtractGold(50)
-                    self.level += 1
-            elif self.level == 2 and player.getGold() >= 100:
-                    player.subtractGold(100)
-                    self.level += 1
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
@@ -164,6 +156,14 @@ class landTile(tile):
             populationperturn = 0
             
         print(f"pop:{self.population} && popperturn:{self.populationperturn} && {player.foodConsumption} && {nextturnfood}")
+
+    def upgradeTile(self, player):
+        if self.level == 1 and player.getGold() >= 50:
+                player.subtractGold(50)
+                self.level += 1
+        elif self.level == 2 and player.getGold() >= 100:
+                player.subtractGold(100)
+                self.level += 1
 
     def getCordsx(self):
         return (self.x)
