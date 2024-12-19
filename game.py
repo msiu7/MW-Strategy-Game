@@ -233,7 +233,7 @@ while gaming:
         pygame.draw.rect(screen1, (139, 124, 124), militaryview)
 
         #Tile Level View Option
-        pygame.draw.rect(screen1, (139, 124, 124), tileLevelView)
+        pygame.draw.rect(screen1, (255, 0, 0), tileLevelView)
         
         #All User inputs work through this 
         waitingForSecond = False
@@ -278,8 +278,9 @@ while gaming:
                     
                     cost = popupText.render(f"Cost: {grid[y][x].tileValue} Gold", True, (0, 0, 0))
                     goToManage = popupText.render(f"Manage Population", True, (0, 0, 0))
-                    goToUpgrade = popupText.render(f"Upgrade Tile", True, (0, 0, 0))
-                    currentLevel = bigText.render(f"Level: {grid[y][x].level}", True, (0, 0, 0))
+                    if isinstance(grid[y][x], landTile):
+                        goToUpgrade = popupText.render(f"Upgrade Tile", True, (0, 0, 0))
+                        currentLevel = bigText.render(f"Level: {grid[y][x].level}", True, (0, 0, 0))
                     production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
                     production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
                     civiliansTile = popupText.render(f"Civilians: {grid[y][x].getCivLength()}", True, (0, 0, 0))
@@ -299,7 +300,8 @@ while gaming:
                                 popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 150, 150)
                                 exitButton = pygame.Rect((x * 25) + 25, (y * 25) + 150, 150, 25)
                                 goToManageButton = pygame.Rect((x * 25) + 50, (y * 25) + 125, 100, 25)
-                                goToUpgradeButton = pygame.Rect((x * 25) + 50, (y * 25) + 95, 100, 25)
+                                if isinstance(grid[y][x], landTile):
+                                    goToUpgradeButton = pygame.Rect((x * 25) + 50, (y * 25) + 95, 100, 25)
                                 productionXposition = x * 25 + 55
                                 production1YPosition = y * 25 + 37
                                 production2YPosition = y * 25 + 51
@@ -311,7 +313,8 @@ while gaming:
                                 popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 150, 150, 150)
                                 exitButton = pygame.Rect((x * 25) + 25, (y * 25) - 25, 150, 25)
                                 goToManageButton = pygame.Rect((x * 25) + 50, (y * 25) - 50, 100, 25)
-                                goToUpgradeButton = pygame.Rect((x * 25) + 50, (y * 25) - 80, 100, 25)
+                                if isinstance(grid[y][x], landTile):
+                                    goToUpgradeButton = pygame.Rect((x * 25) + 50, (y * 25) - 80, 100, 25)
                                 productionXposition = x * 25 + 55
                                 production1YPosition = y * 25 - 120
                                 production2YPosition = y * 25 - 135
@@ -324,7 +327,8 @@ while gaming:
                                 popuprect = pygame.Rect((x * 25) - 150, (y * 25) + 25, 150, 150)
                                 exitButton = pygame.Rect((x * 25) - 150, (y * 25) + 150, 150, 25)
                                 goToManageButton = pygame.Rect((x * 25) - 128, (y * 25) + 125, 100, 25)
-                                goToUpgradeButton = pygame.Rect((x * 25) - 128, (y * 25) + 95, 100, 25)
+                                if isinstance(grid[y][x], landTile):
+                                    goToUpgradeButton = pygame.Rect((x * 25) - 128, (y * 25) + 95, 100, 25)
                                 productionXposition = x * 25 - 123
                                 production1YPosition = y * 25 + 37
                                 production2YPosition = y * 25 + 49
@@ -336,7 +340,8 @@ while gaming:
                                 popuprect = pygame.Rect((x * 25) - 150, (y * 25) - 150, 150, 150)
                                 exitButton = pygame.Rect((x * 25) - 150, (y * 25) - 25, 150, 25)
                                 goToManageButton = pygame.Rect((x * 25) - 128, (y * 25) - 50, 100, 25)
-                                goToUpgradeButton = pygame.Rect((x * 25) - 128, (y * 25) - 80, 100, 25)
+                                if isinstance(grid[y][x], landTile):
+                                    goToUpgradeButton = pygame.Rect((x * 25) - 128, (y * 25) - 80, 100, 25)
                                 productionXposition = x * 25 - 123
                                 production1YPosition = y * 25 - 120
                                 production2YPosition = y * 25 - 135
@@ -392,14 +397,16 @@ while gaming:
                         pygame.draw.rect(screen1, (211, 182, 131), popuprect)
                         pygame.draw.rect(screen1, (209, 27, 27), exitButton)
                         pygame.draw.rect(screen1, (255, 255, 255), goToManageButton)
-                        pygame.draw.rect(screen1, (255, 255, 255), goToUpgradeButton)
+                        if isinstance(grid[y][x], landTile):
+                            pygame.draw.rect(screen1, (255, 255, 255), goToUpgradeButton)
+                            screen1.blit(goToUpgrade, (productionXposition, goToUpgradeYPosition))
                         managescreen = pygame.Rect(225, 225, 800, 300)
                         screen1.blit(production1, (productionXposition, production1YPosition))
                         screen1.blit(production2, (productionXposition, production2YPosition))
                         screen1.blit(civiliansTile, (productionXposition, civiliansTileYPosition))
                         screen1.blit(soldiersTile, (productionXposition, soldiersTileYPosition))
                         screen1.blit(goToManage, (productionXposition, goToManageYPosition))
-                        screen1.blit(goToUpgrade, (productionXposition, goToUpgradeYPosition))
+                        
                         
                         
                         
@@ -424,7 +431,8 @@ while gaming:
                                     tilePopup = False
                                     break
       
-                                if goToUpgradeButton.collidepoint(event.pos):
+                                #This function is for Land Tiles only
+                                if goToUpgradeButton.collidepoint(event.pos) and isinstance(grid[y][x], landTile):
                                     isUpgradingTile = True
                                     exitButton = pygame.Rect(975, 225, 50, 50)
                                     upgradeTileButton = pygame.Rect(600, 300, 200, 50)
@@ -850,19 +858,22 @@ while gaming:
                     print("2")
                     for c in range(0, len(currentplayer.territories)):
                         print("3")
-                        if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True:
+                        #only make rectangles for land tiles (for opponents)
+                        if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True and isinstance(grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50], landTile):
                             print("4")
                             temprect = pygame.Rect(((players[a].territories[b]) % 50) * 25 + 5, ((players[a].territories[b]) // 50) * 25 + 5, 15, 15)
                             pygame.draw.rect(screen4, (211, 182, 131), temprect)
                             level = text3.render(f"{grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].level}", True, (255, 255, 255))
                             screen4.blit(level, ((((players[a].territories[b]) % 50) * 25) + 10, ((players[a].territories[b]) // 50) * 25 + 5))    
         for a in range(0, len(currentplayer.territories)):
-            temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
-            pygame.draw.rect(screen4, (211, 182, 131), temprect)
-            level = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].level}", True, (255, 255, 255))
-            screen4.blit(level, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
+            #only make rectangles for land tiles (for currentplayer)
+            if isinstance(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50], landTile):
+                temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
+                pygame.draw.rect(screen4, (211, 182, 131), temprect)
+                level = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].level}", True, (255, 255, 255))
+                screen4.blit(level, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen4)
-        pygame.draw.rect(screen1, (139, 124, 124), tileLevelView)
+        pygame.draw.rect(screen1, (255, 0, 0), tileLevelView)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if tileLevelView.collidepoint(event.pos):
