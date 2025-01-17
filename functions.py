@@ -339,13 +339,19 @@ def giveTilesProduction(grid):
             grid[row][col].setProduction()
 
 def landBattle(player1, player2, grid):
-    Background_color = (48, 55, 191)
+    fighting = True 
+    
     SCREEN_WIDTH = 1250
     SCREEN_HEIGHT = 850
     screen0 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+    Background_color = (48, 55, 191)
     screen0.fill(Background_color)
-    #while battle == True: (breaks the code for some reason)
-    print("working")
+    mainSquare = pygame.Rect(300, 100, 650, 650)
+    pygame.draw.rect(screen0, (0, 255, 0), mainSquare)
+    while fighting == True:
+        print("working")
+        pygame.display.flip()
+        
 
 def findPlayerFromTile(id, players):
     for a in range(len(players)):
