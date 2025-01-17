@@ -158,11 +158,11 @@ class landTile(tile):
         print(f"pop:{self.population} && popperturn:{self.populationperturn} && {player.foodConsumption} && {nextturnfood}")
 
     def upgradeTile(self, player):
-        if self.level == 1 and player.getGold() >= 50:
-                player.subtractGold(50)
+        if self.level == 1 and player.getBrick() >= 50:
+                player.subtractBrick(50)
                 self.level += 1
-        elif self.level == 2 and player.getGold() >= 100:
-                player.subtractGold(100)
+        elif self.level == 2 and player.getBrick() >= 100:
+                player.subtractBrick(100)
                 self.level += 1
 
     def getCordsx(self):
@@ -338,10 +338,10 @@ class player:
         self.foodperturn = 0
         self.brickperturn = 0
         self.gold = 1000
-        self.wood = 0
-        self.stone = 0
+        self.wood = 100
+        self.stone = 100
         self.food = 0
-        self.brick = 0
+        self.brick = 100
         self.foodConsumption = 0
         
 
