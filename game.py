@@ -437,11 +437,11 @@ while gaming:
                                     exitButton = pygame.Rect(975, 225, 50, 50)
                                     upgradeTileButton = pygame.Rect(600, 300, 200, 50)
                                     
-                                    clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50", True, (0, 0, 0))
+                                    clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50 Brick", True, (0, 0, 0))
                                     if grid[y][x].level == 1:
-                                        clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50", True, (0, 0, 0))
+                                        clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50 Brick", True, (0, 0, 0))
                                     elif grid[y][x].level == 2:
-                                        clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100", True, (0, 0, 0))
+                                        clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100 Brick", True, (0, 0, 0))
                                     elif grid[y][x].level == 3:
                                         clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
                                     
@@ -465,12 +465,12 @@ while gaming:
                                                     break
                                                 if upgradeTileButton.collidepoint(event.pos):
                                                     if grid[y][x].level == 1:
-                                                        if currentplayer.getGold() >= 50:
+                                                        if currentplayer.getBrick() >= 50:
                                                             grid[y][x].upgradeTile(currentplayer)
-                                                            clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100", True, (0, 0, 0))
+                                                            clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100 Brick", True, (0, 0, 0))
                                                             pygame.display.update()
                                                     elif grid[y][x].level == 2:
-                                                        if currentplayer.getGold() >= 100:
+                                                        if currentplayer.getBrick() >= 100:
                                                             grid[y][x].upgradeTile(currentplayer)
                                                             clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
                                                             pygame.display.update()
@@ -828,6 +828,7 @@ while gaming:
                                                     #check if both tiles are owned, if both are land, and if the attacking player has enough population to invade
                                                     if istileowned(tilecol2, tilerow2, players, grid, numplayers) and isinstance(grid[tilerow2][tilecol2], landTile) and (len(grid[tilerow1][tilecol1].population)) > 1:    
                                                         print("LAND BATTLE TIME")
+                                                        #the actual battle square here
                                                         landBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid)
                                             else:
                                                 if ((len(grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
