@@ -829,7 +829,9 @@ while gaming:
                                                     if istileowned(tilecol2, tilerow2, players, grid, numplayers) and isinstance(grid[tilerow2][tilecol2], landTile) and (len(grid[tilerow1][tilecol1].population)) > 1:    
                                                         print("LAND BATTLE TIME")
                                                         #the actual battle square here
-                                                        landBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid)
+                                                        #comment out battle screen for now
+                                                        #landBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid)
+                                                        actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
                                             else:
                                                 if ((len(grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
                                                     grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
@@ -882,3 +884,5 @@ while gaming:
                     levelView = False
                     running1 = True
         pygame.display.flip()
+
+
