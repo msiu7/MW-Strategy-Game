@@ -338,7 +338,7 @@ def giveTilesProduction(grid):
         for col in range(50):
             grid[row][col].setProduction()
 
-def landBattle(player1, player2, grid):
+def landBattle(player1, player2, tile1, tile2):
     fighting = True 
     
     SCREEN_WIDTH = 1250
@@ -352,6 +352,59 @@ def landBattle(player1, player2, grid):
         print("working")
         pygame.display.flip()
         
+
+def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, grid):   
+    player1Roll = 0
+    player2Roll = 0
+    attackingSoldierDeathCount = 0
+    defendingSoldierDeathCount = 0
+    while tile1SoldierNum != 0 and tile2SoldierNum != 0:
+        player1Roll = random.randint(1,6)
+        player2Roll = random.randint(1,6)
+        print(f"Attacker: {player1Roll}")
+        print(f"Defender: {player2Roll}")
+        if player1Roll > player2Roll:
+            tile2SoldierNum -= 1
+            defendingSoldierDeathCount += 1
+        else:
+            tile1SoldierNum -= 1
+            attackingSoldierDeathCount += 1
+    b = 0
+    if tile1SoldierNum != 0:
+        for a in range(-1, -(len(grid[id1 // 50][id1 % 50].population))):
+            if grid[id1 // 50][id1 % 50].population[a].type == "soldier":  
+                grid[id1 // 50][id1 % 50].population.pop(a)
+                a -= 1
+                b += 1
+            if b == attackingSoldierDeathCount:
+                break
+        for a in range(-1, -(len(grid[id2 // 50][id2 % 50].population))):
+            if grid[id2 // 50][id2 % 50].population[a].type == "soldier":  
+                grid[id2 // 50][id2 % 50].population.pop(a)
+                a -= 1
+        player2.subtractTerritoryFromPlayer(id2)
+        player1.addTerritoryToPlayer(id2)
+
+    else:
+        for a in range(-1, -(len(grid[id2 // 50][id2 % 50].population))):
+            if grid[id2 // 50][id2 % 50].population[a].type == "soldier":  
+                grid[id2 // 50][id2 % 50].population.pop(a)
+                a -= 1
+                b += 1
+            if b == defendingSoldierDeathCount:
+                break
+        for a in range(-1, -(len(grid[id1 // 50][id1 % 50].population))):
+            if grid[id1 // 50][id1 % 50].population[a].type == "soldier":  
+                grid[id1 // 50][id1 % 50].population.pop(a)
+                a -= 1
+        
+    pygame.display.flip()
+
+
+
+
+
+
 
 def findPlayerFromTile(id, players):
     for a in range(len(players)):
