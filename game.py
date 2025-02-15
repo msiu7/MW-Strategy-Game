@@ -687,10 +687,10 @@ while gaming:
         pygame.draw.rect(screen2, (114, 9, 219), movePopButtonMode)
         popOnOrOff = text.render(("Move:"), True, (255, 255, 255))
         if movePopMode == False:
-            print(0)
+            #print(0) 
             pygame.draw.rect(screen2, (255, 0, 0), moveMode)
         else:
-            print(1)
+            #print(1)
             pygame.draw.rect(screen2, (0, 255, 0), moveMode)
         screen2.blit(popOnOrOff, (760, 760))
         pygame.display.flip()
@@ -775,10 +775,10 @@ while gaming:
         pygame.draw.rect(screen3, (114, 9, 219), movePopButtonMode)
         popOnOrOff = text.render(("Move:"), True, (255, 255, 255))
         if movePopMode == False:
-            print(0)
+            #print(0)
             pygame.draw.rect(screen3, (255, 0, 0), moveMode)
         else:
-            print(1)
+            #print(1)
             pygame.draw.rect(screen3, (0, 255, 0), moveMode)
         screen3.blit(popOnOrOff, (760, 760))
         pygame.display.flip()
@@ -832,6 +832,7 @@ while gaming:
                                                         #comment out battle screen for now
                                                         #landBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid)
                                                         actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
+                                                        pygame.display.flip()
                                             else:
                                                 if ((len(grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
                                                     grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
