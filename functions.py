@@ -366,45 +366,75 @@ def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, g
         if player1Roll > player2Roll:
             tile2SoldierNum -= 1
             defendingSoldierDeathCount += 1
+            
+            
+            #krv experiment
+            print("Defender lost a soldier")
+            for a in range((len(grid[id2 // 50][id2 % 50].population))-1):
+                if grid[id2 // 50][id2 % 50].population[a].type == "soldier":
+                    grid[id2 // 50][id2 % 50].population.pop(a)
+                    print(f"Defender kill confirmed {tile2SoldierNum-defendingSoldierDeathCount}")
+                    break
+
+
         else:
             tile1SoldierNum -= 1
             attackingSoldierDeathCount += 1
+            print("Attacker lost a soldier")
+            for a in range((len(grid[id1 // 50][id1 % 50].population))-1):
+                if grid[id1 // 50][id1 % 50].population[a].type == "soldier":
+                    grid[id1 // 50][id1 % 50].population.pop(a)
+                    print(f"Attacker kill confirmed {tile1SoldierNum-attackingSoldierDeathCount}")
+                    break
+
+    if tile2SoldierNum == 0:
+        player2.subtractTerritoryFromPlayer(id2)
+        player1.addTerritoryToPlayer(id2)
+        pygame.display.flip()
+        
+
+    pygame.display.flip()
+    
+    
+    
+    
+    '''
     b = 0
     if tile1SoldierNum != 0:
-        for a in range(-1, -(len(grid[id1 // 50][id1 % 50].population))):
-            if grid[id1 // 50][id1 % 50].population[a].type == "soldier":  
-                grid[id1 // 50][id1 % 50].population.pop(a)
-                a -= 1
-                b += 1
+        for a in range((len(grid[id1 // 50][id1 % 50].population))-1):
+            print("preyes")
             if b == attackingSoldierDeathCount:
                 break
-        for a in range(-1, -(len(grid[id2 // 50][id2 % 50].population))):
+            if grid[id1 // 50][id1 % 50].population[a].type == "soldier":  
+                print("yes")
+                grid[id1 // 50][id1 % 50].population.pop(a)
+                a = 0
+                b += 1
+        for a in range((len(grid[id2 // 50][id2 % 50].population))-1):
             if grid[id2 // 50][id2 % 50].population[a].type == "soldier":  
+                print("hi")
                 grid[id2 // 50][id2 % 50].population.pop(a)
                 a -= 1
         player2.subtractTerritoryFromPlayer(id2)
         player1.addTerritoryToPlayer(id2)
 
     else:
-        for a in range(-1, -(len(grid[id2 // 50][id2 % 50].population))):
-            if grid[id2 // 50][id2 % 50].population[a].type == "soldier":  
-                grid[id2 // 50][id2 % 50].population.pop(a)
-                a -= 1
-                b += 1
+        for a in range((len(grid[id2 // 50][id2 % 50].population))-1):
             if b == defendingSoldierDeathCount:
                 break
-        for a in range(-1, -(len(grid[id1 // 50][id1 % 50].population))):
-            if grid[id1 // 50][id1 % 50].population[a].type == "soldier":  
+            if grid[id2 // 50][id2 % 50].population[a].type == "soldier":
+                print("wsg")  
+                grid[id2 // 50][id2 % 50].population.pop(a)
+                a = 0
+                b += 1
+            
+        for a in range((len(grid[id1 // 50][id1 % 50].population))-1):
+            if grid[id1 // 50][id1 % 50].population[a].type == "soldier":
+                print("hello") 
                 grid[id1 // 50][id1 % 50].population.pop(a)
                 a -= 1
         
-    pygame.display.flip()
-
-
-
-
-
-
+    pygame.display.flip()'''
 
 def findPlayerFromTile(id, players):
     for a in range(len(players)):
