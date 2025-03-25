@@ -389,9 +389,7 @@ def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, g
 
     if tile2SoldierNum == 0:
         player2.subtractTerritoryFromPlayer(id2)
-        player1.addTerritoryToPlayer(id2)
-        pygame.display.flip()
-        
+        player1.addTerritoryToPlayer(id2)        
 
     pygame.display.flip()
     
