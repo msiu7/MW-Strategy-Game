@@ -796,7 +796,26 @@ while gaming:
                         pygame.draw.rect(screen3, (0, 255, 0), moveMode)
                     pygame.display.flip()
         while movePopMode == True:
-            
+            for row in range(30):
+                for col in range(50):
+                    grid[row][col].draw(screen3)
+            for a in range(0, len(players)):
+                players[a].drawBorders(screen3)
+                players[a].addBordering()
+                if not a == currentplayerindex:
+                    for b in range(0, len(players[a].territories)):
+                        for c in range(0, len(currentplayer.territories)):
+                            if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True:
+                                temprect = pygame.Rect(((players[a].territories[b]) % 50) * 25 + 5, ((players[a].territories[b]) // 50) * 25 + 5, 15, 15)
+                                pygame.draw.rect(screen3, (211, 182, 131), temprect)
+                                popsoldiers = text3.render(f"{grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].getSolLength()}", True, (255, 255, 255))
+                                screen3.blit(popsoldiers, ((((players[a].territories[b]) % 50) * 25) + 10, ((players[a].territories[b]) // 50) * 25 + 5))    
+            for a in range(0, len(currentplayer.territories)):
+                temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
+                pygame.draw.rect(screen3, (211, 182, 131), temprect)
+                popsoldiers = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getSolLength()}", True, (255, 255, 255))
+                screen3.blit(popsoldiers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
+            currentplayer.drawBorders(screen3)
             waitingforclick = True
             while waitingforclick:
                 for a in range(0, len(currentplayer.territories)):
@@ -832,6 +851,13 @@ while gaming:
                                                         #comment out battle screen for now
                                                         #landBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid)
                                                         actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
+                                                        for row in range(30):
+                                                            for col in range(50):
+                                                                grid[row][col].draw(screen3)
+                                                        for a in range(0, len(players)):
+                                                            players[a].addBordering()
+                                                            players[a].drawBorders(screen3)
+                                                            
                                                         pygame.display.flip()
                                             else:
                                                 if ((len(grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
