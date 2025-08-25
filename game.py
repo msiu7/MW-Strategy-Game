@@ -188,6 +188,8 @@ moveMode = pygame.Rect(775, 800, 50, 25)
     #Tile Level View Button
 tileLevelView = pygame.Rect(650, 750, 100, 100)
 
+    #Spelunking Results Button
+spelunkingResultsView = pygame.Rect(550, 750, 100, 100)
 
     #Ask If User Wants to Expand Button
     #ultimate super dooper awesome loop!!!!!!!!!!
@@ -199,6 +201,7 @@ while gaming:
     battleview = False
     civview = False
     resourcedisplay1 = False
+    resourcedisplay2 = False
     movePopMode = False 
     levelView = False
     while running1:
@@ -234,6 +237,9 @@ while gaming:
 
         #Tile Level View Option
         pygame.draw.rect(screen1, (255, 0, 0), tileLevelView)
+
+        #Spelunking Results Option
+        pygame.draw.rect(screen1, (219, 3, 252), spelunkingResultsView)
         
         #All User inputs work through this 
         waitingForSecond = False
@@ -580,6 +586,15 @@ while gaming:
                 elif not resourcedisplay1:         
                     if resourcetab.collidepoint(event.pos):
                         resourcedisplay1 = True
+
+                if resourcedisplay2: 
+                    if spelunkingResultsView.collidepoint(event.pos):
+                        resourcedisplay2 = False
+                        
+                elif not resourcedisplay2:         
+                    if spelunkingResultsView.collidepoint(event.pos):
+                        resourcedisplay2 = True
+
                 #Player Turn Cycling
                 if endturn.collidepoint(event.pos):
                     currentplayerindex += 1
@@ -912,4 +927,4 @@ while gaming:
                     running1 = True
         pygame.display.flip()
 
-
+    while resourcedisplay2:

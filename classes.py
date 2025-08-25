@@ -63,6 +63,7 @@ class tile:
         self.functionalFoodProduction = 0
         self.spelunkingChance = 0
         self.functionalSpelunkingChance = 0
+        self.spelunkingCooldown = 0
         self.level = 1
 
     def updateFunctionalProduction(self):
@@ -343,7 +344,13 @@ class player:
         self.food = 0
         self.brick = 100
         self.foodConsumption = 0
-        
+
+        #Spelunking/Treasure Hunting Variables
+        self.lastTurnGoldFromTreasure = 0
+        self.lastTurnBrickFromTreasure = 0 
+        self.lastTurnFoodFromTreasure = 0 
+        self.lastTurnStoneFromTreasure = 0
+        self.lastTurnWoodFromTreasure = 0
 
     def updateFoodConsumption(self):
         self.foodConsumption = len(self.population) * 4
