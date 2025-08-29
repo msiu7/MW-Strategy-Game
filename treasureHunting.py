@@ -1,4 +1,5 @@
 import random
+from classes import *
 
 #code for ocean spelunking mechanic
 

@@ -3,6 +3,8 @@
 import pygame
 import random
 from array import *
+from basicResourceViewSetup import *
+from treasureHunting import *
 from classes import *
 from functions import *
 
@@ -253,15 +255,47 @@ while gaming:
             
             
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if militaryview.collidepoint(event.pos):
+                
+                if militaryview.collidepoint(event.pos): #event 1
                     battleview = True
                     running1 = False
-                if populationview.collidepoint(event.pos):
+
+                if populationview.collidepoint(event.pos): #event 2
                     civview = True
                     running1 = False
-                if tileLevelView.collidepoint(event.pos):
+
+                if tileLevelView.collidepoint(event.pos): #event 3
                     levelView = True
                     running1 = False
+                
+                if resourcetab.collidepoint(event.pos): #event 4
+                    if resourcedisplay1:
+                        resourcedisplay1 = False
+                    else:
+                        resourcedisplay1 = True
+                    resourcedisplay2 = False
+
+                if spelunkingResultsView.collidepoint(event.pos): #event 5
+                    if resourcedisplay2:
+                        resourcedisplay2 = False
+                    else:
+                        resourcedisplay2 = True
+                    resourcedisplay1 = False 
+
+                    #The lines at the end of events 4 & 5 allow for switching between the production view and treasure view
+
+                
+                #Player Turn Cycling
+                if endturn.collidepoint(event.pos): #event 6
+                    currentplayerindex += 1
+                    currentplayer.endTurnSequence(grid)
+                    if currentplayerindex == numplayers:
+                        currentplayerindex = 0
+                        turnnumber += 1
+                    currentplayer = players[currentplayerindex]
+                    resourcedisplay1 = False
+                    resourcedisplay2 = False
+
                 if event.pos[1] // 25 < 30:
                     
                     
@@ -579,31 +613,8 @@ while gaming:
                                 unownedWaitingForSecond = False
                     
                     
-                if resourcedisplay1: 
-                    if resourcetab.collidepoint(event.pos):
-                        resourcedisplay1 = False
-                        
-                elif not resourcedisplay1:         
-                    if resourcetab.collidepoint(event.pos):
-                        resourcedisplay1 = True
+                
 
-                if resourcedisplay2: 
-                    if spelunkingResultsView.collidepoint(event.pos):
-                        resourcedisplay2 = False
-                        
-                elif not resourcedisplay2:         
-                    if spelunkingResultsView.collidepoint(event.pos):
-                        resourcedisplay2 = True
-
-                #Player Turn Cycling
-                if endturn.collidepoint(event.pos):
-                    currentplayerindex += 1
-                    currentplayer.endTurnSequence(grid)
-                    if currentplayerindex == numplayers:
-                        currentplayerindex = 0
-                        turnnumber += 1
-                    currentplayer = players[currentplayerindex]
-                    resourcedisplay1 = False
                     
 
 
@@ -628,52 +639,51 @@ while gaming:
         
         #Resource display
         if resourcedisplay1:
-                #popupText = pygame.font.SysFont("Arial", 10)
-                resourcedisplay = pygame.Rect(200, 25, 850, 100)
-                pygame.draw.rect(screen1, (211, 182, 131), resourcedisplay)
-                #Icons/Labels
-                perTurnLabel = text.render(f"Per Turn:", True, (0, 0, 0))
-                screen1.blit(perTurnLabel, (300, 60))
-                totalLabel = text.render(f"Total:", True, (0, 0, 0))
-                screen1.blit(totalLabel, (300, 90))
-                resourcesLabel = text.render(f"Resources:", True, (0, 0, 0))
-                screen1.blit(resourcesLabel, (300, 30))
-                goldIcon = text.render(f"Gold", True, (0, 0, 0))
-                screen1.blit(goldIcon, (475, 30))
-                brickIcon = text.render(f"Brick", True, (0, 0, 0))
-                screen1.blit(brickIcon, (575, 30))
-                foodIcon = text.render(f"Food", True, (0, 0, 0))
-                screen1.blit(foodIcon, (675, 30))
-                stoneIcon = text.render(f"Stone", True, (0, 0, 0))
-                screen1.blit(stoneIcon, (775, 30))
-                woodIcon = text.render(f"Wood", True, (0, 0, 0))
-                screen1.blit(woodIcon, (875, 30))
+            
+            resourceViewSetup(screen1, text, "Resources:","Per Turn:", "Total:")
                 
-                totalGold = text.render(f"{currentplayer.getGold()}", True, (0, 0, 0))
-                screen1.blit(totalGold, (475, 90))
-                totalBrick = text.render(f"{currentplayer.getBrick()}", True, (0, 0, 0))
-                screen1.blit(totalBrick, (575, 90))
-                totalFood = text.render(f"{currentplayer.getFood()}", True, (0, 0, 0))
-                screen1.blit(totalFood, (675, 90))
-                totalStone = text.render(f"{currentplayer.getStone()}", True, (0, 0, 0))
-                screen1.blit(totalStone, (775, 90))
-                totalWood = text.render(f"{currentplayer.getWood()}", True, (0, 0, 0))
-                screen1.blit(totalWood, (875, 90))
+            totalGold = text.render(f"{currentplayer.getGold()}", True, (0, 0, 0))
+            screen1.blit(totalGold, (475, 90))
+            totalBrick = text.render(f"{currentplayer.getBrick()}", True, (0, 0, 0))
+            screen1.blit(totalBrick, (575, 90))
+            totalFood = text.render(f"{currentplayer.getFood()}", True, (0, 0, 0))
+            screen1.blit(totalFood, (675, 90))
+            totalStone = text.render(f"{currentplayer.getStone()}", True, (0, 0, 0))
+            screen1.blit(totalStone, (775, 90))
+            totalWood = text.render(f"{currentplayer.getWood()}", True, (0, 0, 0))
+            screen1.blit(totalWood, (875, 90))
                 
-                goldPerTurn = text.render(f"{currentplayer.goldperturn}", True, (0, 0, 0))
-                screen1.blit(goldPerTurn, (475, 60))
-                brickPerTurn = text.render(f"{currentplayer.brickperturn}", True, (0, 0, 0))
-                screen1.blit(brickPerTurn, (575, 60))
-                currentplayer.updateFoodConsumption()
-                currentplayer.updateFunctionalProductionValues(grid)
-                currentplayer.updateProductionValues(grid)
-                foodPerTurn = text.render(f"{currentplayer.foodperturn - currentplayer.foodConsumption}", True, (0, 0, 0))
-                screen1.blit(foodPerTurn, (675, 60))
-                stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
-                screen1.blit(stonePerTurn, (775, 60))
-                woodPerTurn = text.render(f"{currentplayer.woodperturn}", True, (0, 0, 0))
-                screen1.blit(woodPerTurn, (875, 60))
+            goldPerTurn = text.render(f"{currentplayer.goldperturn}", True, (0, 0, 0))
+            screen1.blit(goldPerTurn, (475, 60))
+            brickPerTurn = text.render(f"{currentplayer.brickperturn}", True, (0, 0, 0))
+            screen1.blit(brickPerTurn, (575, 60))
+            currentplayer.updateFoodConsumption()
+            currentplayer.updateFunctionalProductionValues(grid)
+            currentplayer.updateProductionValues(grid)
+            foodPerTurn = text.render(f"{currentplayer.foodperturn - currentplayer.foodConsumption}", True, (0, 0, 0))
+            screen1.blit(foodPerTurn, (675, 60))
+            stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
+            screen1.blit(stonePerTurn, (775, 60))
+            woodPerTurn = text.render(f"{currentplayer.woodperturn}", True, (0, 0, 0))
+            screen1.blit(woodPerTurn, (875, 60))
                 
+        
+
+        elif resourcedisplay2:
+            #(must be elif, not if, just if causes the rectangular box to flicker)
+            resourceViewSetup(screen1, text, "Resources:", "Found Last Turn:", "")
+
+            treasureGold = text.render(f"{currentplayer.lastTurnGoldFromTreasure}", True, (0, 0, 0))
+            screen1.blit(treasureGold, (475, 60))
+            treasureBrick = text.render(f"{currentplayer.lastTurnBrickFromTreasure}", True, (0, 0, 0))
+            screen1.blit(treasureBrick, (575, 60))
+            treasureFood = text.render(f"{currentplayer.lastTurnFoodFromTreasure}", True, (0, 0, 0))
+            screen1.blit(treasureFood, (675, 60))
+            treasureStone = text.render(f"{currentplayer.lastTurnStoneFromTreasure}", True, (0, 0, 0))
+            screen1.blit(treasureStone, (775, 60))
+            treasureWood = text.render(f"{currentplayer.lastTurnWoodFromTreasure}", True, (0, 0, 0))
+            screen1.blit(treasureWood, (875, 60))
+        
         pygame.display.update()
     
     screen2 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
@@ -927,4 +937,5 @@ while gaming:
                     running1 = True
         pygame.display.flip()
 
-    while resourcedisplay2:
+
+
