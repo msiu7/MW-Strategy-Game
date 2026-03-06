@@ -5,20 +5,9 @@ import random
 from array import *
 from basicResourceViewSetup import *
 from treasureHunting import *
-from classes import *
+from player import *
 from functions import *
-
-#Things To Work On
-
-#UI Buttons
-#Give Each Tile Resources depending on type
-#Give each player starting resources
-#Give each tile a cost
-#Population should increase every turn depending on food and capacity
-#Army is created by taking population from a tile
-#Create textures for settlement, village, city, mine, farmland?
-
-
+from oceanTile import oceanTile
 
 
 #Player and Territory Management
@@ -217,7 +206,7 @@ while gaming:
         if my < 30:
             tilex = grid[my][mx].getCordsx() 
             tiley = grid[my][mx].getCordsy()
-        wowzer = pygame.image.load('white.png')
+        wowzer = pygame.image.load('Graphics/white.png')
         
         #Recreating Screen
         screen1.fill(Background_color)

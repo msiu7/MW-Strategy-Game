@@ -1,5 +1,5 @@
 import random
-from classes import *
+from oceanTile import oceanTile
 
 #code for ocean spelunking mechanic
 
