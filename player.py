@@ -133,18 +133,6 @@ class player:
                 self.subtractTerritoryFromPlayer(zero[a])
                 self.territories[0].manuallyAddPopulation(1)
 
-            
-
-        #print(f"Numzero: {numzero}, Numpos: {numpos}")
-                #self.subtractTerritoryFromPlayer(self.territories[a])
-                #a-=1
-                #print(f"a value:{a}")
-
-
-
-
-   
-
     def addProductionToTotal(self):
         self.gold += self.goldperturn
         self.wood += self.woodperturn
@@ -158,7 +146,10 @@ class player:
     def subtractTerritoryFromPlayer(self, id):
         if len(self.territories) > 1:
             self.territories.remove(id)
-        #print(len(self.territories))
+
+    def subtractTerritoryFromPlayerInWar(self, id):
+        if len(self.territories) >= 1:
+            self.territories.remove(id)
 
     def returnNumTerritories(self):
         return len(self.territories)

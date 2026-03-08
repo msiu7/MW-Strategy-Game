@@ -56,7 +56,7 @@ def isValidGen(grid):
         return True
     return False
 
-#Work In Progess, Checks If Tile Controlled By Another Player
+#Work In Progess, Checks If Tile Controlled By Another Player (LITERALLY NOT USED ANYWHERE ?????)
 def checkIfUsedID(id, ids):
     for a in range(0, ids.size()):
         if id == ids[a]:
@@ -302,9 +302,6 @@ def checkPureAdjacency(id1, id2):
         return True
     return False 
 
-
-
-
 #Develop Forest
 def CreateForest(grid):
     foundLand = True
@@ -337,27 +334,10 @@ def createPlainsTiles(grid):
                 if not (isinstance(grid[row][col], coastalTile) or isinstance(grid[row][col], forestTile) or isinstance(grid[row][col], mountainTile)):
                     grid[row][col] = plainsTile(col * 25, row * 25, 25, 25)
 
-
-
 def giveTilesProduction(grid):
     for row in range(30):
         for col in range(50):
             grid[row][col].setProduction()
-
-def landBattle(player1, player2, tile1, tile2):
-    fighting = True 
-    
-    SCREEN_WIDTH = 1250
-    SCREEN_HEIGHT = 850
-    screen0 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-    Background_color = (48, 55, 191)
-    screen0.fill(Background_color)
-    mainSquare = pygame.Rect(300, 100, 650, 650)
-    pygame.draw.rect(screen0, (0, 255, 0), mainSquare)
-    while fighting == True:
-        print("working")
-        pygame.display.flip()
-        
 
 def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, grid):   
     player1Roll = 0
@@ -394,51 +374,10 @@ def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, g
                     break
 
     if tile2SoldierNum == 0:
-        player2.subtractTerritoryFromPlayer(id2)
+        player2.subtractTerritoryFromPlayerInWar(id2)
         player1.addTerritoryToPlayer(id2)        
 
     pygame.display.flip()
-    
-    
-    
-    
-    '''
-    b = 0
-    if tile1SoldierNum != 0:
-        for a in range((len(grid[id1 // 50][id1 % 50].population))-1):
-            print("preyes")
-            if b == attackingSoldierDeathCount:
-                break
-            if grid[id1 // 50][id1 % 50].population[a].type == "soldier":  
-                print("yes")
-                grid[id1 // 50][id1 % 50].population.pop(a)
-                a = 0
-                b += 1
-        for a in range((len(grid[id2 // 50][id2 % 50].population))-1):
-            if grid[id2 // 50][id2 % 50].population[a].type == "soldier":  
-                print("hi")
-                grid[id2 // 50][id2 % 50].population.pop(a)
-                a -= 1
-        player2.subtractTerritoryFromPlayer(id2)
-        player1.addTerritoryToPlayer(id2)
-
-    else:
-        for a in range((len(grid[id2 // 50][id2 % 50].population))-1):
-            if b == defendingSoldierDeathCount:
-                break
-            if grid[id2 // 50][id2 % 50].population[a].type == "soldier":
-                print("wsg")  
-                grid[id2 // 50][id2 % 50].population.pop(a)
-                a = 0
-                b += 1
-            
-        for a in range((len(grid[id1 // 50][id1 % 50].population))-1):
-            if grid[id1 // 50][id1 % 50].population[a].type == "soldier":
-                print("hello") 
-                grid[id1 // 50][id1 % 50].population.pop(a)
-                a -= 1
-        
-    pygame.display.flip()'''
 
 def findPlayerFromTile(id, players):
     for a in range(len(players)):

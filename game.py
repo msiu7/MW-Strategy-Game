@@ -863,7 +863,6 @@ while gaming:
                                                         print("LAND BATTLE TIME")
                                                         #the actual battle square here
                                                         #comment out battle screen for now
-                                                        #landBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid)
                                                         actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
                                                         for row in range(30):
                                                             for col in range(50):
