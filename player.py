@@ -32,10 +32,6 @@ class player:
         if color == '6':
            self.rgb = (0, 168, 157)
         
-
-        
-
-        
         #Game mechanics related variables
         self.population = []
         self.goldperturn = 0
@@ -72,9 +68,9 @@ class player:
         for a in range(0, len(self.territories)):
             grid[(self.territories[a]) // 50][(self.territories[a]) % 50].updateFunctionalProduction()
             count0 += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
-            print(f"functional: {count0}")
+            #print(f"functional: {count0}")
             count1 += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].foodProduction
-            print(f"regular: {count1}")
+            #print(f"regular: {count1}")
 
     def updateProductionValues(self, grid):
         self.woodperturn = 0
@@ -364,6 +360,52 @@ class player:
     def getFoodConsumption(self):
         return self.foodConsumption
     
+    #code for ocean spelunking mechanic
+
+    def triggerRandomEvent(self):
+        a = random.randrange(0, 5)
+        b = random.randrange(1, 21)
+        if a == 0:
+            self.lastTurnGoldFromTreasure += b
+        elif a == 1:
+            self.lastTurnBrickFromTreasure += b 
+        elif a == 2:
+            self.lastTurnFoodFromTreasure += b 
+        elif a == 3:
+            self.lastTurnStoneFromTreasure += b
+        else:
+            self.lastTurnWoodFromTreasure += b
+        print("trigger random event")
+
+    #goes through all ocean tiles that belong to a player and randomly decides whether treasure is found or not
+    def checkSpelunk(self, grid):
+        self.lastTurnGoldFromTreasure = 0
+        self.lastTurnBrickFromTreasure = 0 
+        self.lastTurnFoodFromTreasure = 0 
+        self.lastTurnStoneFromTreasure = 0
+        self.lastTurnWoodFromTreasure = 0
+        for a in range(0, len(self.territories)):
+            randomize = random.randrange(0, 100)
+            #print(f"randomize value: {randomize}")
+            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], oceanTile) and randomize < grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingChance and grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown <= 0):
+                print("got past if")
+                self.triggerRandomEvent()
+                grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown = 10
+
+    def reduceTreasureCooldown(self, grid):
+        for a in range(0, len(self.territories)):
+            if grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown != 0:
+                grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown -= 1
+                print(f"{grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown}")
+
+    def addTreasureGains(self):
+        self.gold += self.lastTurnGoldFromTreasure
+        self.wood += self.lastTurnWoodFromTreasure
+        self.stone += self.lastTurnStoneFromTreasure
+        self.food += self.lastTurnFoodFromTreasure
+        self.brick += self.lastTurnBrickFromTreasure
+        print("Treasure Gains added")
+    
     def endTurnSequence(self, grid):
         self.totalPlayerPopulation(grid)
         self.updateFunctionalProductionValues(grid)
@@ -376,7 +418,12 @@ class player:
         self.updateFunctionalProductionValues(grid)
         self.updateProductionValues(grid)
         self.updateFoodConsumption()
-        print(self.foodperturn)
-        print(f"Total Player Population: {len(self.population)}")
-        for a in range(len(self.population)):
-            print(self.population[a])
+        self.checkSpelunk(grid)
+        self.addTreasureGains()
+        self.reduceTreasureCooldown(grid)
+
+
+        #print(self.foodperturn)
+        #print(f"Total Player Population: {len(self.population)}")
+        #for a in range(len(self.population)):
+            #print(self.population[a])

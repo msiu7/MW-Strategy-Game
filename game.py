@@ -461,7 +461,7 @@ while gaming:
                                     break
       
                                 #This function is for Land Tiles only
-                                if goToUpgradeButton.collidepoint(event.pos) and isinstance(grid[y][x], landTile):
+                                if  isinstance(grid[y][x], landTile) and goToUpgradeButton.collidepoint(event.pos):
                                     isUpgradingTile = True
                                     exitButton = pygame.Rect(975, 225, 50, 50)
                                     upgradeTileButton = pygame.Rect(600, 300, 200, 50)
