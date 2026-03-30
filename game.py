@@ -4,7 +4,6 @@ import pygame
 import random
 from array import *
 from basicResourceViewSetup import *
-from treasureHunting import *
 from player import *
 from functions import *
 from oceanTile import oceanTile
@@ -859,11 +858,15 @@ while gaming:
                                                 if (not(currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()):
                                                     print("got through")
                                                     #check if both tiles are owned, if both are land, and if the attacking player has enough population to invade
-                                                    if istileowned(tilecol2, tilerow2, players, grid, numplayers) and isinstance(grid[tilerow2][tilecol2], landTile) and (len(grid[tilerow1][tilecol1].population)) > 1:    
-                                                        print("LAND BATTLE TIME")
-                                                        #the actual battle square here
-                                                        #comment out battle screen for now
-                                                        actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
+                                                    if istileowned(tilecol2, tilerow2, players, grid, numplayers) and (len(grid[tilerow1][tilecol1].population)) > 1:    
+                                                        if isinstance(grid[tilerow2][tilecol2], landTile):
+                                                            print("LAND BATTLE TIME")
+                                                            #the actual battle square here
+                                                            #comment out battle screen for now
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
+                                                        else:
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
+                                                            print("Land to water")
                                                         for row in range(30):
                                                             for col in range(50):
                                                                 grid[row][col].draw(screen3)
@@ -877,11 +880,21 @@ while gaming:
                                                     grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
                                                 if (not(currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()):
                                                     print("got through")
-                                                    if istileowned(tilecol2, tilerow2, players, grid, numplayers):
-                                                        if isinstance(grid[tilerow2][tilecol2], landTile):    
+                                                    if istileowned(tilecol2, tilerow2, players, grid, numplayers) and (len(grid[tilerow1][tilecol1].population)) > 0:
+                                                        if isinstance(grid[tilerow2][tilecol2], landTile):
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)  
                                                             print("AMPHIBIOUS ATTACK")
                                                         else:
-                                                            print("NAVAL BATTLE")   
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
+                                                            print("NAVAL BATTLE")  
+                                                            #maybe do something more with these in the future?
+                                                        for row in range(30):
+                                                            for col in range(50):
+                                                                grid[row][col].draw(screen3)
+                                                        for a in range(0, len(players)):
+                                                            players[a].addBordering()
+                                                            players[a].drawBorders(screen3)
+                                                        pygame.display.flip()
                                             waitingforclick = False
                                             waitingforclick2 = False
                         elif movePopButtonMode.collidepoint(event.pos):
