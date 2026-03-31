@@ -7,6 +7,7 @@ from basicResourceViewSetup import *
 from player import *
 from functions import *
 from oceanTile import oceanTile
+from gameMap import gameMap
 
 
 #Player and Territory Management
@@ -89,71 +90,9 @@ SCREEN_WIDTH = 1250
 SCREEN_HEIGHT = 850
 screen1 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 screen1.fill(Background_color)
-grid = []
-for row in range(30):
-    temp_row = []
-    for col in range(50):
-        x = col * 25
-        y = row * 25
-        temp_row.append(oceanTile(x, y, 25, 25))
-    grid.append(temp_row)
+mainMap = gameMap()
+mainMap.buildMap()
 
-#Generate Map
-genLand(random.randrange(0, 50), random.randrange(0, 30), grid)
-while not isValidGen(grid): 
-    genLand(10, 5, grid)
-    if checkTotalLand(grid) > 700:
-        break
-    genLand(10, 25, grid)
-    if checkTotalLand(grid) > 700:
-        break    
-    genLand(45, 5, grid)
-    if checkTotalLand(grid) > 700:
-        break
-    genLand(45, 25, grid)
-    if checkTotalLand(grid) > 700:
-        break
-x = 0
-count = 0
-for col in range(50):
-    grid[0][count] = oceanTile(x, 0, 25, 25)
-    x += 25
-    count += 1
-x = 0
-count = 0
-for col in range(50):
-    grid[29][count] = oceanTile(x, 725, 25, 25)
-    x += 25
-    count += 1
-y = 0
-count = 0
-for row in range(30):
-    grid[count][0] = oceanTile(0, y, 25, 25)
-    count += 1
-    y += 25
-y = 0
-count = 0
-for row in range(30):
-    grid[count][49] = oceanTile(1225, y, 25, 25)
-    count += 1
-    y += 25
-removeIsolatedOcean(grid)
-print(checkTotalLand(grid))
-fixCoastalTextures(grid)
-for a in range(75):
-    CreateForest(grid)
-while checkTotalMountain(grid) < 60:
-    CreateMountains(grid)
-createPlainsTiles(grid)
-randomizeTextures(grid)
-fixMountainTextures(grid)
-#Giving all Land Tiles an ID
-counter = -1
-for row in range(30):
-    for col in range(50):
-            counter += 1
-            grid[row][col].setID(counter)
-giveTilesProduction(grid)
 #Creating Buttons
 
     #Background for UI Bar
@@ -203,8 +142,8 @@ while gaming:
         my = mouse_pos[1] // 25 
         mx = mouse_pos[0] // 25
         if my < 30:
-            tilex = grid[my][mx].getCordsx() 
-            tiley = grid[my][mx].getCordsy()
+            tilex = mainMap.grid[my][mx].getCordsx() 
+            tiley = mainMap.grid[my][mx].getCordsy()
         wowzer = pygame.image.load('Graphics/white.png')
         
         #Recreating Screen
@@ -276,7 +215,7 @@ while gaming:
                 #Player Turn Cycling
                 if endturn.collidepoint(event.pos): #event 6
                     currentplayerindex += 1
-                    currentplayer.endTurnSequence(grid)
+                    currentplayer.endTurnSequence(mainMap)
                     if currentplayerindex == numplayers:
                         currentplayerindex = 0
                         turnnumber += 1
@@ -300,19 +239,19 @@ while gaming:
                     
                     unownedWaitingForSecond = True
                     for a in range(0, len(players)):
-                        if players[a].doesTileBelongToPlayer(grid[y][x].getID()):
+                        if players[a].doesTileBelongToPlayer(mainMap.grid[y][x].getID()):
                             unownedWaitingForSecond = False
                             break
                     
-                    cost = popupText.render(f"Cost: {grid[y][x].tileValue} Gold", True, (0, 0, 0))
+                    cost = popupText.render(f"Cost: {mainMap.grid[y][x].tileValue} Gold", True, (0, 0, 0))
                     goToManage = popupText.render(f"Manage Population", True, (0, 0, 0))
-                    if isinstance(grid[y][x], landTile):
+                    if isinstance(mainMap.grid[y][x], landTile):
                         goToUpgrade = popupText.render(f"Upgrade Tile", True, (0, 0, 0))
-                        currentLevel = bigText.render(f"Level: {grid[y][x].level}", True, (0, 0, 0))
-                    production1 = popupText.render(f"{grid[y][x].returnProduction1()}", True, (0, 0, 0))
-                    production2 = popupText.render(f"{grid[y][x].returnProduction2()}", True, (0, 0, 0))
-                    civiliansTile = popupText.render(f"Civilians: {grid[y][x].getCivLength()}", True, (0, 0, 0))
-                    soldiersTile = popupText.render(f"Soldiers: {grid[y][x].getSolLength()}", True, (0, 0, 0))
+                        currentLevel = bigText.render(f"Level: {mainMap.grid[y][x].level}", True, (0, 0, 0))
+                    production1 = popupText.render(f"{mainMap.grid[y][x].returnProduction1()}", True, (0, 0, 0))
+                    production2 = popupText.render(f"{mainMap.grid[y][x].returnProduction2()}", True, (0, 0, 0))
+                    civiliansTile = popupText.render(f"Civilians: {mainMap.grid[y][x].getCivLength()}", True, (0, 0, 0))
+                    soldiersTile = popupText.render(f"Soldiers: {mainMap.grid[y][x].getSolLength()}", True, (0, 0, 0))
                     production1YPosition = 0
                     production2YPosition = 0
                     productionXposition = 0
@@ -321,14 +260,14 @@ while gaming:
                     goToManageYPosition = 0
 
                     tilePopup = False
-                    if currentplayer.doesTileBelongToPlayer(grid[y][x].getID()):
+                    if currentplayer.doesTileBelongToPlayer(mainMap.grid[y][x].getID()):
                        tilePopup = True                 
-                       if grid[y][x].getCol() < 25:
-                            if grid[y][x].getRow() < 15:
+                       if mainMap.grid[y][x].getCol() < 25:
+                            if mainMap.grid[y][x].getRow() < 15:
                                 popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 150, 150)
                                 exitButton = pygame.Rect((x * 25) + 25, (y * 25) + 150, 150, 25)
                                 goToManageButton = pygame.Rect((x * 25) + 50, (y * 25) + 125, 100, 25)
-                                if isinstance(grid[y][x], landTile):
+                                if isinstance(mainMap.grid[y][x], landTile):
                                     goToUpgradeButton = pygame.Rect((x * 25) + 50, (y * 25) + 95, 100, 25)
                                 productionXposition = x * 25 + 55
                                 production1YPosition = y * 25 + 37
@@ -341,7 +280,7 @@ while gaming:
                                 popuprect = pygame.Rect((x * 25) + 25, (y * 25) - 150, 150, 150)
                                 exitButton = pygame.Rect((x * 25) + 25, (y * 25) - 25, 150, 25)
                                 goToManageButton = pygame.Rect((x * 25) + 50, (y * 25) - 50, 100, 25)
-                                if isinstance(grid[y][x], landTile):
+                                if isinstance(mainMap.grid[y][x], landTile):
                                     goToUpgradeButton = pygame.Rect((x * 25) + 50, (y * 25) - 80, 100, 25)
                                 productionXposition = x * 25 + 55
                                 production1YPosition = y * 25 - 120
@@ -351,11 +290,11 @@ while gaming:
                                 goToManageYPosition = y * 25 - 45
                                 goToUpgradeYPosition = y * 25 - 75
                        else:
-                            if grid[y][x].getRow() < 15:
+                            if mainMap.grid[y][x].getRow() < 15:
                                 popuprect = pygame.Rect((x * 25) - 150, (y * 25) + 25, 150, 150)
                                 exitButton = pygame.Rect((x * 25) - 150, (y * 25) + 150, 150, 25)
                                 goToManageButton = pygame.Rect((x * 25) - 128, (y * 25) + 125, 100, 25)
-                                if isinstance(grid[y][x], landTile):
+                                if isinstance(mainMap.grid[y][x], landTile):
                                     goToUpgradeButton = pygame.Rect((x * 25) - 128, (y * 25) + 95, 100, 25)
                                 productionXposition = x * 25 - 123
                                 production1YPosition = y * 25 + 37
@@ -368,7 +307,7 @@ while gaming:
                                 popuprect = pygame.Rect((x * 25) - 150, (y * 25) - 150, 150, 150)
                                 exitButton = pygame.Rect((x * 25) - 150, (y * 25) - 25, 150, 25)
                                 goToManageButton = pygame.Rect((x * 25) - 128, (y * 25) - 50, 100, 25)
-                                if isinstance(grid[y][x], landTile):
+                                if isinstance(mainMap.grid[y][x], landTile):
                                     goToUpgradeButton = pygame.Rect((x * 25) - 128, (y * 25) - 80, 100, 25)
                                 productionXposition = x * 25 - 123
                                 production1YPosition = y * 25 - 120
@@ -379,8 +318,8 @@ while gaming:
                                 goToUpgradeYPosition = y * 25 - 75
 
                     else:
-                        if grid[y][x].getCol() < 25:
-                            if grid[y][x].getRow() < 15:
+                        if mainMap.grid[y][x].getCol() < 25:
+                            if mainMap.grid[y][x].getRow() < 15:
                                 popuprect = pygame.Rect((x * 25) + 25, (y * 25) + 25, 100, 100)
                                 yesExpand = pygame.Rect((x * 25) + 25, (y * 25) + 115, 50, 10)
                                 noExpand = pygame.Rect((x * 25) + 75, (y * 25) + 115, 50, 10)
@@ -397,7 +336,7 @@ while gaming:
                                 production1YPosition = y * 25 - 113
                                 production2YPosition = y * 25 - 101
                         else:
-                            if grid[y][x].getRow() < 15:
+                            if mainMap.grid[y][x].getRow() < 15:
                                 popuprect = pygame.Rect((x * 25) - 125, (y * 25) + 25, 100, 100)
                                 yesExpand = pygame.Rect((x * 25) - 125, (y * 25) + 115, 50, 10)
                                 noExpand = pygame.Rect((x * 25) - 75, (y * 25) + 115, 50, 10)
@@ -420,12 +359,12 @@ while gaming:
 
                         for row in range(30):
                             for col in range(50):
-                                grid[row][col].draw(screen1)
+                                mainMap.grid[row][col].draw(screen1)
 
                         pygame.draw.rect(screen1, (211, 182, 131), popuprect)
                         pygame.draw.rect(screen1, (209, 27, 27), exitButton)
                         pygame.draw.rect(screen1, (255, 255, 255), goToManageButton)
-                        if isinstance(grid[y][x], landTile):
+                        if isinstance(mainMap.grid[y][x], landTile):
                             pygame.draw.rect(screen1, (255, 255, 255), goToUpgradeButton)
                             screen1.blit(goToUpgrade, (productionXposition, goToUpgradeYPosition))
                         managescreen = pygame.Rect(225, 225, 800, 300)
@@ -460,23 +399,23 @@ while gaming:
                                     break
       
                                 #This function is for Land Tiles only
-                                if  isinstance(grid[y][x], landTile) and goToUpgradeButton.collidepoint(event.pos):
+                                if  isinstance(mainMap.grid[y][x], landTile) and goToUpgradeButton.collidepoint(event.pos):
                                     isUpgradingTile = True
                                     exitButton = pygame.Rect(975, 225, 50, 50)
                                     upgradeTileButton = pygame.Rect(600, 300, 200, 50)
                                     
                                     clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50 Brick", True, (0, 0, 0))
-                                    if grid[y][x].level == 1:
+                                    if mainMap.grid[y][x].level == 1:
                                         clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50 Brick", True, (0, 0, 0))
-                                    elif grid[y][x].level == 2:
+                                    elif mainMap.grid[y][x].level == 2:
                                         clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100 Brick", True, (0, 0, 0))
-                                    elif grid[y][x].level == 3:
+                                    elif mainMap.grid[y][x].level == 3:
                                         clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
                                     
                                     while isUpgradingTile:
                                         for row in range(30):
                                             for col in range(50):
-                                                grid[row][col].draw(screen1)                                        
+                                                mainMap.grid[row][col].draw(screen1)                                        
                                         
                                         pygame.draw.rect(screen1, (211, 182, 131), managescreen)
                                         pygame.draw.rect(screen1, (255, 0, 0), exitButton)
@@ -492,19 +431,19 @@ while gaming:
                                                     tilePopup = False
                                                     break
                                                 if upgradeTileButton.collidepoint(event.pos):
-                                                    if grid[y][x].level == 1:
+                                                    if mainMap.grid[y][x].level == 1:
                                                         if currentplayer.getBrick() >= 50:
-                                                            grid[y][x].upgradeTile(currentplayer)
+                                                            mainMap.grid[y][x].upgradeTile(currentplayer)
                                                             clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100 Brick", True, (0, 0, 0))
                                                             pygame.display.update()
-                                                    elif grid[y][x].level == 2:
+                                                    elif mainMap.grid[y][x].level == 2:
                                                         if currentplayer.getBrick() >= 100:
-                                                            grid[y][x].upgradeTile(currentplayer)
+                                                            mainMap.grid[y][x].upgradeTile(currentplayer)
                                                             clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
                                                             pygame.display.update()
                                                     else:
                                                         break
-                                                    currentLevel = bigText.render(f"Level: {grid[y][x].level}", True, (0, 0, 0))
+                                                    currentLevel = bigText.render(f"Level: {mainMap.grid[y][x].level}", True, (0, 0, 0))
                                                     screen1.blit(currentLevel, (250, 350))
                                                     
                                                     pygame.display.update()
@@ -516,10 +455,10 @@ while gaming:
                                     while isManagingPopulation:
                                         for row in range(30):
                                             for col in range(50):
-                                                grid[row][col].draw(screen1)
-                                        unemployedTile = bigText.render(f"Unemployed: {grid[y][x].getUnemployedLength()}", True, (0, 0, 0))
-                                        civiliansTile = bigText.render(f"Civilians: {grid[y][x].getCivLength()}", True, (0, 0, 0))
-                                        soldiersTile = bigText.render(f"Soldiers: {grid[y][x].getSolLength()}", True, (0, 0, 0))
+                                                mainMap.grid[row][col].draw(screen1)
+                                        unemployedTile = bigText.render(f"Unemployed: {mainMap.grid[y][x].getUnemployedLength()}", True, (0, 0, 0))
+                                        civiliansTile = bigText.render(f"Civilians: {mainMap.grid[y][x].getCivLength()}", True, (0, 0, 0))
+                                        soldiersTile = bigText.render(f"Soldiers: {mainMap.grid[y][x].getSolLength()}", True, (0, 0, 0))
                                         exitButton = pygame.Rect(975, 225, 50, 50)
                                         pygame.draw.rect(screen1, (211, 182, 131), managescreen)
                                         screen1.blit(civiliansTile, (235, 230))
@@ -542,35 +481,35 @@ while gaming:
                                                     tilePopup = False
                                                     break
                                                 if poptociv.collidepoint(event.pos):
-                                                    if grid[y][x].getUnemployedLength() > 0:
-                                                        grid[y][x].population[grid[y][x].findIndexOfType("unemployed")].changeType("civilian")
-                                                        print(f"Civ: {grid[y][x].getCivLength()}")
-                                                        print(f"Sol:{grid[y][x].getSolLength()}")
-                                                        print(f"Un:{grid[y][x].getUnemployedLength()}")
+                                                    if mainMap.grid[y][x].getUnemployedLength() > 0:
+                                                        mainMap.grid[y][x].population[mainMap.grid[y][x].findIndexOfType("unemployed")].changeType("civilian")
+                                                        print(f"Civ: {mainMap.grid[y][x].getCivLength()}")
+                                                        print(f"Sol:{mainMap.grid[y][x].getSolLength()}")
+                                                        print(f"Un:{mainMap.grid[y][x].getUnemployedLength()}")
                                                 if poptosol.collidepoint(event.pos):
-                                                    if grid[y][x].getUnemployedLength() > 0:
-                                                        grid[y][x].population[grid[y][x].findIndexOfType("unemployed")].changeType("soldier")
-                                                        print(f"Civ: {grid[y][x].getCivLength()}")
-                                                        print(f"Sol:{grid[y][x].getSolLength()}")
-                                                        print(f"Un:{grid[y][x].getUnemployedLength()}")           
+                                                    if mainMap.grid[y][x].getUnemployedLength() > 0:
+                                                        mainMap.grid[y][x].population[mainMap.grid[y][x].findIndexOfType("unemployed")].changeType("soldier")
+                                                        print(f"Civ: {mainMap.grid[y][x].getCivLength()}")
+                                                        print(f"Sol:{mainMap.grid[y][x].getSolLength()}")
+                                                        print(f"Un:{mainMap.grid[y][x].getUnemployedLength()}")           
                                                 if soltociv.collidepoint(event.pos):
-                                                    if grid[y][x].getSolLength() > 0:  
-                                                        grid[y][x].population[grid[y][x].findIndexOfType("soldier")].changeType("civilian")
-                                                        print(f"Civ: {grid[y][x].getCivLength()}")
-                                                        print(f"Sol:{grid[y][x].getSolLength()}")
-                                                        print(f"Un:{grid[y][x].getUnemployedLength()}")
+                                                    if mainMap.grid[y][x].getSolLength() > 0:  
+                                                        mainMap.grid[y][x].population[mainMap.grid[y][x].findIndexOfType("soldier")].changeType("civilian")
+                                                        print(f"Civ: {mainMap.grid[y][x].getCivLength()}")
+                                                        print(f"Sol:{mainMap.grid[y][x].getSolLength()}")
+                                                        print(f"Un:{mainMap.grid[y][x].getUnemployedLength()}")
                                                 if civtosol.collidepoint(event.pos):
-                                                    if grid[y][x].getCivLength() > 0:
-                                                        grid[y][x].population[grid[y][x].findIndexOfType("civilian")].changeType("soldier")
-                                                        print(f"Civ: {grid[y][x].getCivLength()}")
-                                                        print(f"Sol:{grid[y][x].getSolLength()}")
-                                                        print(f"Un:{grid[y][x].getUnemployedLength()}")                              
+                                                    if mainMap.grid[y][x].getCivLength() > 0:
+                                                        mainMap.grid[y][x].population[mainMap.grid[y][x].findIndexOfType("civilian")].changeType("soldier")
+                                                        print(f"Civ: {mainMap.grid[y][x].getCivLength()}")
+                                                        print(f"Sol:{mainMap.grid[y][x].getSolLength()}")
+                                                        print(f"Un:{mainMap.grid[y][x].getUnemployedLength()}")                              
 
                     while unownedWaitingForSecond:
                         
                         for row in range(30):
                             for col in range(50):
-                                grid[row][col].draw(screen1)
+                                mainMap.grid[row][col].draw(screen1)
                         
 
                         
@@ -584,16 +523,16 @@ while gaming:
                         for event in pygame.event.get():
                             if event.type == pygame.MOUSEBUTTONDOWN:
                                 if yesExpand.collidepoint(event.pos):
-                                    if currentplayer.getGold() >= grid[y][x].tileValue:
-                                        if currentplayer.checkExpandable(grid[y][x].getID(), grid):
-                                            if not(len(currentplayer.territories) == 0 and isinstance(grid[y][x], oceanTile)):
-                                                currentplayer.subtractGold(grid[y][x].tileValue)                           
-                                                currentplayer.addTerritoryToPlayer(grid[y][x].getID())
-                                                if isinstance(grid[y][x],landTile):
-                                                    grid[y][x].manuallyAddPopulation(1)
-                                                currentplayer.totalPlayerPopulation(grid)
-                                                currentplayer.updateFunctionalProductionValues(grid)
-                                                currentplayer.updateProductionValues(grid)
+                                    if currentplayer.getGold() >= mainMap.grid[y][x].tileValue:
+                                        if currentplayer.checkExpandable(mainMap.grid[y][x].getID()):
+                                            if not(len(currentplayer.territories) == 0 and isinstance(mainMap.grid[y][x], oceanTile)):
+                                                currentplayer.subtractGold(mainMap.grid[y][x].tileValue)                           
+                                                currentplayer.addTerritoryToPlayer(mainMap.grid[y][x].getID())
+                                                if isinstance(mainMap.grid[y][x],landTile):
+                                                    mainMap.grid[y][x].manuallyAddPopulation(1)
+                                                currentplayer.totalPlayerPopulation(mainMap)
+                                                currentplayer.updateFunctionalProductionValues(mainMap)
+                                                currentplayer.updateProductionValues(mainMap)
                                             
                                             
                                 if noExpand.collidepoint(event.pos):
@@ -616,7 +555,7 @@ while gaming:
 
         for row in range(30):
             for col in range(50):
-                grid[row][col].draw(screen1)
+                mainMap.grid[row][col].draw(screen1)
                 if tiley < 749:
                     screen1.blit(wowzer, (tilex, tiley))
         
@@ -646,8 +585,8 @@ while gaming:
             brickPerTurn = text.render(f"{currentplayer.brickperturn}", True, (0, 0, 0))
             screen1.blit(brickPerTurn, (575, 60))
             currentplayer.updateFoodConsumption()
-            currentplayer.updateFunctionalProductionValues(grid)
-            currentplayer.updateProductionValues(grid)
+            currentplayer.updateFunctionalProductionValues(mainMap)
+            currentplayer.updateProductionValues(mainMap)
             foodPerTurn = text.render(f"{currentplayer.foodperturn - currentplayer.foodConsumption}", True, (0, 0, 0))
             screen1.blit(foodPerTurn, (675, 60))
             stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
@@ -678,7 +617,7 @@ while gaming:
     while civview:
         for row in range(30):
             for col in range(50):
-                grid[row][col].draw(screen2)
+                mainMap.grid[row][col].draw(screen2)
         for a in range(0, len(players)):
             players[a].drawBorders(screen2)
             players[a].addBordering()
@@ -688,12 +627,12 @@ while gaming:
                         if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True:
                             temprect = pygame.Rect(((players[a].territories[b]) % 50) * 25 + 5, ((players[a].territories[b]) // 50) * 25 + 5, 15, 15)
                             pygame.draw.rect(screen2, (211, 182, 131), temprect)
-                            popnumbers = text3.render(f"{grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].getCivLength()}", True, (255, 255, 255))
+                            popnumbers = text3.render(f"{mainMap.grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].getCivLength()}", True, (255, 255, 255))
                             screen2.blit(popnumbers, ((((players[a].territories[b]) % 50) * 25) + 10, ((players[a].territories[b]) // 50) * 25 + 5))    
         for a in range(0, len(currentplayer.territories)):
             temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
             pygame.draw.rect(screen2, (211, 182, 131), temprect)
-            popnumbers = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getCivLength()}", True, (255, 255, 255))
+            popnumbers = text3.render(f"{mainMap.grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getCivLength()}", True, (255, 255, 255))
             screen2.blit(popnumbers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen2)
         pygame.draw.rect(screen2, (29, 158, 29), populationview)
@@ -727,7 +666,7 @@ while gaming:
                 for a in range(0, len(currentplayer.territories)):
                     temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
                     pygame.draw.rect(screen2, (211, 182, 131), temprect)
-                    popcivilians = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getCivLength()}", True, (255, 255, 255))
+                    popcivilians = text3.render(f"{mainMap.grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getCivLength()}", True, (255, 255, 255))
                     screen2.blit(popcivilians, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
                     pygame.display.flip()
                 for event in pygame.event.get():
@@ -745,12 +684,12 @@ while gaming:
                                             tilerow2 = event.pos[1] // 25
                                             print("click2")
                                             #LandTiles always need to have at least 1 population, OceanTiles don't
-                                            if isinstance(grid[tilerow1][tilecol1], landTile):
-                                                if ((len(grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
-                                                    grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("civilian")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("civilian"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
+                                            if isinstance(mainMap.grid[tilerow1][tilecol1], landTile):
+                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID())):
+                                                    mainMap.grid[tilerow1][tilecol1].population[mainMap.grid[tilerow1][tilecol1].findIndexOfType("civilian")].movePopulation(mainMap.grid[tilerow1][tilecol1].findIndexOfType("civilian"), tilerow1, tilecol1, tilerow2, tilecol2, mainMap.grid)
                                             else:
-                                                if ((len(grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
-                                                    grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("civilian")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("civilian"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
+                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID())):
+                                                    mainMap.grid[tilerow1][tilecol1].population[mainMap.grid[tilerow1][tilecol1].findIndexOfType("civilian")].movePopulation(mainMap.grid[tilerow1][tilecol1].findIndexOfType("civilian"), tilerow1, tilecol1, tilerow2, tilecol2, mainMap.grid)
                                             waitingforclick = False
                                             waitingforclick2 = False
                         elif movePopButtonMode.collidepoint(event.pos):
@@ -766,7 +705,7 @@ while gaming:
     while battleview:
         for row in range(30):
             for col in range(50):
-                grid[row][col].draw(screen3)
+                mainMap.grid[row][col].draw(screen3)
         for a in range(0, len(players)):
             players[a].drawBorders(screen3)
             players[a].addBordering()
@@ -776,12 +715,12 @@ while gaming:
                         if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True:
                             temprect = pygame.Rect(((players[a].territories[b]) % 50) * 25 + 5, ((players[a].territories[b]) // 50) * 25 + 5, 15, 15)
                             pygame.draw.rect(screen3, (211, 182, 131), temprect)
-                            popsoldiers = text3.render(f"{grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].getSolLength()}", True, (255, 255, 255))
+                            popsoldiers = text3.render(f"{mainMap.grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].getSolLength()}", True, (255, 255, 255))
                             screen3.blit(popsoldiers, ((((players[a].territories[b]) % 50) * 25) + 10, ((players[a].territories[b]) // 50) * 25 + 5))    
         for a in range(0, len(currentplayer.territories)):
             temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
             pygame.draw.rect(screen3, (211, 182, 131), temprect)
-            popsoldiers = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getSolLength()}", True, (255, 255, 255))
+            popsoldiers = text3.render(f"{mainMap.grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getSolLength()}", True, (255, 255, 255))
             screen3.blit(popsoldiers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen3)
         pygame.draw.rect(screen3, (139, 124, 124), militaryview)
@@ -811,7 +750,7 @@ while gaming:
         while movePopMode == True:
             for row in range(30):
                 for col in range(50):
-                    grid[row][col].draw(screen3)
+                    mainMap.grid[row][col].draw(screen3)
             for a in range(0, len(players)):
                 players[a].drawBorders(screen3)
                 players[a].addBordering()
@@ -821,12 +760,12 @@ while gaming:
                             if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True:
                                 temprect = pygame.Rect(((players[a].territories[b]) % 50) * 25 + 5, ((players[a].territories[b]) // 50) * 25 + 5, 15, 15)
                                 pygame.draw.rect(screen3, (211, 182, 131), temprect)
-                                popsoldiers = text3.render(f"{grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].getSolLength()}", True, (255, 255, 255))
+                                popsoldiers = text3.render(f"{mainMap.grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].getSolLength()}", True, (255, 255, 255))
                                 screen3.blit(popsoldiers, ((((players[a].territories[b]) % 50) * 25) + 10, ((players[a].territories[b]) // 50) * 25 + 5))    
             for a in range(0, len(currentplayer.territories)):
                 temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
                 pygame.draw.rect(screen3, (211, 182, 131), temprect)
-                popsoldiers = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getSolLength()}", True, (255, 255, 255))
+                popsoldiers = text3.render(f"{mainMap.grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getSolLength()}", True, (255, 255, 255))
                 screen3.blit(popsoldiers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
             currentplayer.drawBorders(screen3)
             waitingforclick = True
@@ -834,7 +773,7 @@ while gaming:
                 for a in range(0, len(currentplayer.territories)):
                     temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
                     pygame.draw.rect(screen3, (211, 182, 131), temprect)
-                    popsoldiers = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getSolLength()}", True, (255, 255, 255))
+                    popsoldiers = text3.render(f"{mainMap.grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].getSolLength()}", True, (255, 255, 255))
                     screen3.blit(popsoldiers, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
                     pygame.display.flip()
                 for event in pygame.event.get():
@@ -852,45 +791,45 @@ while gaming:
                                             tilerow2 = event.pos[1] // 25
                                             print("click2")
                                             #LandTiles always need to have at least 1 population, OceanTiles don't
-                                            if isinstance(grid[tilerow1][tilecol1], landTile):
-                                                if ((len(grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
-                                                    grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
-                                                if (not(currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()):
+                                            if isinstance(mainMap.grid[tilerow1][tilecol1], landTile):
+                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID())):
+                                                    mainMap.grid[tilerow1][tilecol1].population[mainMap.grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(mainMap.grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, mainMap.grid)
+                                                if (not(currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()):
                                                     print("got through")
                                                     #check if both tiles are owned, if both are land, and if the attacking player has enough population to invade
-                                                    if istileowned(tilecol2, tilerow2, players, grid, numplayers) and (len(grid[tilerow1][tilecol1].population)) > 1:    
-                                                        if isinstance(grid[tilerow2][tilecol2], landTile):
+                                                    if mainMap.istileowned(tilecol2, tilerow2, players, numplayers) and (len(mainMap.grid[tilerow1][tilecol1].population)) > 1:    
+                                                        if isinstance(mainMap.grid[tilerow2][tilecol2], landTile):
                                                             print("LAND BATTLE TIME")
                                                             #the actual battle square here
                                                             #comment out battle screen for now
-                                                            actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)
                                                         else:
-                                                            actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)
                                                             print("Land to water")
                                                         for row in range(30):
                                                             for col in range(50):
-                                                                grid[row][col].draw(screen3)
+                                                                mainMap.grid[row][col].draw(screen3)
                                                         for a in range(0, len(players)):
                                                             players[a].addBordering()
                                                             players[a].drawBorders(screen3)
                                                             
                                                         pygame.display.flip()
                                             else:
-                                                if ((len(grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID())):
-                                                    grid[tilerow1][tilecol1].population[grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, grid)
-                                                if (not(currentplayer.checkAdjacencyForMovement(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID()):
+                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID())):
+                                                    mainMap.grid[tilerow1][tilecol1].population[mainMap.grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(mainMap.grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, mainMap.grid)
+                                                if (not(currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()):
                                                     print("got through")
-                                                    if istileowned(tilecol2, tilerow2, players, grid, numplayers) and (len(grid[tilerow1][tilecol1].population)) > 0:
-                                                        if isinstance(grid[tilerow2][tilecol2], landTile):
-                                                            actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)  
+                                                    if mainMap.istileowned(tilecol2, tilerow2, players, numplayers) and (len(mainMap.grid[tilerow1][tilecol1].population)) > 0:
+                                                        if isinstance(mainMap.grid[tilerow2][tilecol2], landTile):
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)  
                                                             print("AMPHIBIOUS ATTACK")
                                                         else:
-                                                            actualBattle(currentplayer, players[findPlayerFromTile(grid[tilerow2][tilecol2].getID(), players)], grid[tilerow1][tilecol1].getSolLength(), grid[tilerow2][tilecol2].getSolLength(), grid[tilerow1][tilecol1].getID(), grid[tilerow2][tilecol2].getID(), grid)
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)
                                                             print("NAVAL BATTLE")  
                                                             #maybe do something more with these in the future?
                                                         for row in range(30):
                                                             for col in range(50):
-                                                                grid[row][col].draw(screen3)
+                                                                mainMap.grid[row][col].draw(screen3)
                                                         for a in range(0, len(players)):
                                                             players[a].addBordering()
                                                             players[a].drawBorders(screen3)
@@ -905,7 +844,7 @@ while gaming:
     while levelView:                        
         for row in range(30):
             for col in range(50):
-                grid[row][col].draw(screen4)
+                mainMap.grid[row][col].draw(screen4)
         for a in range(0, len(players)):
             players[a].drawBorders(screen4)
             players[a].addBordering()
@@ -916,18 +855,18 @@ while gaming:
                     for c in range(0, len(currentplayer.territories)):
                         print("3")
                         #only make rectangles for land tiles (for opponents)
-                        if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True and isinstance(grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50], landTile):
+                        if checkPureAdjacency(players[a].territories[b], currentplayer.territories[c]) == True and isinstance(mainMap.grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50], landTile):
                             print("4")
                             temprect = pygame.Rect(((players[a].territories[b]) % 50) * 25 + 5, ((players[a].territories[b]) // 50) * 25 + 5, 15, 15)
                             pygame.draw.rect(screen4, (211, 182, 131), temprect)
-                            level = text3.render(f"{grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].level}", True, (255, 255, 255))
+                            level = text3.render(f"{mainMap.grid[(players[a].territories[b]) // 50][(players[a].territories[b]) % 50].level}", True, (255, 255, 255))
                             screen4.blit(level, ((((players[a].territories[b]) % 50) * 25) + 10, ((players[a].territories[b]) // 50) * 25 + 5))    
         for a in range(0, len(currentplayer.territories)):
             #only make rectangles for land tiles (for currentplayer)
-            if isinstance(grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50], landTile):
+            if isinstance(mainMap.grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50], landTile):
                 temprect = pygame.Rect(((currentplayer.territories[a]) % 50) * 25 + 5, ((currentplayer.territories[a]) // 50) * 25 + 5, 15, 15)
                 pygame.draw.rect(screen4, (211, 182, 131), temprect)
-                level = text3.render(f"{grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].level}", True, (255, 255, 255))
+                level = text3.render(f"{mainMap.grid[(currentplayer.territories[a]) // 50][(currentplayer.territories[a]) % 50].level}", True, (255, 255, 255))
                 screen4.blit(level, ((((currentplayer.territories[a]) % 50) * 25) + 10, ((currentplayer.territories[a]) // 50) * 25 + 5))
         currentplayer.drawBorders(screen4)
         pygame.draw.rect(screen1, (255, 0, 0), tileLevelView)

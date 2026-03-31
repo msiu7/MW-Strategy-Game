@@ -62,61 +62,61 @@ class player:
         if self.food < 0:
             self.food = 0
     
-    def updateFunctionalProductionValues(self, grid):
+    def updateFunctionalProductionValues(self, map):
         count0 = 0
         count1 = 0
         for a in range(0, len(self.territories)):
-            grid[(self.territories[a]) // 50][(self.territories[a]) % 50].updateFunctionalProduction()
-            count0 += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
+            map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].updateFunctionalProduction()
+            count0 += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
             #print(f"functional: {count0}")
-            count1 += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].foodProduction
+            count1 += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].foodProduction
             #print(f"regular: {count1}")
 
-    def updateProductionValues(self, grid):
+    def updateProductionValues(self, map):
         self.woodperturn = 0
         self.stoneperturn = 0
         self.goldperturn = 0
         self.foodperturn = 0
         self.brickperturn = 0
         for a in range(0, len(self.territories)):
-            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], forestTile)):
-                self.woodperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalWoodProduction
-                self.foodperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
-            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], mountainTile)):
-                self.stoneperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalStoneProduction
-                self.goldperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalGoldProduction
-            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50 ], coastalTile)):
-                self.brickperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalBrickProduction
-                self.foodperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
-            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50 ], plainsTile)):
-                self.foodperturn += grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
+            if (isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50], forestTile)):
+                self.woodperturn += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalWoodProduction
+                self.foodperturn += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
+            if (isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50], mountainTile)):
+                self.stoneperturn += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalStoneProduction
+                self.goldperturn += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalGoldProduction
+            if (isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50 ], coastalTile)):
+                self.brickperturn += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalBrickProduction
+                self.foodperturn += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
+            if (isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50 ], plainsTile)):
+                self.foodperturn += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].functionalFoodProduction
 
-    def totalPlayerPopulation(self, grid):
+    def totalPlayerPopulation(self, map):
         self.population = []
         for a in range(0, len(self.territories)):
-            for b in range(0, len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)):   
-                self.population.append(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])                  
+            for b in range(0, len(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)):   
+                self.population.append(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population[b])                  
 
-    def updatePopulation(self, grid):
+    def updatePopulation(self, map):
         count = 0
         for a in range(0, len(self.territories)):
-            if(isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
-                grid[(self.territories[a]) // 50][(self.territories[a]) % 50].updatePopulationPerTurn(self)  
+            if(isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
+                map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].updatePopulationPerTurn(self)  
         for a in range(0, len(self.territories)):
-            if(isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
-                grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
-                count += len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)
+            if(isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
+                map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].autoAddPopulation()
+                count += len(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population)
         if count == 0 and len(self.territories) > 0:
             b = 0
             #while loop checks if b is an oceanTile, keeps running until territories[b] is a landTile
-            while isinstance(grid[(self.territories[b]) // 50][(self.territories[b]) % 50], oceanTile):
+            while isinstance(map.grid[(self.territories[b]) // 50][(self.territories[b]) % 50], oceanTile):
                 b = random.randint(0, len(self.territories)-1)
-            grid[(self.territories[b]) // 50][(self.territories[b]) % 50].manuallyAddPopulation(1)
+            map.grid[(self.territories[b]) // 50][(self.territories[b]) % 50].manuallyAddPopulation(1)
         numzero = 0
         numpos = 0  
         zero = []
         for a in range(len(self.territories)):
-            if (len(grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population) == 0) and (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
+            if (len(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].population) == 0) and (isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
                 numzero += 1
                 zero.append(self.territories[a])
             else:
@@ -168,7 +168,7 @@ class player:
                 return True
         return False
    
-    def checkExpandable(self, id, grid):
+    def checkExpandable(self, id):
         if len(self.territories) == 0:
             return True    
         for a in range(0, len(self.borderingTerritories)):       
@@ -378,7 +378,7 @@ class player:
         print("trigger random event")
 
     #goes through all ocean tiles that belong to a player and randomly decides whether treasure is found or not
-    def checkSpelunk(self, grid):
+    def checkSpelunk(self, map):
         self.lastTurnGoldFromTreasure = 0
         self.lastTurnBrickFromTreasure = 0 
         self.lastTurnFoodFromTreasure = 0 
@@ -387,16 +387,16 @@ class player:
         for a in range(0, len(self.territories)):
             randomize = random.randrange(0, 100)
             #print(f"randomize value: {randomize}")
-            if (isinstance(grid[(self.territories[a]) // 50][(self.territories[a]) % 50], oceanTile) and randomize < grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingChance and grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown <= 0):
+            if (isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50], oceanTile) and randomize < map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingChance and map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown <= 0):
                 print("got past if")
                 self.triggerRandomEvent()
-                grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown = 10
+                map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown = 10
 
-    def reduceTreasureCooldown(self, grid):
+    def reduceTreasureCooldown(self, map):
         for a in range(0, len(self.territories)):
-            if grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown != 0:
-                grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown -= 1
-                print(f"{grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown}")
+            if map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown != 0:
+                map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown -= 1
+                print(f"{map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown}")
 
     def addTreasureGains(self):
         self.gold += self.lastTurnGoldFromTreasure
@@ -406,21 +406,21 @@ class player:
         self.brick += self.lastTurnBrickFromTreasure
         print("Treasure Gains added")
     
-    def endTurnSequence(self, grid):
-        self.totalPlayerPopulation(grid)
-        self.updateFunctionalProductionValues(grid)
-        self.updateProductionValues(grid)
+    def endTurnSequence(self, map):
+        self.totalPlayerPopulation(map)
+        self.updateFunctionalProductionValues(map)
+        self.updateProductionValues(map)
         self.updateFoodConsumption()           
-        self.updatePopulation(grid)
+        self.updatePopulation(map)
         self.addProductionToTotal()           
         self.consumeFood()
-        self.totalPlayerPopulation(grid)
-        self.updateFunctionalProductionValues(grid)
-        self.updateProductionValues(grid)
+        self.totalPlayerPopulation(map)
+        self.updateFunctionalProductionValues(map)
+        self.updateProductionValues(map)
         self.updateFoodConsumption()
-        self.checkSpelunk(grid)
+        self.checkSpelunk(map)
         self.addTreasureGains()
-        self.reduceTreasureCooldown(grid)
+        self.reduceTreasureCooldown(map)
 
 
         #print(self.foodperturn)
