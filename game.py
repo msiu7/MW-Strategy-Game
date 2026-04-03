@@ -7,6 +7,7 @@ from player import *
 from functions import *
 from oceanTile import oceanTile
 from gameMap import gameMap
+from managePopulation import managePopulation
 
 
 #Player and Territory Management
@@ -433,65 +434,12 @@ while gaming and numplayers != 0:
                                                     currentLevel = bigText.render(f"Level: {mainMap.grid[y][x].level}", True, (0, 0, 0))
                                                     screen1.blit(currentLevel, (250, 350))
                                                     
-                                                    pygame.display.update()
-                                                        
+                                                    pygame.display.update() 
                                 
                                 if goToManageButton.collidepoint(event.pos):
-                                                  
-                                    isManagingPopulation = True
-                                    while isManagingPopulation:
-                                        for row in range(30):
-                                            for col in range(50):
-                                                mainMap.grid[row][col].draw(screen1)
-                                        unemployedTile = bigText.render(f"Unemployed: {mainMap.grid[y][x].getUnemployedLength()}", True, (0, 0, 0))
-                                        civiliansTile = bigText.render(f"Civilians: {mainMap.grid[y][x].getCivLength()}", True, (0, 0, 0))
-                                        soldiersTile = bigText.render(f"Soldiers: {mainMap.grid[y][x].getSolLength()}", True, (0, 0, 0))
-                                        exitButton = pygame.Rect(975, 225, 50, 50)
-                                        pygame.draw.rect(screen1, (211, 182, 131), managescreen)
-                                        screen1.blit(civiliansTile, (235, 230))
-                                        screen1.blit(soldiersTile, (235, 355))
-                                        screen1.blit(unemployedTile, (235, 470))
-                                        poptociv = pygame.Rect(495, 465, 200, 50)
-                                        poptosol = pygame.Rect(715, 465, 200, 50)
-                                        soltociv = pygame.Rect(600, 355, 200, 50)
-                                        civtosol = pygame.Rect(600, 230, 200, 50)
-                                        pygame.draw.rect(screen1, (255, 0, 0), exitButton)
-                                        pygame.draw.rect(screen1, (255, 255, 255), poptociv)
-                                        pygame.draw.rect(screen1, (255, 255, 255), poptosol)
-                                        pygame.draw.rect(screen1, (255, 255, 255), soltociv)
-                                        pygame.draw.rect(screen1, (255, 255, 255), civtosol)
-                                        pygame.display.update()
-                                        for event in pygame.event.get():
-                                            if event.type == pygame.MOUSEBUTTONDOWN:
-                                                if exitButton.collidepoint(event.pos):
-                                                    isManagingPopulation = False
-                                                    tilePopup = False
-                                                    break
-                                                if poptociv.collidepoint(event.pos):
-                                                    if mainMap.grid[y][x].getUnemployedLength() > 0:
-                                                        mainMap.grid[y][x].population[mainMap.grid[y][x].findIndexOfType("unemployed")].changeType("civilian")
-                                                        print(f"Civ: {mainMap.grid[y][x].getCivLength()}")
-                                                        print(f"Sol:{mainMap.grid[y][x].getSolLength()}")
-                                                        print(f"Un:{mainMap.grid[y][x].getUnemployedLength()}")
-                                                if poptosol.collidepoint(event.pos):
-                                                    if mainMap.grid[y][x].getUnemployedLength() > 0:
-                                                        mainMap.grid[y][x].population[mainMap.grid[y][x].findIndexOfType("unemployed")].changeType("soldier")
-                                                        print(f"Civ: {mainMap.grid[y][x].getCivLength()}")
-                                                        print(f"Sol:{mainMap.grid[y][x].getSolLength()}")
-                                                        print(f"Un:{mainMap.grid[y][x].getUnemployedLength()}")           
-                                                if soltociv.collidepoint(event.pos):
-                                                    if mainMap.grid[y][x].getSolLength() > 0:  
-                                                        mainMap.grid[y][x].population[mainMap.grid[y][x].findIndexOfType("soldier")].changeType("civilian")
-                                                        print(f"Civ: {mainMap.grid[y][x].getCivLength()}")
-                                                        print(f"Sol:{mainMap.grid[y][x].getSolLength()}")
-                                                        print(f"Un:{mainMap.grid[y][x].getUnemployedLength()}")
-                                                if civtosol.collidepoint(event.pos):
-                                                    if mainMap.grid[y][x].getCivLength() > 0:
-                                                        mainMap.grid[y][x].population[mainMap.grid[y][x].findIndexOfType("civilian")].changeType("soldier")
-                                                        print(f"Civ: {mainMap.grid[y][x].getCivLength()}")
-                                                        print(f"Sol:{mainMap.grid[y][x].getSolLength()}")
-                                                        print(f"Un:{mainMap.grid[y][x].getUnemployedLength()}")                              
-
+                                    managePopulation(mainMap, screen1, y, x, bigText, managescreen)
+                                    tilePopup = False                  
+                                                        
                     while unownedWaitingForSecond:
                         
                         for row in range(30):
