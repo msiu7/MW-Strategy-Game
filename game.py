@@ -1,7 +1,6 @@
 #CS Club Game
 
 import pygame
-import random
 from array import *
 from basicResourceViewSetup import *
 from player import *
@@ -54,35 +53,24 @@ numplayers = 0
 running0 = True 
 while running0:
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            
+        if event.type == pygame.QUIT:
+            running0 = False
+        if event.type == pygame.MOUSEBUTTONDOWN:       
             if rect2.collidepoint(event.pos):
                 numplayers = 2
-            
-                #pygame.screen0.quit()
-                running0 = False
             if rect3.collidepoint(event.pos):
                 numplayers = 3
-                
-                running0 = False
             if rect4.collidepoint(event.pos):
                 numplayers = 4
-                
-                running0 = False
             if rect5.collidepoint(event.pos):
                 numplayers = 5
-                
-                running0 = False
             if rect6.collidepoint(event.pos):
                 numplayers = 6
-                
-                running0 = False
+            for a in range(numplayers):
+                players.append(player(str(a+1), str(a+1)))
+            currentplayer = players[currentplayerindex]        
+            running0 = False
     pygame.display.update()
-
-for a in range(numplayers):
-    players.append(player(str(a+1), str(a+1)))
-currentplayer = players[currentplayerindex] 
-
 
 #Setting up Game Screen & Tiles
 Background_color = (50, 168, 82)
@@ -123,7 +111,7 @@ spelunkingResultsView = pygame.Rect(550, 750, 100, 100)
     #Ask If User Wants to Expand Button
     #ultimate super dooper awesome loop!!!!!!!!!!
 gaming = True
-while gaming:
+while gaming and numplayers != 0:
 
 #Game Loop
     running1 = True
@@ -176,7 +164,6 @@ while gaming:
             if event.type == pygame.QUIT:
                 gaming = False
                 running1 = False
-                civview = False
             
             
             
