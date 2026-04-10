@@ -13,9 +13,7 @@ class gameMap():
     def __init__(self):
         self.grid = []
 
-    def genLand(self, xx, yy):
-        x = xx
-        y = yy
+    def genLand(self, x, y):
         while (x < 49 and x > 1) and (y < 29 and y > 1):
             self.grid[y][x] = landTile(x*25, y*25, 25, 25)
             self.grid[y + 1][x] = landTile(x*25, (y+1)*25, 25, 25)
@@ -131,94 +129,116 @@ class gameMap():
                     count += 1
         return count
 
+    def setDirectCoastalAdjacencyValues(self):
+        for row in range(29):
+            for col in range(49):
+                if isinstance(self.grid[row][col], landTile):
+                    if isinstance(self.grid[row + 1][col], landTile):
+                        self.grid[row][col].directCoastalAdjacencyValue |= (1 << 0)
+                    if isinstance(self.grid[row][col + 1], landTile):
+                        self.grid[row][col].directCoastalAdjacencyValue |= (1 << 1)
+                    if isinstance(self.grid[row][col - 1], landTile):
+                        self.grid[row][col].directCoastalAdjacencyValue |= (1 << 2)
+                    if isinstance(self.grid[row - 1][col], landTile):
+                        self.grid[row][col].directCoastalAdjacencyValue |= (1 << 3)
+                    print(f"bit image: {self.grid[row][col].directCoastalAdjacencyValue}") #converts to int, but whatever
+    '''
+    { _ A _ }
+    { B X C } tile.directCoastalAdjacencyValues = ABCD, X is the tile, 1 means land, 0 means ocean
+    { _ D _ }
+    '''
 
+    def setDiagonalCoastalAdjacencyValues(self):
+        for row in range(29):
+            for col in range(49):
+                if isinstance(self.grid[row][col], landTile):
+                    if isinstance(self.grid[row + 1][col + 1], landTile):
+                        self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 0)
+                    if isinstance(self.grid[row + 1][col - 1], landTile):
+                        self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 1)
+                    if isinstance(self.grid[row - 1][col + 1], landTile):
+                        self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 2)
+                    if isinstance(self.grid[row - 1][col - 1], landTile):
+                        self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 3)
 
+    '''
+    { A _ B }
+    { _ X _ } tile.diagonalCoastalAdjacencyValues = ABCD, X is the tile, 1 means land, 0 means ocean
+    { C _ D }
+    '''
 
     #Gives Proper Coastal Texture To All Land Tiles
     def fixCoastalTextures(self):
         for row in range(29):
             for col in range(49):
                 if isinstance(self.grid[row][col], landTile):
-                    if  (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col - 1], oceanTile) and isinstance(self.grid[row][col + 1], landTile)):                
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastL.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], oceanTile) and isinstance(self.grid[row][col - 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastR.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], oceanTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastT.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], oceanTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastB.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], oceanTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], oceanTile) and isinstance(self.grid[row][col - 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastTR.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], oceanTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], oceanTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastBL.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], oceanTile) and isinstance(self.grid[row][col + 1], oceanTile) and isinstance(self.grid[row][col - 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastBR.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], oceanTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], oceanTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastBR.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], oceanTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], oceanTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastTL.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], oceanTile) and isinstance(self.grid[row][col + 1], oceanTile) and isinstance(self.grid[row][col - 1], oceanTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/Coast3B.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], oceanTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], oceanTile) and isinstance(self.grid[row][col - 1], oceanTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/Coast3T.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], oceanTile) and isinstance(self.grid[row + 1][col], oceanTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], oceanTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/Coast3L.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], oceanTile) and isinstance(self.grid[row + 1][col], oceanTile) and isinstance(self.grid[row][col + 1], oceanTile) and isinstance(self.grid[row][col - 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/Coast3R.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], oceanTile) and isinstance(self.grid[row + 1][col], oceanTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastPH.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], oceanTile) and isinstance(self.grid[row][col - 1], oceanTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastPV.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], landTile)
-                    and isinstance(self.grid[row - 1][col - 1], landTile) and isinstance(self.grid[row - 1][col + 1], landTile) and isinstance(self.grid[row + 1][col - 1], oceanTile) and isinstance(self.grid[row + 1][col + 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastDBL.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], landTile)
-                    and isinstance(self.grid[row - 1][col - 1], landTile) and isinstance(self.grid[row - 1][col + 1], landTile) and isinstance(self.grid[row + 1][col - 1], landTile) and isinstance(self.grid[row + 1][col + 1], oceanTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastDBR.png')
-                        self.grid[row][col].setTexture(img)         
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], landTile)
-                    and isinstance(self.grid[row - 1][col - 1], oceanTile) and isinstance(self.grid[row - 1][col + 1], landTile) and isinstance(self.grid[row + 1][col - 1], landTile) and isinstance(self.grid[row + 1][col + 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastDTL.png')
-                        self.grid[row][col].setTexture(img)
-                    if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], landTile)
-                    and isinstance(self.grid[row - 1][col - 1], landTile) and isinstance(self.grid[row - 1][col + 1], oceanTile) and isinstance(self.grid[row + 1][col - 1], landTile) and isinstance(self.grid[row + 1][col + 1], landTile)):
-                        self.grid[row][col] = coastalTile(col*25, row*25, 25, 25)
-                        img = pygame.image.load('Graphics/CoastDTR.png')
-                        self.grid[row][col].setTexture(img)
+                    match self.grid[row][col].directCoastalAdjacencyValue:
+                        case 0b0001:  
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C0001.png')
+                        case 0b0010:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C0010.png')
+                        case 0b0011:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C0011.png')
+                        case 0b0100:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C0100.png')
+                        case 0b0101:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C0101.png')
+                        case 0b0110:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C0110.png')
+                        case 0b0111:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C0111.png')
+                        case 0b1000:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C1000.png')
+                        case 0b1001:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C1001.png')
+                        case 0b1010:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C1010.png')
+                        case 0b1011:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C1011.png')
+                        case 0b1100:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C1100.png')
+                        case 0b1101:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C1101.png')
+                        case 0b1110:
+                            self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                            img = pygame.image.load('Graphics/C1110.png')
+                        case 0b1111:
+                            match self.grid[row][col].diagonalCoastalAdjacencyValue:
+                                #case 0b0000:
+                                    #print("four corners")  
+                                case 0b0111:
+                                    self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                                    img = pygame.image.load('Graphics/CD0111.png')
+                                case 0b1011:
+                                    self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                                    img = pygame.image.load('Graphics/CD1011.png')
+                                case 0b1101:
+                                    self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                                    img = pygame.image.load('Graphics/CD1101.png')
+                                case 0b1110:
+                                    self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                                    img = pygame.image.load('Graphics/CD1110.png')
+                                case 0b1111:
+                                    img = pygame.image.load('Graphics/land.png')
+                                case _:
+                                    self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                                    img = pygame.image.load('Graphics/red.png')
+                        case _:
+                            img = pygame.image.load('Graphics/filler.png')
+                    self.grid[row][col].setTexture(img)
                 
     def fixMountainTextures(self):
         for row in range(29):
@@ -369,7 +389,8 @@ class gameMap():
             count += 1
             y += 25
         self.removeIsolatedOcean()
-        #print(self.checkTotalLand())
+        self.setDirectCoastalAdjacencyValues()
+        self.setDiagonalCoastalAdjacencyValues()
         self.fixCoastalTextures()
         for a in range(75):
             self.CreateForest()

@@ -10,6 +10,8 @@ class landTile(tile):
         self.image = pygame.image.load('Graphics/land.png')
         self.isCoastal = False
         self.populationperturn = 0
+        self.directCoastalAdjacencyValue = 0b0
+        self.diagonalCoastalAdjacencyValue = 0b0
 
     def updatePopulationPerTurn(self, player):
 

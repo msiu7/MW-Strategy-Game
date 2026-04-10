@@ -345,10 +345,7 @@ while gaming and numplayers != 0:
 
                     while tilePopup:
 
-                        for row in range(30):
-                            for col in range(50):
-                                mainMap.grid[row][col].draw(screen1)
-
+                        mainMap.displayMap(screen1)
                         pygame.draw.rect(screen1, (211, 182, 131), popuprect)
                         pygame.draw.rect(screen1, (209, 27, 27), exitButton)
                         pygame.draw.rect(screen1, (255, 255, 255), goToManageButton)
@@ -360,22 +357,9 @@ while gaming and numplayers != 0:
                         screen1.blit(production2, (productionXposition, production2YPosition))
                         screen1.blit(civiliansTile, (productionXposition, civiliansTileYPosition))
                         screen1.blit(soldiersTile, (productionXposition, soldiersTileYPosition))
-                        screen1.blit(goToManage, (productionXposition, goToManageYPosition))
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
+                        screen1.blit(goToManage, (productionXposition, goToManageYPosition)) 
                         
                         screen1.blit(wowzer, (x*25, y*25))
-                        
-
-
-
-
 
                         pygame.display.update()
 
@@ -401,9 +385,7 @@ while gaming and numplayers != 0:
                                         clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
                                     
                                     while isUpgradingTile:
-                                        for row in range(30):
-                                            for col in range(50):
-                                                mainMap.grid[row][col].draw(screen1)                                        
+                                        mainMap.displayMap(screen1)                                       
                                         
                                         pygame.draw.rect(screen1, (211, 182, 131), managescreen)
                                         pygame.draw.rect(screen1, (255, 0, 0), exitButton)
@@ -442,9 +424,7 @@ while gaming and numplayers != 0:
                                                         
                     while unownedWaitingForSecond:
                         
-                        for row in range(30):
-                            for col in range(50):
-                                mainMap.grid[row][col].draw(screen1)
+                        mainMap.displayMap(screen1)
                         
 
                         
@@ -550,9 +530,7 @@ while gaming and numplayers != 0:
     
     screen2 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     while civview:
-        for row in range(30):
-            for col in range(50):
-                mainMap.grid[row][col].draw(screen2)
+        mainMap.displayMap(screen2)
         for a in range(0, len(players)):
             players[a].drawBorders(screen2)
             players[a].addBordering()
@@ -638,9 +616,7 @@ while gaming and numplayers != 0:
     screen3 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     #  = pygame.Rect(1050, 750, 100, 100)              
     while battleview:
-        for row in range(30):
-            for col in range(50):
-                mainMap.grid[row][col].draw(screen3)
+        mainMap.displayMap(screen3)
         for a in range(0, len(players)):
             players[a].drawBorders(screen3)
             players[a].addBordering()
@@ -683,9 +659,7 @@ while gaming and numplayers != 0:
                         pygame.draw.rect(screen3, (0, 255, 0), moveMode)
                     pygame.display.flip()
         while movePopMode == True:
-            for row in range(30):
-                for col in range(50):
-                    mainMap.grid[row][col].draw(screen3)
+            mainMap.displayMap(screen3)
             for a in range(0, len(players)):
                 players[a].drawBorders(screen3)
                 players[a].addBordering()
@@ -741,9 +715,7 @@ while gaming and numplayers != 0:
                                                         else:
                                                             actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)
                                                             print("Land to water")
-                                                        for row in range(30):
-                                                            for col in range(50):
-                                                                mainMap.grid[row][col].draw(screen3)
+                                                        mainMap.displayMap(screen3)
                                                         for a in range(0, len(players)):
                                                             players[a].addBordering()
                                                             players[a].drawBorders(screen3)
@@ -762,9 +734,7 @@ while gaming and numplayers != 0:
                                                             actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)
                                                             print("NAVAL BATTLE")  
                                                             #maybe do something more with these in the future?
-                                                        for row in range(30):
-                                                            for col in range(50):
-                                                                mainMap.grid[row][col].draw(screen3)
+                                                        mainMap.displayMap(screen3)
                                                         for a in range(0, len(players)):
                                                             players[a].addBordering()
                                                             players[a].drawBorders(screen3)
@@ -777,9 +747,7 @@ while gaming and numplayers != 0:
 
     screen4 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     while levelView:                        
-        for row in range(30):
-            for col in range(50):
-                mainMap.grid[row][col].draw(screen4)
+        mainMap.displayMap(screen4)
         for a in range(0, len(players)):
             players[a].drawBorders(screen4)
             players[a].addBordering()
