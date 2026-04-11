@@ -44,6 +44,25 @@ class gameMap():
                     if surrounded_by_land:
                         self.grid[row][col] = landTile(col * 25, row * 25, 25, 25)
 
+    def removeCoastalAnomalies(self):
+        for row in range(1, 29):
+            for col in range(1, 49):  
+                if isinstance(self.grid[row][col], landTile):
+                    self.setDirectCoastalAdjacencyValues()
+                    self.setDiagonalCoastalAdjacencyValues()
+                    match self.grid[row][col].directCoastalAdjacencyValue:
+                        case 0b0001:
+                            #if self.grid[row][col].diagonalCoastalAdjacencyValue < 4: #delete if first two digits of diag. in binary are 00
+                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                        case 0b0010:   
+                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                        case 0b0100:
+                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                        case 0b1000:
+                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                        case _:
+                            pass
+
     #Returns Total Land Tiles
     def checkTotalLand(self):
         counter = 0
@@ -116,6 +135,32 @@ class gameMap():
                         img = pygame.image.load('Graphics/forest3.png')
                         self.grid[row][col].setTexture(img)
 
+    def createOceanBorder(self):
+        x = 0
+        count = 0
+        for col in range(50):
+            self.grid[0][count] = oceanTile(x, 0, 25, 25)
+            x += 25
+            count += 1
+        x = 0
+        count = 0
+        for col in range(50):
+            self.grid[29][count] = oceanTile(x, 725, 25, 25)
+            x += 25
+            count += 1
+        y = 0
+        count = 0
+        for row in range(30):
+            self.grid[count][0] = oceanTile(0, y, 25, 25)
+            count += 1
+            y += 25
+        y = 0
+        count = 0
+        for row in range(30):
+            self.grid[count][49] = oceanTile(1225, y, 25, 25)
+            count += 1
+            y += 25
+
     def surroundedByLand(self, row, col):
         if (isinstance(self.grid[row - 1][col], landTile) and isinstance(self.grid[row + 1][col], landTile) and isinstance(self.grid[row][col + 1], landTile) and isinstance(self.grid[row][col - 1], landTile) and isinstance(self.grid[row - 1][col - 1], landTile) and isinstance(self.grid[row - 1][col + 1], landTile) and isinstance(self.grid[row + 1][col - 1], landTile) and isinstance(self.grid[row + 1][col + 1], landTile)):
             return True
@@ -133,6 +178,7 @@ class gameMap():
         for row in range(29):
             for col in range(49):
                 if isinstance(self.grid[row][col], landTile):
+                    self.grid[row][col].directCoastalAdjacencyValue = 0
                     if isinstance(self.grid[row + 1][col], landTile):
                         self.grid[row][col].directCoastalAdjacencyValue |= (1 << 0)
                     if isinstance(self.grid[row][col + 1], landTile):
@@ -141,7 +187,7 @@ class gameMap():
                         self.grid[row][col].directCoastalAdjacencyValue |= (1 << 2)
                     if isinstance(self.grid[row - 1][col], landTile):
                         self.grid[row][col].directCoastalAdjacencyValue |= (1 << 3)
-                    print(f"bit image: {self.grid[row][col].directCoastalAdjacencyValue}") #converts to int, but whatever
+                    #print(f"bit image: {self.grid[row][col].directCoastalAdjacencyValue}") #converts to int, but whatever
     '''
     { _ A _ }
     { B X C } tile.directCoastalAdjacencyValues = ABCD, X is the tile, 1 means land, 0 means ocean
@@ -152,6 +198,7 @@ class gameMap():
         for row in range(29):
             for col in range(49):
                 if isinstance(self.grid[row][col], landTile):
+                    self.grid[row][col].diagonalCoastalAdjacencyValue = 0
                     if isinstance(self.grid[row + 1][col + 1], landTile):
                         self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 0)
                     if isinstance(self.grid[row + 1][col - 1], landTile):
@@ -217,8 +264,7 @@ class gameMap():
                             img = pygame.image.load('Graphics/C1110.png')
                         case 0b1111:
                             match self.grid[row][col].diagonalCoastalAdjacencyValue:
-                                #case 0b0000:
-                                    #print("four corners")  
+                                # a good few of these never actually happen 
                                 case 0b0111:
                                     self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
                                     img = pygame.image.load('Graphics/CD0111.png')
@@ -231,6 +277,18 @@ class gameMap():
                                 case 0b1110:
                                     self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
                                     img = pygame.image.load('Graphics/CD1110.png')
+                                case 0b0011:
+                                    self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                                    img = pygame.image.load('Graphics/CD0011.png')
+                                case 0b1010:
+                                    self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                                    img = pygame.image.load('Graphics/CD1010.png')
+                                case 0b1100:
+                                    self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                                    img = pygame.image.load('Graphics/CD1100.png')
+                                case 0b0101:
+                                    self.grid[row][col] = coastalTile(col * 25, row * 25, 25, 25)
+                                    img = pygame.image.load('Graphics/CD0101.png')
                                 case 0b1111:
                                     img = pygame.image.load('Graphics/land.png')
                                 case _:
@@ -351,7 +409,8 @@ class gameMap():
     def buildMap(self):
         self.fillWithOcean()
         self.genLand(random.randrange(0, 50), random.randrange(0, 30))
-        while not self.isValidGen(): 
+        while not self.isValidGen():
+            print("numgenerate")
             self.genLand(10, 5)
             if self.checkTotalLand() > 700:
                 break
@@ -364,31 +423,9 @@ class gameMap():
             self.genLand(45, 25)
             if self.checkTotalLand() > 700:
                 break
-        x = 0
-        count = 0
-        for col in range(50):
-            self.grid[0][count] = oceanTile(x, 0, 25, 25)
-            x += 25
-            count += 1
-        x = 0
-        count = 0
-        for col in range(50):
-            self.grid[29][count] = oceanTile(x, 725, 25, 25)
-            x += 25
-            count += 1
-        y = 0
-        count = 0
-        for row in range(30):
-            self.grid[count][0] = oceanTile(0, y, 25, 25)
-            count += 1
-            y += 25
-        y = 0
-        count = 0
-        for row in range(30):
-            self.grid[count][49] = oceanTile(1225, y, 25, 25)
-            count += 1
-            y += 25
+        self.createOceanBorder()
         self.removeIsolatedOcean()
+        self.removeCoastalAnomalies()
         self.setDirectCoastalAdjacencyValues()
         self.setDiagonalCoastalAdjacencyValues()
         self.fixCoastalTextures()
