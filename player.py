@@ -362,9 +362,9 @@ class player:
     
     #code for ocean spelunking mechanic
 
-    def triggerRandomEvent(self):
+    def triggerRandomEvent(self, tile):
         a = random.randrange(0, 5)
-        b = random.randrange(1, 21)
+        b = random.randrange(1, 21) * tile.getCivLength()
         if a == 0:
             self.lastTurnGoldFromTreasure += b
         elif a == 1:
@@ -386,10 +386,13 @@ class player:
         self.lastTurnWoodFromTreasure = 0
         for a in range(0, len(self.territories)):
             randomize = random.randrange(0, 100)
-            #print(f"randomize value: {randomize}")
-            if (isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50], oceanTile) and randomize < map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingChance and map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown <= 0):
+            print(f"randomize value: {randomize}")
+            if (isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50], oceanTile) 
+                and randomize < map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingChance 
+                and map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown <= 0 
+                and map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].getCivLength() != 0):
                 print("got past if")
-                self.triggerRandomEvent()
+                self.triggerRandomEvent(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50])
                 map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].spelunkingCooldown = 10
 
     def reduceTreasureCooldown(self, map):
@@ -404,7 +407,6 @@ class player:
         self.stone += self.lastTurnStoneFromTreasure
         self.food += self.lastTurnFoodFromTreasure
         self.brick += self.lastTurnBrickFromTreasure
-        print("Treasure Gains added")
     
     def endTurnSequence(self, map):
         self.totalPlayerPopulation(map)
