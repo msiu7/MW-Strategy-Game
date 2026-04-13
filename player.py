@@ -9,6 +9,7 @@ from forestTile import forestTile
 from coastalTile import coastalTile
 from plainsTile import plainsTile
 
+
 #Creates Unique Player
 class player:
     def __init__(self, name, color):
@@ -45,6 +46,7 @@ class player:
         self.food = 0
         self.brick = 100
         self.foodConsumption = 0
+        self.woodUse = 0
 
         #Spelunking/Treasure Hunting Variables
         self.lastTurnGoldFromTreasure = 0
@@ -61,7 +63,12 @@ class player:
         self.food -= self.foodConsumption
         if self.food < 0:
             self.food = 0
-    
+
+    def updateWoodUse(self, map):
+        self.woodUse = 0
+        for a in range(0, len(self.territories)):
+            self.woodUse += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].level
+
     def updateFunctionalProductionValues(self, map):
         count0 = 0
         count1 = 0
@@ -407,7 +414,20 @@ class player:
         self.stone += self.lastTurnStoneFromTreasure
         self.food += self.lastTurnFoodFromTreasure
         self.brick += self.lastTurnBrickFromTreasure
-    
+
+    def tileUpkeepCost(self, map):
+        checkIfAnyDowngraded = 0
+        for a in range(0, len(self.territories)):
+            if self.wood >= map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].level:
+                self.wood -= map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].level
+            else:
+                map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].downgradeTile()
+                checkIfAnyDowngraded = 1
+        #There is a small chance that if for example you have 1 wood, and level 2, the 2 will get downgraded but you still have one wood. 
+        #This code makes it so no matter what, the wood gets spent, even if the upkeep wasn't enough to keep the tile at the same level.
+        if (checkIfAnyDowngraded):
+            self.wood = 0
+
     def endTurnSequence(self, map):
         self.totalPlayerPopulation(map)
         self.updateFunctionalProductionValues(map)
@@ -416,6 +436,7 @@ class player:
         self.updatePopulation(map)
         self.addProductionToTotal()           
         self.consumeFood()
+        self.tileUpkeepCost(map)
         self.totalPlayerPopulation(map)
         self.updateFunctionalProductionValues(map)
         self.updateProductionValues(map)

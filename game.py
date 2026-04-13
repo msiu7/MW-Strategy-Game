@@ -166,9 +166,6 @@ while gaming and numplayers != 0:
                 gaming = False
                 running1 = False
             
-            
-            
-            
             if event.type == pygame.MOUSEBUTTONDOWN:
                 
                 if militaryview.collidepoint(event.pos): #event 1
@@ -375,15 +372,13 @@ while gaming and numplayers != 0:
                                     isUpgradingTile = True
                                     exitButton = pygame.Rect(975, 225, 50, 50)
                                     upgradeTileButton = pygame.Rect(600, 300, 200, 50)
-                                    
-                                    clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50 Brick", True, (0, 0, 0))
+                                    clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 25 Brick", True, (0, 0, 0))
                                     if mainMap.grid[y][x].level == 1:
                                         clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50 Brick", True, (0, 0, 0))
                                     elif mainMap.grid[y][x].level == 2:
                                         clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100 Brick", True, (0, 0, 0))
                                     elif mainMap.grid[y][x].level == 3:
                                         clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
-                                    
                                     while isUpgradingTile:
                                         mainMap.displayMap(screen1)                                       
                                         
@@ -401,7 +396,12 @@ while gaming and numplayers != 0:
                                                     tilePopup = False
                                                     break
                                                 if upgradeTileButton.collidepoint(event.pos):
-                                                    if mainMap.grid[y][x].level == 1:
+                                                    if mainMap.grid[y][x].level == 0:
+                                                        if currentplayer.getBrick() >= 25:
+                                                            mainMap.grid[y][x].upgradeTile(currentplayer)
+                                                            clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50 Brick", True, (0, 0, 0))
+                                                            pygame.display.update()
+                                                    elif mainMap.grid[y][x].level == 1:
                                                         if currentplayer.getBrick() >= 50:
                                                             mainMap.grid[y][x].upgradeTile(currentplayer)
                                                             clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100 Brick", True, (0, 0, 0))
@@ -413,6 +413,7 @@ while gaming and numplayers != 0:
                                                             pygame.display.update()
                                                     else:
                                                         break
+                                                    
                                                     currentLevel = bigText.render(f"Level: {mainMap.grid[y][x].level}", True, (0, 0, 0))
                                                     screen1.blit(currentLevel, (250, 350))
                                                     
@@ -502,11 +503,12 @@ while gaming and numplayers != 0:
             currentplayer.updateFoodConsumption()
             currentplayer.updateFunctionalProductionValues(mainMap)
             currentplayer.updateProductionValues(mainMap)
+            currentplayer.updateWoodUse(mainMap)
             foodPerTurn = text.render(f"{currentplayer.foodperturn - currentplayer.foodConsumption}", True, (0, 0, 0))
             screen1.blit(foodPerTurn, (675, 60))
             stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
             screen1.blit(stonePerTurn, (775, 60))
-            woodPerTurn = text.render(f"{currentplayer.woodperturn}", True, (0, 0, 0))
+            woodPerTurn = text.render(f"{currentplayer.woodperturn - currentplayer.woodUse}", True, (0, 0, 0))
             screen1.blit(woodPerTurn, (875, 60))
                 
         

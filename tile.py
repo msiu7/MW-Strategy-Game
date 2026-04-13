@@ -26,12 +26,19 @@ class tile:
         self.level = 1
 
     def updateFunctionalProduction(self):
-        self.functionalWoodProduction = self.woodProduction * self.getCivLength() * (2**(self.level-1))
-        self.functionalBrickProduction = self.brickProduction * self.getCivLength() * (2**(self.level-1))
-        self.functionalGoldProduction = self.goldProduction * self.getCivLength() * (2**(self.level-1))
-        self.functionalStoneProduction = self.stoneProduction * self.getCivLength() * (2**(self.level-1))
-        self.functionalFoodProduction = self.foodProduction * self.getCivLength() * (2**(self.level-1))
-        self.functionalSpelunkingChance = self.spelunkingChance * self.getCivLength() * (2**(self.level-1))
+        if self.level == 0:
+            self.functionalWoodProduction = 0
+            self.functionalBrickProduction = 0
+            self.functionalGoldProduction = 0
+            self.functionalStoneProduction = 0 
+            self.functionalFoodProduction = 0
+        else:
+            self.functionalWoodProduction = self.woodProduction * self.getCivLength() * (2**(self.level-1))
+            self.functionalBrickProduction = self.brickProduction * self.getCivLength() * (2**(self.level-1))
+            self.functionalGoldProduction = self.goldProduction * self.getCivLength() * (2**(self.level-1))
+            self.functionalStoneProduction = self.stoneProduction * self.getCivLength() * (2**(self.level-1))
+            self.functionalFoodProduction = self.foodProduction * self.getCivLength() * (2**(self.level-1))
+            self.functionalSpelunkingChance = self.spelunkingChance * self.getCivLength() * (2**(self.level-1))
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
