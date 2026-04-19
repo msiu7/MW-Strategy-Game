@@ -59,18 +59,19 @@ while running0:
         if event.type == pygame.MOUSEBUTTONDOWN:       
             if rect2.collidepoint(event.pos):
                 numplayers = 2
-            if rect3.collidepoint(event.pos):
+            elif rect3.collidepoint(event.pos):
                 numplayers = 3
-            if rect4.collidepoint(event.pos):
+            elif rect4.collidepoint(event.pos):
                 numplayers = 4
-            if rect5.collidepoint(event.pos):
+            elif rect5.collidepoint(event.pos):
                 numplayers = 5
-            if rect6.collidepoint(event.pos):
+            elif rect6.collidepoint(event.pos):
                 numplayers = 6
-            for a in range(numplayers):
-                players.append(player(str(a+1), str(a+1)))
-            currentplayer = players[currentplayerindex]        
-            running0 = False
+            if(numplayers != 0):
+                for a in range(numplayers):
+                    players.append(player(str(a+1), str(a+1)))
+                currentplayer = players[currentplayerindex]        
+                running0 = False
     pygame.display.update()
 
 #Setting up Game Screen & Tiles

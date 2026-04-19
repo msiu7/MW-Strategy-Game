@@ -52,7 +52,6 @@ class gameMap():
                     self.setDiagonalCoastalAdjacencyValues()
                     match self.grid[row][col].directCoastalAdjacencyValue:
                         case 0b0001:
-                            #if self.grid[row][col].diagonalCoastalAdjacencyValue < 4: #delete if first two digits of diag. in binary are 00
                             self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
                         case 0b0010:   
                             self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
@@ -60,6 +59,18 @@ class gameMap():
                             self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
                         case 0b1000:
                             self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                        case 0b0110:
+                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                        case 0b1001: 
+                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                        case 0b1111:
+                            match self.grid[row][col].diagonalCoastalAdjacencyValue:
+                                case 0b1001:
+                                    self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                case 0b0110:
+                                     self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                case _:
+                                    pass
                         case _:
                             pass
 
