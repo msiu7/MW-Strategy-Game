@@ -24,6 +24,12 @@ class tile:
         self.functionalSpelunkingChance = 0
         self.spelunkingCooldown = 0
         self.level = 1
+        self.relativePositionValue = 256 #default value, not attainable using the relative Position dictionary
+        #will be used for edge ocean tiles that border neither ocean nor land
+        self.relativePositionTL = 16
+        self.relativePositionTR = 16
+        self.relativePositionBL = 16
+        self.relativePositionBR = 16
 
     def updateFunctionalProduction(self):
         if self.level == 0:

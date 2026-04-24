@@ -12,6 +12,126 @@ class gameMap():
 
     def __init__(self):
         self.grid = []
+        self.relativePositionDict = { "TL" : 128,
+        "TC" : 64,
+        "TR" : 32,
+        "L" : 16,
+        "R" : 8,
+        "BL" : 4,
+        "BC" : 2,
+        "BR" : 1
+        } #based on binary (tbh not really necessary I just thought using a dictionary at some point would be nice)
+
+    def setRelativePositionForOneTile(self, row, col):
+        if (row == 0 or row == 29 or col == 0 or col == 49):
+            return
+        self.grid[row][col].relativePositionValue = 0
+        if isinstance(self.grid[row - 1][col - 1], landTile):
+            self.grid[row][col].relativePositionValue += self.relativePositionDict["TL"]
+        if isinstance(self.grid[row - 1][col], landTile):
+            self.grid[row][col].relativePositionValue += self.relativePositionDict["TC"]
+        if isinstance(self.grid[row - 1][col + 1], landTile):
+            self.grid[row][col].relativePositionValue += self.relativePositionDict["TR"]
+        if isinstance(self.grid[row][col - 1], landTile):
+            self.grid[row][col].relativePositionValue += self.relativePositionDict["L"]
+        if isinstance(self.grid[row][col + 1], landTile):
+            self.grid[row][col].relativePositionValue += self.relativePositionDict["R"]
+        if isinstance(self.grid[row + 1][col - 1], landTile):
+            self.grid[row][col].relativePositionValue += self.relativePositionDict["BL"]
+        if isinstance(self.grid[row + 1][col], landTile):
+            self.grid[row][col].relativePositionValue += self.relativePositionDict["BC"]
+        if isinstance(self.grid[row + 1][col + 1], landTile):
+            self.grid[row][col].relativePositionValue += self.relativePositionDict["BR"]
+
+    def setRelativePositionsForAllTiles(self):
+        for row in range(1, 29):
+            for col in range(1, 49):
+                self.setRelativePositionForOneTile(row, col)
+
+    def setFourBlockRelativePositionsForOneTile(self, row, col):
+        if (row == 0 or row == 29 or col == 0 or col == 49):
+            return
+        self.grid[row][col].relativePositionTL = 0
+        self.grid[row][col].relativePositionTR = 0
+        self.grid[row][col].relativePositionBL = 0
+        self.grid[row][col].relativePositionBR = 0
+        if isinstance(self.grid[row][col], landTile):
+            self.grid[row][col].relativePositionTL += 1  #(TL, TC, L, C) 8421
+            self.grid[row][col].relativePositionTR += 2  #(TC, TR, C, R) 8421
+            self.grid[row][col].relativePositionBL += 4  #(L, C, BL, BC) 8421
+            self.grid[row][col].relativePositionBR += 8  #(C, R, BC, BR) 8421
+        if isinstance(self.grid[row - 1][col - 1], landTile):
+            self.grid[row][col].relativePositionTL += 8
+        if isinstance(self.grid[row - 1][col], landTile):
+            self.grid[row][col].relativePositionTL += 4
+            self.grid[row][col].relativePositionTR += 8
+        if isinstance(self.grid[row - 1][col + 1], landTile):
+            self.grid[row][col].relativePositionTR += 4
+        if isinstance(self.grid[row][col - 1], landTile):
+            self.grid[row][col].relativePositionTL += 2
+            self.grid[row][col].relativePositionBL += 8
+        if isinstance(self.grid[row][col + 1], landTile):
+            self.grid[row][col].relativePositionTR += 1
+            self.grid[row][col].relativePositionBR += 8
+        if isinstance(self.grid[row + 1][col - 1], landTile):
+            self.grid[row][col].relativePositionBL += 2
+        if isinstance(self.grid[row + 1][col], landTile):
+            self.grid[row][col].relativePositionBL += 1
+            self.grid[row][col].relativePositionBR += 2
+        if isinstance(self.grid[row + 1][col + 1], landTile):
+            self.grid[row][col].relativePositionBR += 1
+
+    def setFourBlockRelativePositionsForAllTiles(self):
+        for row in range(1, 29):
+            for col in range(1, 49):
+                self.setFourBlockRelativePositionsForOneTile(row, col)
+
+    def eliminateDiagonalityForOneTile(self, row, col, countChanges):
+        if isinstance(self.grid[row][col], landTile):
+            if (self.grid[row][col].relativePositionTL == 9):
+                self.grid[row - 1][col - 1] = oceanTile((col - 1) * 25, (row - 1) * 25, 25, 25)
+                self.updateRelativePositionsForAllTilesAroundATile(row - 1, col - 1)
+                countChanges += 1
+            if (self.grid[row][col].relativePositionTR == 6):
+                self.grid[row - 1][col + 1] = oceanTile((col + 1) * 25, (row - 1) * 25, 25, 25)
+                self.updateRelativePositionsForAllTilesAroundATile(row - 1, col + 1)
+                countChanges += 1
+            if (self.grid[row][col].relativePositionBL == 6):
+                self.grid[row + 1][col - 1] = oceanTile((col - 1) * 25, (row + 1) * 25, 25, 25)
+                self.updateRelativePositionsForAllTilesAroundATile(row + 1, col - 1)
+                countChanges += 1
+            if (self.grid[row][col].relativePositionBR == 9):
+                self.grid[row + 1][col + 1] = oceanTile((col + 1) * 25, (row + 1) * 25, 25, 25)
+                self.updateRelativePositionsForAllTilesAroundATile(row + 1, col + 1)
+                countChanges += 1
+        else:
+            if (self.grid[row][col].relativePositionTL == 6):
+                self.grid[row - 1][col - 1] = landTile((col - 1) * 25, (row - 1) * 25, 25, 25)
+                self.updateRelativePositionsForAllTilesAroundATile(row - 1, col - 1)
+                countChanges += 1
+            if (self.grid[row][col].relativePositionTR == 9):
+                self.grid[row - 1][col + 1] = landTile((col + 1) * 25, (row - 1) * 25, 25, 25)
+                self.updateRelativePositionsForAllTilesAroundATile(row - 1, col + 1)
+                countChanges += 1
+            if (self.grid[row][col].relativePositionBL == 9):
+                self.grid[row + 1][col - 1] = landTile((col - 1) * 25, (row + 1) * 25, 25, 25)
+                self.updateRelativePositionsForAllTilesAroundATile(row + 1, col - 1)
+                countChanges += 1
+            if (self.grid[row][col].relativePositionBR == 6):
+                self.grid[row + 1][col + 1] = landTile((col + 1) * 25, (row + 1) * 25, 25, 25)
+                self.updateRelativePositionsForAllTilesAroundATile(row + 1, col + 1)
+                countChanges += 1
+
+    def eliminateDiagonalityForAllTiles(self, countChanges): #basically, land-to-land
+        for row in range(1, 29):
+            for col in range(1, 49):
+                self.eliminateDiagonalityForOneTile(row, col, countChanges)
+
+    def updateRelativePositionsForAllTilesAroundATile(self, row, col):
+        for r in range (row - 1, row + 2):
+            for c in range (col - 1, col + 2):
+                self.setRelativePositionForOneTile(r, c)
+                self.setFourBlockRelativePositionsForOneTile(r, c)
 
     def genLand(self, x, y):
         while (x < 49 and x > 1) and (y < 29 and y > 1):
@@ -45,34 +165,51 @@ class gameMap():
                         self.grid[row][col] = landTile(col * 25, row * 25, 25, 25)
 
     def removeCoastalAnomalies(self):
-        for row in range(1, 29):
-            for col in range(1, 49):  
-                if isinstance(self.grid[row][col], landTile):
-                    self.setDirectCoastalAdjacencyValues()
-                    self.setDiagonalCoastalAdjacencyValues()
-                    match self.grid[row][col].directCoastalAdjacencyValue:
-                        case 0b0001:
-                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
-                        case 0b0010:   
-                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
-                        case 0b0100:
-                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
-                        case 0b1000:
-                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
-                        case 0b0110:
-                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
-                        case 0b1001: 
-                            self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
-                        case 0b1111:
-                            match self.grid[row][col].diagonalCoastalAdjacencyValue:
-                                case 0b1001:
-                                    self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
-                                case 0b0110:
-                                     self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
-                                case _:
-                                    pass
-                        case _:
-                            pass
+        countChanges = 1
+        while(countChanges != 0):
+            countChanges = 0
+            self.setFourBlockRelativePositionsForAllTiles()
+            self.eliminateDiagonalityForAllTiles(countChanges)
+            self.setDirectCoastalAdjacencyValuesForAllTiles()
+            self.setDiagonalCoastalAdjacencyValuesForAllTiles()
+            for row in range(1, 29):
+                for col in range(1, 49):
+                    self.setDirectCoastalAdjacencyValuesForAllTiles()
+                    self.setDiagonalCoastalAdjacencyValuesForAllTiles()
+                    if isinstance(self.grid[row][col], landTile):
+                        match self.grid[row][col].directCoastalAdjacencyValue:
+                            case 0b0001:
+                                self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                countChanges += 1
+                            case 0b0010:   
+                                self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                countChanges += 1
+                            case 0b0100:
+                                self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                countChanges += 1
+                            case 0b1000:
+                                self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                countChanges += 1
+                            case 0b0110:
+                                self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                countChanges += 1
+                            case 0b1001: 
+                                self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                countChanges += 1
+                            case 0b1111:
+                                match self.grid[row][col].diagonalCoastalAdjacencyValue:
+                                    case 0b1001:
+                                        self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                        countChanges += 1
+                                    case 0b0110:
+                                        self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                                        countChanges += 1
+                                    case _:
+                                        pass
+                            case _:
+                                pass
+                    self.updateCoastalAdjacencyForAllTilesAroundATile(row, col)
+                    self.updateRelativePositionsForAllTilesAroundATile(row, col)
 
     #Returns Total Land Tiles
     def checkTotalLand(self):
@@ -185,45 +322,57 @@ class gameMap():
                     count += 1
         return count
 
-    def setDirectCoastalAdjacencyValues(self):
+    def setDirectCoastalAdjacencyValuesForAllTiles(self):
         for row in range(29):
             for col in range(49):
-                if isinstance(self.grid[row][col], landTile):
-                    self.grid[row][col].directCoastalAdjacencyValue = 0
-                    if isinstance(self.grid[row + 1][col], landTile):
-                        self.grid[row][col].directCoastalAdjacencyValue |= (1 << 0)
-                    if isinstance(self.grid[row][col + 1], landTile):
-                        self.grid[row][col].directCoastalAdjacencyValue |= (1 << 1)
-                    if isinstance(self.grid[row][col - 1], landTile):
-                        self.grid[row][col].directCoastalAdjacencyValue |= (1 << 2)
-                    if isinstance(self.grid[row - 1][col], landTile):
-                        self.grid[row][col].directCoastalAdjacencyValue |= (1 << 3)
-                    #print(f"bit image: {self.grid[row][col].directCoastalAdjacencyValue}") #converts to int, but whatever
+                self.setDirectCoastalAdjacencyValuesForOneTile(row, col)
+
+    def setDiagonalCoastalAdjacencyValuesForAllTiles(self):
+        for row in range(29):
+            for col in range(49):
+                self.setDiagonalCoastalAdjacencyValuesForOneTile(row, col)
+
+    def setDirectCoastalAdjacencyValuesForOneTile(self, row, col):
+        if isinstance(self.grid[row][col], landTile):
+            self.grid[row][col].directCoastalAdjacencyValue = 0
+            if isinstance(self.grid[row + 1][col], landTile):
+                self.grid[row][col].directCoastalAdjacencyValue |= (1 << 0)
+            if isinstance(self.grid[row][col + 1], landTile):
+                self.grid[row][col].directCoastalAdjacencyValue |= (1 << 1)
+            if isinstance(self.grid[row][col - 1], landTile):
+                self.grid[row][col].directCoastalAdjacencyValue |= (1 << 2)
+            if isinstance(self.grid[row - 1][col], landTile):
+                self.grid[row][col].directCoastalAdjacencyValue |= (1 << 3)
+            #print(f"bit image: {self.grid[row][col].directCoastalAdjacencyValue}") #converts to int, but whatever
     '''
     { _ A _ }
     { B X C } tile.directCoastalAdjacencyValues = ABCD, X is the tile, 1 means land, 0 means ocean
     { _ D _ }
     '''
 
-    def setDiagonalCoastalAdjacencyValues(self):
-        for row in range(29):
-            for col in range(49):
-                if isinstance(self.grid[row][col], landTile):
-                    self.grid[row][col].diagonalCoastalAdjacencyValue = 0
-                    if isinstance(self.grid[row + 1][col + 1], landTile):
-                        self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 0)
-                    if isinstance(self.grid[row + 1][col - 1], landTile):
-                        self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 1)
-                    if isinstance(self.grid[row - 1][col + 1], landTile):
-                        self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 2)
-                    if isinstance(self.grid[row - 1][col - 1], landTile):
-                        self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 3)
-
+    def setDiagonalCoastalAdjacencyValuesForOneTile(self, row, col):
+        if isinstance(self.grid[row][col], landTile):
+            self.grid[row][col].diagonalCoastalAdjacencyValue = 0
+            if isinstance(self.grid[row + 1][col + 1], landTile):
+                self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 0)
+            if isinstance(self.grid[row + 1][col - 1], landTile):
+                self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 1)
+            if isinstance(self.grid[row - 1][col + 1], landTile):
+                self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 2)
+            if isinstance(self.grid[row - 1][col - 1], landTile):
+                self.grid[row][col].diagonalCoastalAdjacencyValue |= (1 << 3)
+                
     '''
     { A _ B }
     { _ X _ } tile.diagonalCoastalAdjacencyValues = ABCD, X is the tile, 1 means land, 0 means ocean
     { C _ D }
     '''
+    def updateCoastalAdjacencyForAllTilesAroundATile(self, row, col):
+        for r in range (row - 1, row + 2):
+            for c in range (col - 1, col + 2):
+                self.setDirectCoastalAdjacencyValuesForOneTile(r, c)
+                self.setDiagonalCoastalAdjacencyValuesForOneTile(r, c)
+                
 
     #Gives Proper Coastal Texture To All Land Tiles
     def fixCoastalTextures(self):
@@ -307,7 +456,10 @@ class gameMap():
                                     img = pygame.image.load('Graphics/red.png')
                         case _:
                             img = pygame.image.load('Graphics/filler.png')
-                    self.grid[row][col].setTexture(img)
+                else:
+                    img = pygame.image.load('Graphics/ocean.png')
+                self.grid[row][col].setTexture(img)
+
                 
     def fixMountainTextures(self):
         for row in range(29):
@@ -437,8 +589,8 @@ class gameMap():
         self.createOceanBorder()
         self.removeIsolatedOcean()
         self.removeCoastalAnomalies()
-        self.setDirectCoastalAdjacencyValues()
-        self.setDiagonalCoastalAdjacencyValues()
+        self.setDirectCoastalAdjacencyValuesForAllTiles()
+        self.setDiagonalCoastalAdjacencyValuesForAllTiles()
         self.fixCoastalTextures()
         for a in range(75):
             self.CreateForest()
