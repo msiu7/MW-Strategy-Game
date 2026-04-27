@@ -86,6 +86,21 @@ class gameMap():
             for col in range(1, 49):
                 self.setFourBlockRelativePositionsForOneTile(row, col)
 
+    def deleteOceanKnightMovePosition(self, countChanges): #(ocean tiles are a knights move away)
+        for row in range(1, 29):
+            for col in range(1, 49):
+                if isinstance(self.grid[row][col], landTile) and self.grid[row][col].relativePositionValue in (221, 238, 243, 125):
+                    self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                    countChanges += 1
+                self.updateRelativePositionsForAllTilesAroundATile(row, col)
+
+    def deleteOneTileIslands(self):
+        for row in range(1, 29):
+            for col in range(1, 49):
+                if isinstance(self.grid[row][col], landTile) and self.grid[row][col].relativePositionValue == 0:
+                    self.grid[row][col] = oceanTile(col * 25, row * 25, 25, 25)
+                self.updateRelativePositionsForAllTilesAroundATile(row, col)
+
     def eliminateDiagonalityForOneTile(self, row, col, countChanges):
         if isinstance(self.grid[row][col], landTile):
             if (self.grid[row][col].relativePositionTL == 9):
@@ -169,6 +184,8 @@ class gameMap():
         while(countChanges != 0):
             countChanges = 0
             self.setFourBlockRelativePositionsForAllTiles()
+            self.deleteOneTileIslands()
+            self.deleteOceanKnightMovePosition(countChanges)
             self.eliminateDiagonalityForAllTiles(countChanges)
             self.setDirectCoastalAdjacencyValuesForAllTiles()
             self.setDiagonalCoastalAdjacencyValuesForAllTiles()
