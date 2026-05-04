@@ -12,7 +12,7 @@ from plainsTile import plainsTile
 
 #Creates Unique Player
 class player:
-    def __init__(self, name, color):
+    def __init__(self, name = "", color = ""):
         self.territories = []
         self.name = name
         self.color = color
