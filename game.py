@@ -382,7 +382,7 @@ while gaming and numplayers != 0:
                                                     pygame.display.update() 
                                 
                                 if goToManageButton.collidepoint(event.pos):
-                                    managePopulation(mainMap, screen1, y, x, bigText, managescreen)
+                                    managePopulation(mainMap, screen1, y, x, bigText, managescreen, currentplayer)
                                     tilePopup = False                  
                                                         
                     while unownedWaitingForSecond:

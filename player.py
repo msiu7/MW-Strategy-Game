@@ -42,7 +42,7 @@ class player:
         self.brickperturn = 0
         self.gold = 1000
         self.wood = 100
-        self.stone = 100
+        self.stone = 5
         self.food = 0
         self.brick = 100
         self.foodConsumption = 0

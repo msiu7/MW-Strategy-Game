@@ -1,6 +1,6 @@
 import pygame
 
-def managePopulation(map, screen, y, x, bigText, managescreen):
+def managePopulation(map, screen, y, x, bigText, managescreen, currentplayer):
     while(True):    
         for row in range(30):
             for col in range(50):
@@ -40,14 +40,16 @@ def managePopulation(map, screen, y, x, bigText, managescreen):
                         print(f"Sol:{map.grid[y][x].getSolLength()}")
                         print(f"Un:{map.grid[y][x].getUnemployedLength()}")           
                 if soltociv.collidepoint(event.pos):
-                    if map.grid[y][x].getSolLength() > 0:  
+                    if map.grid[y][x].getSolLength() > 0 and currentplayer.getStone() > 0:  
                         map.grid[y][x].population[map.grid[y][x].findIndexOfType("soldier")].changeType("civilian")
+                        currentplayer.stone -= 1
                         print(f"Civ: {map.grid[y][x].getCivLength()}")
                         print(f"Sol:{map.grid[y][x].getSolLength()}")
                         print(f"Un:{map.grid[y][x].getUnemployedLength()}")
                 if civtosol.collidepoint(event.pos):
-                    if map.grid[y][x].getCivLength() > 0:
+                    if map.grid[y][x].getCivLength() > 0 and currentplayer.getStone() > 0:
                         map.grid[y][x].population[map.grid[y][x].findIndexOfType("civilian")].changeType("soldier")
+                        currentplayer.stone -= 1
                         print(f"Civ: {map.grid[y][x].getCivLength()}")
                         print(f"Sol:{map.grid[y][x].getSolLength()}")
                         print(f"Un:{map.grid[y][x].getUnemployedLength()}")
