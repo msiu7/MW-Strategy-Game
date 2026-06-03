@@ -157,8 +157,7 @@ while gaming and numplayers != 0:
                     resourcedisplay1 = False 
 
                     #The lines at the end of events 4 & 5 allow for switching between the production view and treasure view
-
-                
+            
                 #Player Turn Cycling
                 if endturn.collidepoint(event.pos): #event 6
                     currentplayerindex += 1
@@ -170,19 +169,10 @@ while gaming and numplayers != 0:
                     resourcedisplay1 = False
                     resourcedisplay2 = False
 
-                if event.pos[1] // 25 < 30:
-                    
+                if event.pos[1] // 25 < 30:                   
                     
                     x = event.pos[0] // 25
-                    y = event.pos[1] // 25
-
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+                    y = event.pos[1] // 25                 
                     
                     unownedWaitingForSecond = True
                     for a in range(0, len(players)):
@@ -298,9 +288,7 @@ while gaming and numplayers != 0:
                                 costXPosition = x * 25 - 123
                                 costYPosition = y * 25 - 125
                                 production1YPosition = y * 25 - 113
-                                production2YPosition = y * 25 - 101
-                        
-                    
+                                production2YPosition = y * 25 - 101                   
 
                     while tilePopup:
 
@@ -388,9 +376,7 @@ while gaming and numplayers != 0:
                     while unownedWaitingForSecond:
                         
                         mainMap.displayMap(screen1)
-                        
-
-                        
+                                             
                         pygame.draw.rect(screen1, (211, 182, 131), popuprect)
                         pygame.draw.rect(screen1, (34, 227, 50), yesExpand)
                         pygame.draw.rect(screen1, (209, 27, 27), noExpand)
@@ -417,12 +403,6 @@ while gaming and numplayers != 0:
                                     screen1.fill(Background_color)
                                 unownedWaitingForSecond = False
                     
-                    
-                
-
-                    
-
-
                             
         #player count display
         
@@ -471,9 +451,7 @@ while gaming and numplayers != 0:
             stonePerTurn = text.render(f"{currentplayer.stoneperturn}", True, (0, 0, 0))
             screen1.blit(stonePerTurn, (775, 60))
             woodPerTurn = text.render(f"{currentplayer.woodperturn - currentplayer.woodUse}", True, (0, 0, 0))
-            screen1.blit(woodPerTurn, (875, 60))
-                
-        
+            screen1.blit(woodPerTurn, (875, 60))     
 
         elif resourcedisplay2:
             #(must be elif, not if, just if causes the rectangular box to flicker)
@@ -547,20 +525,18 @@ while gaming and numplayers != 0:
                                             print("click2")
                                             #LandTiles always need to have at least 1 population, OceanTiles don't
                                             if isinstance(mainMap.grid[tilerow1][tilecol1], landTile):
-                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID())):
+                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()) and currentplayer.getStone() > 0):
                                                     mainMap.grid[tilerow1][tilecol1].population[mainMap.grid[tilerow1][tilecol1].findIndexOfType("civilian")].movePopulation(mainMap.grid[tilerow1][tilecol1].findIndexOfType("civilian"), tilerow1, tilecol1, tilerow2, tilecol2, mainMap.grid)
+                                                    currentplayer.stone -= 1
                                             else:
-                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID())):
+                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()) and currentplayer.getStone() > 0):
                                                     mainMap.grid[tilerow1][tilecol1].population[mainMap.grid[tilerow1][tilecol1].findIndexOfType("civilian")].movePopulation(mainMap.grid[tilerow1][tilecol1].findIndexOfType("civilian"), tilerow1, tilecol1, tilerow2, tilecol2, mainMap.grid)
+                                                    currentplayer.stone -= 1
                                             waitingforclick = False
                                             waitingforclick2 = False
                         elif movePopButtonMode.collidepoint(event.pos):
                             movePopMode = False
-                            waitingforclick = False
-                        
-                
-
-            
+                            waitingforclick = False         
        
     screen3 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     #  = pygame.Rect(1050, 750, 100, 100)              
@@ -635,8 +611,9 @@ while gaming and numplayers != 0:
                                             print("click2")
                                             #LandTiles always need to have at least 1 population, OceanTiles don't
                                             if isinstance(mainMap.grid[tilerow1][tilecol1], landTile):
-                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID())):
+                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 1 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()) and currentplayer.getStone() > 0):
                                                     mainMap.grid[tilerow1][tilecol1].population[mainMap.grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(mainMap.grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, mainMap.grid)
+                                                    currentplayer.stone -= 1
                                                 if (not(currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()):
                                                     print("got through")
                                                     #check if both tiles are owned, if both are land, and if the attacking player has enough population to invade
@@ -656,8 +633,9 @@ while gaming and numplayers != 0:
                                                             
                                                         pygame.display.flip()
                                             else:
-                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID())):
+                                                if ((len(mainMap.grid[tilerow1][tilecol1].population)) > 0 and currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()) and currentplayer.getStone() > 0):
                                                     mainMap.grid[tilerow1][tilecol1].population[mainMap.grid[tilerow1][tilecol1].findIndexOfType("soldier")].movePopulation(mainMap.grid[tilerow1][tilecol1].findIndexOfType("soldier"), tilerow1, tilecol1, tilerow2, tilecol2, mainMap.grid)
+                                                    currentplayer.stone -= 1
                                                 if (not(currentplayer.checkAdjacencyForMovement(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()))) and checkPureAdjacency(mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID()):
                                                     print("got through")
                                                     if mainMap.istileowned(tilecol2, tilerow2, players, numplayers) and (len(mainMap.grid[tilerow1][tilecol1].population)) > 0:
@@ -713,6 +691,3 @@ while gaming and numplayers != 0:
                     levelView = False
                     running1 = True
         pygame.display.flip()
-
-
-
