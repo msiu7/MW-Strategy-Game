@@ -3,7 +3,7 @@
 import pygame
 from globals import *
 from array import *
-from basicResourceViewSetup import *
+from displays import *
 from player import *
 from functions import *
 from oceanTile import oceanTile
@@ -71,6 +71,9 @@ tileLevelView = pygame.Rect(650, 750, 100, 100)
     #Spelunking Results Button
 spelunkingResultsView = pygame.Rect(550, 750, 100, 100)
 
+    #Shows all player scores
+scoreboardView = pygame.Rect(450, 750, 100, 100)
+
     #Ask If User Wants to Expand Button
     #ultimate super dooper awesome loop!!!!!!!!!!
 gaming = True
@@ -84,6 +87,7 @@ while gaming and numplayers != 0:
     resourcedisplay2 = False
     movePopMode = False 
     levelView = False
+    scoreboard = False
     while running1:
         
         popupText = pygame.font.SysFont("Arial", 10)
@@ -120,6 +124,9 @@ while gaming and numplayers != 0:
 
         #Spelunking Results Option
         pygame.draw.rect(screen1, (219, 3, 252), spelunkingResultsView)
+
+        #Scoreboard Option
+        pygame.draw.rect(screen1, (207, 104, 2), scoreboardView)
         
         #All User inputs work through this 
         waitingForSecond = False
@@ -148,6 +155,7 @@ while gaming and numplayers != 0:
                     else:
                         resourcedisplay1 = True
                     resourcedisplay2 = False
+                    scoreboard = False
 
                 if spelunkingResultsView.collidepoint(event.pos): #event 5
                     if resourcedisplay2:
@@ -155,6 +163,7 @@ while gaming and numplayers != 0:
                     else:
                         resourcedisplay2 = True
                     resourcedisplay1 = False 
+                    scoreboard = False
 
                     #The lines at the end of events 4 & 5 allow for switching between the production view and treasure view
             
@@ -166,6 +175,16 @@ while gaming and numplayers != 0:
                         currentplayerindex = 0
                         turnnumber += 1
                     currentplayer = players[currentplayerindex]
+                    resourcedisplay1 = False
+                    resourcedisplay2 = False
+                    scoreboard = False
+
+                #View the Scores
+                if scoreboardView.collidepoint(event.pos): #event 7
+                    if scoreboard:
+                        scoreboard = False
+                    else:
+                        scoreboard = True
                     resourcedisplay1 = False
                     resourcedisplay2 = False
 
@@ -425,7 +444,7 @@ while gaming and numplayers != 0:
         #Resource display
         if resourcedisplay1:
             
-            resourceViewSetup(screen1, text, "Resources:","Per Turn:", "Total:")
+            displays.resourceViewSetup(screen1, text, "Resources:","Per Turn:", "Total:")
                 
             totalGold = text.render(f"{currentplayer.getGold()}", True, (0, 0, 0))
             screen1.blit(totalGold, (475, 90))
@@ -455,7 +474,7 @@ while gaming and numplayers != 0:
 
         elif resourcedisplay2:
             #(must be elif, not if, just if causes the rectangular box to flicker)
-            resourceViewSetup(screen1, text, "Resources:", "Found Last Turn:", "")
+            displays.resourceViewSetup(screen1, text, "Resources:", "Found Last Turn:", "")
 
             treasureGold = text.render(f"{currentplayer.lastTurnGoldFromTreasure}", True, (0, 0, 0))
             screen1.blit(treasureGold, (475, 60))
@@ -467,7 +486,15 @@ while gaming and numplayers != 0:
             screen1.blit(treasureStone, (775, 60))
             treasureWood = text.render(f"{currentplayer.lastTurnWoodFromTreasure}", True, (0, 0, 0))
             screen1.blit(treasureWood, (875, 60))
-        
+
+        elif scoreboard:
+            displays.makeScoreboard(screen1, numplayers, text)
+            for a in range (numplayers):
+                playerNumber = text.render(f"Player {currentplayer.name}", True, (0, 0, 0))
+                screen1.blit(playerNumber, (210, 60 + (a * 35)))
+                playerScore = text.render("Score here", True, (0, 0, 0))
+                screen1.blit(playerScore, (350, 60 + (a * 35)))
+
         pygame.display.update()
     
     screen2 = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
