@@ -7,6 +7,9 @@ class oceanTile(tile):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.image = pygame.image.load('Graphics/ocean.png')
+
+        #score per oceanTile, definitely can be changed.
+        self.score = 3
     
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))

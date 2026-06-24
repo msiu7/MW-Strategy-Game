@@ -2,11 +2,11 @@ import random
 from landTile import landTile
 import pygame
 
-def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, grid):
-    if isinstance(grid[id1 // 50][id1 % 50], landTile):
-        popOffsetConst = 1;
+def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, map):
+    if isinstance(map.grid[id1 // 50][id1 % 50], landTile):
+        popOffsetConst = 1
     else:
-        popOffsetConst = 0;
+        popOffsetConst = 0
     '''if isinstance(grid[id2 // 50][id2 % 50], landTile):
         popOffsetConst2 = 1;
     else:
@@ -15,7 +15,7 @@ def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, g
     player2Roll = 0
     attackingSoldierDeathCount = 0
     defendingSoldierDeathCount = 0
-    while (len(grid[id1 // 50][id1 % 50].population)) > popOffsetConst and tile1SoldierNum != 0 and tile2SoldierNum != 0:
+    while (len(map.grid[id1 // 50][id1 % 50].population)) > popOffsetConst and tile1SoldierNum != 0 and tile2SoldierNum != 0:
         player1Roll = random.randint(1,6)
         player2Roll = random.randint(1,6)
         print(f"Attacker: {player1Roll}")
@@ -27,10 +27,10 @@ def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, g
             
              
             print("Defender lost a soldier")
-            for a in range(len(grid[id2 // 50][id2 % 50].population)):
+            for a in range(len(map.grid[id2 // 50][id2 % 50].population)):
                 print(f"value of statement in for loop")
-                if grid[id2 // 50][id2 % 50].population[a].type == "soldier":
-                    grid[id2 // 50][id2 % 50].population.pop(a)
+                if map.grid[id2 // 50][id2 % 50].population[a].type == "soldier":
+                    map.grid[id2 // 50][id2 % 50].population.pop(a)
                     print(f"Defender kill confirmed {tile2SoldierNum}")
                     break
 
@@ -39,15 +39,21 @@ def actualBattle(player1, player2, tile1SoldierNum, tile2SoldierNum, id1, id2, g
             tile1SoldierNum -= 1
             attackingSoldierDeathCount += 1
             print("Attacker lost a soldier")
-            for a in range(len(grid[id1 // 50][id1 % 50].population)):
-                if grid[id1 // 50][id1 % 50].population[a].type == "soldier":
-                    grid[id1 // 50][id1 % 50].population.pop(a)
+            for a in range(len(map.grid[id1 // 50][id1 % 50].population)):
+                if map.grid[id1 // 50][id1 % 50].population[a].type == "soldier":
+                    map.grid[id1 // 50][id1 % 50].population.pop(a)
                     print(f"Attacker kill confirmed {tile1SoldierNum}")
                     break
 
     if tile2SoldierNum == 0:
-        player2.subtractTerritoryFromPlayerInWar(id2)
-        player1.addTerritoryToPlayer(id2)        
+        player2.subtractTerritoryFromPlayerInWar(id2, map)
+        player1.addTerritoryToPlayer(id2, map)
+
+    #update population for score
+    player1.totalPlayerPopulation(map)        
+    player2.totalPlayerPopulation(map)
+    player1.calculateTotalScoreForPlayer(map)
+    player2.calculateTotalScoreForPlayer(map)
 
     pygame.display.flip()
 

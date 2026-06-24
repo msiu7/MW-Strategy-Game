@@ -13,9 +13,10 @@ class landTile(tile):
         self.directCoastalAdjacencyValue = 0b0
         self.diagonalCoastalAdjacencyValue = 0b0
 
-    def updatePopulationPerTurn(self, player):
+        #score per landTile, definitely can be changed.
+        self.score = 15
 
-            
+    def updatePopulationPerTurn(self, player):
         nextturnfood = player.food + player.foodperturn - player.foodConsumption
         if player.food > 0 and nextturnfood > 0: 
             self.populationperturn = nextturnfood / player.food
@@ -38,7 +39,7 @@ class landTile(tile):
             
         print(f"pop:{self.population} && popperturn:{self.populationperturn} && {player.foodConsumption} && {nextturnfood}")
 
-    def upgradeTile(self, player):
+    def upgradeTile(self, player, map):
         if self.level == 0 and player.getBrick() >= 25:
             player.subtractBrick(25)
             self.level += 1
@@ -48,6 +49,8 @@ class landTile(tile):
         elif self.level == 2 and player.getBrick() >= 100:
             player.subtractBrick(100)
             self.level += 1
+        self.landTileCalculateScore()
+        player.calculateTotalScoreForPlayer(map)
 
     def downgradeTile(self):
         if self.level != 0:
@@ -78,3 +81,7 @@ class landTile(tile):
 
     def getPopulation(self):
         return self.population
+    
+    #idk this is completely arbitrary we need to test and check
+    def landTileCalculateScore(self):
+        self.score = 15 * self.level + 5

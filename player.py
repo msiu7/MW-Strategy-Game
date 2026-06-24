@@ -18,8 +18,6 @@ class player:
         self.color = color
         self.borderingTerritories = []
         
-        
-        
         if color == '1':
             self.rgb = (255, 18, 5)
         if color == '2': 
@@ -42,7 +40,7 @@ class player:
         self.brickperturn = 0
         self.gold = 1000
         self.wood = 100
-        self.stone = 5
+        self.stone = 50
         self.food = 0
         self.brick = 100
         self.foodConsumption = 0
@@ -54,6 +52,9 @@ class player:
         self.lastTurnFoodFromTreasure = 0 
         self.lastTurnStoneFromTreasure = 0
         self.lastTurnWoodFromTreasure = 0
+
+        #score
+        self.totalScore = 0
 
     def updateFoodConsumption(self):
         self.foodConsumption = len(self.population) * 4
@@ -143,16 +144,19 @@ class player:
         self.food += self.foodperturn
         self.brick += self.brickperturn 
     
-    def addTerritoryToPlayer(self, id):
+    def addTerritoryToPlayer(self, id, map):
         self.territories.append(id)
+        self.calculateTotalScoreForPlayer(map)
 
-    def subtractTerritoryFromPlayer(self, id):
+    def subtractTerritoryFromPlayer(self, id, map):
         if len(self.territories) > 1:
             self.territories.remove(id)
+            self.calculateTotalScoreForPlayer(map)
 
-    def subtractTerritoryFromPlayerInWar(self, id):
+    def subtractTerritoryFromPlayerInWar(self, id, map):
         if len(self.territories) >= 1:
             self.territories.remove(id)
+            self.calculateTotalScoreForPlayer(map)
 
     def returnNumTerritories(self):
         return len(self.territories)
@@ -428,6 +432,16 @@ class player:
         if (checkIfAnyDowngraded):
             self.wood = 0
 
+    def calculateTotalScoreForPlayer(self, map):
+        localVar = 0
+        for a in range(len(self.territories)):
+            if(isinstance(map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50], landTile)):
+                map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].landTileCalculateScore()
+            localVar += map.grid[(self.territories[a]) // 50][(self.territories[a]) % 50].score
+        for b in range(len(self.population)):
+            localVar += self.population[b].score
+        self.totalScore = localVar
+
     def endTurnSequence(self, map):
         self.totalPlayerPopulation(map)
         self.updateFunctionalProductionValues(map)
@@ -445,6 +459,8 @@ class player:
         self.addTreasureGains()
         self.reduceTreasureCooldown(map)
 
+        #by putting this here we don't have to add it to the end of functions that only happen at the end of turn
+        self.calculateTotalScoreForPlayer(map)
 
         #print(self.foodperturn)
         #print(f"Total Player Population: {len(self.population)}")

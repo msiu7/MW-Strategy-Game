@@ -5,6 +5,9 @@ class population:
         self.tilerow = tilerow
         self.tilecol = tilecol
         #type list: "unemployed", "civilian", "soldier"
+
+        #population score (maybe we should do different scores for each type?)
+        self.score = 1
     
     def movePopulation(self, index, tilerow1, tilecol1, tilerow2, tilecol2, grid):
         grid[tilerow2][tilecol2].population.append(self)

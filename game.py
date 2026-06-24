@@ -165,7 +165,7 @@ while gaming and numplayers != 0:
                     resourcedisplay1 = False 
                     scoreboard = False
 
-                    #The lines at the end of events 4 & 5 allow for switching between the production view and treasure view
+                    #The lines at the end of events 4 & 5 allow for switching between the production view and treasure view (and 7 now too)
             
                 #Player Turn Cycling
                 if endturn.collidepoint(event.pos): #event 6
@@ -367,17 +367,17 @@ while gaming and numplayers != 0:
                                                 if upgradeTileButton.collidepoint(event.pos):
                                                     if mainMap.grid[y][x].level == 0:
                                                         if currentplayer.getBrick() >= 25:
-                                                            mainMap.grid[y][x].upgradeTile(currentplayer)
+                                                            mainMap.grid[y][x].upgradeTile(currentplayer, mainMap)
                                                             clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 50 Brick", True, (0, 0, 0))
                                                             pygame.display.update()
                                                     elif mainMap.grid[y][x].level == 1:
                                                         if currentplayer.getBrick() >= 50:
-                                                            mainMap.grid[y][x].upgradeTile(currentplayer)
+                                                            mainMap.grid[y][x].upgradeTile(currentplayer, mainMap)
                                                             clickToUpgradeTile = bigText.render(f"Cost To Upgrade Tile: 100 Brick", True, (0, 0, 0))
                                                             pygame.display.update()
                                                     elif mainMap.grid[y][x].level == 2:
                                                         if currentplayer.getBrick() >= 100:
-                                                            mainMap.grid[y][x].upgradeTile(currentplayer)
+                                                            mainMap.grid[y][x].upgradeTile(currentplayer, mainMap)
                                                             clickToUpgradeTile = bigText.render(f"Tile Maxed Out", True, (0, 0, 0))
                                                             pygame.display.update()
                                                     else:
@@ -410,13 +410,14 @@ while gaming and numplayers != 0:
                                         if currentplayer.checkExpandable(mainMap.grid[y][x].getID()):
                                             if not(len(currentplayer.territories) == 0 and isinstance(mainMap.grid[y][x], oceanTile)):
                                                 currentplayer.subtractGold(mainMap.grid[y][x].tileValue)                           
-                                                currentplayer.addTerritoryToPlayer(mainMap.grid[y][x].getID())
+                                                currentplayer.addTerritoryToPlayer(mainMap.grid[y][x].getID(), mainMap)
                                                 if isinstance(mainMap.grid[y][x],landTile):
                                                     mainMap.grid[y][x].manuallyAddPopulation(1)
+                                                    currentplayer.totalPlayerPopulation(mainMap)
+                                                    currentplayer.calculateTotalScoreForPlayer(mainMap)
                                                 currentplayer.totalPlayerPopulation(mainMap)
                                                 currentplayer.updateFunctionalProductionValues(mainMap)
                                                 currentplayer.updateProductionValues(mainMap)
-                                            
                                             
                                 if noExpand.collidepoint(event.pos):
                                     screen1.fill(Background_color)
@@ -490,9 +491,9 @@ while gaming and numplayers != 0:
         elif scoreboard:
             displays.makeScoreboard(screen1, numplayers, text)
             for a in range (numplayers):
-                playerNumber = text.render(f"Player {currentplayer.name}", True, (0, 0, 0))
+                playerNumber = text.render(f"Player {a + 1}", True, (0, 0, 0))
                 screen1.blit(playerNumber, (210, 60 + (a * 35)))
-                playerScore = text.render("Score here", True, (0, 0, 0))
+                playerScore = text.render(f"{players[a].totalScore}", True, (0, 0, 0))
                 screen1.blit(playerScore, (350, 60 + (a * 35)))
 
         pygame.display.update()
@@ -649,9 +650,9 @@ while gaming and numplayers != 0:
                                                             print("LAND BATTLE TIME")
                                                             #the actual battle square here
                                                             #comment out battle screen for now
-                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap)
                                                         else:
-                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap)
                                                             print("Land to water")
                                                         mainMap.displayMap(screen3)
                                                         for a in range(0, len(players)):
@@ -667,10 +668,10 @@ while gaming and numplayers != 0:
                                                     print("got through")
                                                     if mainMap.istileowned(tilecol2, tilerow2, players, numplayers) and (len(mainMap.grid[tilerow1][tilecol1].population)) > 0:
                                                         if isinstance(mainMap.grid[tilerow2][tilecol2], landTile):
-                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)  
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap)  
                                                             print("AMPHIBIOUS ATTACK")
                                                         else:
-                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap.grid)
+                                                            actualBattle(currentplayer, players[findPlayerFromTile(mainMap.grid[tilerow2][tilecol2].getID(), players)], mainMap.grid[tilerow1][tilecol1].getSolLength(), mainMap.grid[tilerow2][tilecol2].getSolLength(), mainMap.grid[tilerow1][tilecol1].getID(), mainMap.grid[tilerow2][tilecol2].getID(), mainMap)
                                                             print("NAVAL BATTLE")  
                                                             #maybe do something more with these in the future?
                                                         mainMap.displayMap(screen3)
