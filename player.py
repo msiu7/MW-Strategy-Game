@@ -17,6 +17,7 @@ class player:
         self.name = name
         self.color = color
         self.borderingTerritories = []
+        self.cornerBorderingTerritories = []
         
         if color == '1':
             self.rgb = (255, 18, 5)
@@ -202,13 +203,14 @@ class player:
             c = self.territories[b]
             if not (self.doesTileBelongToPlayer(c - 1) and self.doesTileBelongToPlayer(c + 1) and self.doesTileBelongToPlayer(c - 50) and self.doesTileBelongToPlayer(c + 50)):
                 self.borderingTerritories.append(c)
+            if (self.doesTileBelongToPlayer(c - 1) and self.doesTileBelongToPlayer(c - 50) and not self.doesTileBelongToPlayer(c - 51)) or (self.doesTileBelongToPlayer(c + 1) and self.doesTileBelongToPlayer(c - 50) and not self.doesTileBelongToPlayer(c - 49)) or (self.doesTileBelongToPlayer(c - 1) and self.doesTileBelongToPlayer(c + 50) and not self.doesTileBelongToPlayer(c + 49)) or (self.doesTileBelongToPlayer(c + 1) and self.doesTileBelongToPlayer(c + 50) and not self.doesTileBelongToPlayer(c + 51)):
+                self.cornerBorderingTerritories.append(c)
             b += 1
                 
 
     def drawBorders(self, screen):
         
         for a in range(0, len(self.borderingTerritories)):
-            #SurFued
             if ((not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 1)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] - 50)) and (not self.doesTileBelongToPlayer(self.borderingTerritories[a] + 50))):
                 #width,height
                 right = pygame.Rect((self.borderingTerritories[a] % 50) * 25 + 23, (self.borderingTerritories[a] // 50) * 25, 2, 25)
@@ -334,6 +336,22 @@ class player:
                 #width,height
                 bottom = pygame.Rect((self.borderingTerritories[a] % 50) * 25, (self.borderingTerritories[a] // 50) * 25 + 23, 25, 2)
                 pygame.draw.rect(screen, (self.rgb), bottom)
+
+            #for consistent corners
+        for a in range(0, len(self.cornerBorderingTerritories)):
+            if (self.doesTileBelongToPlayer(self.cornerBorderingTerritories[a] - 1) and self.doesTileBelongToPlayer(self.cornerBorderingTerritories[a] - 50)):
+                topLeft = pygame.Rect((self.cornerBorderingTerritories[a] % 50) * 25, (self.cornerBorderingTerritories[a] // 50) * 25, 2, 2)
+                pygame.draw.rect(screen, (self.rgb), topLeft)
+            if (self.doesTileBelongToPlayer(self.cornerBorderingTerritories[a] + 1) and self.doesTileBelongToPlayer(self.cornerBorderingTerritories[a] - 50)):
+                topRight = pygame.Rect((self.cornerBorderingTerritories[a] % 50) * 25 + 23, (self.cornerBorderingTerritories[a] // 50) * 25, 2, 2)
+                pygame.draw.rect(screen, (self.rgb), topRight)
+            if (self.doesTileBelongToPlayer(self.cornerBorderingTerritories[a] - 1) and self.doesTileBelongToPlayer(self.cornerBorderingTerritories[a] + 50)):
+                bottomLeft = pygame.Rect((self.cornerBorderingTerritories[a] % 50) * 25, (self.cornerBorderingTerritories[a] // 50) * 25 + 23, 2, 2)
+                pygame.draw.rect(screen, (self.rgb), bottomLeft)
+            if (self.doesTileBelongToPlayer(self.cornerBorderingTerritories[a] + 1) and self.doesTileBelongToPlayer(self.cornerBorderingTerritories[a] + 50)):
+                bottomRight = pygame.Rect((self.cornerBorderingTerritories[a] % 50) * 25 + 23, (self.cornerBorderingTerritories[a] // 50) * 25 + 23, 2, 2)
+                pygame.draw.rect(screen, (self.rgb), bottomRight)
+            
 
 
 
