@@ -39,11 +39,11 @@ class player:
         self.stoneperturn = 0
         self.foodperturn = 0
         self.brickperturn = 0
-        self.gold = 1000
-        self.wood = 100
-        self.stone = 50
+        self.gold = 100
+        self.wood = 10
+        self.stone = 15
         self.food = 0
-        self.brick = 100
+        self.brick = 25
         self.foodConsumption = 0
         self.woodUse = 0
 
@@ -132,10 +132,10 @@ class player:
                 numpos += 1
         if numpos > 0:
             for a in range(len(zero)):
-                self.subtractTerritoryFromPlayer(zero[a])
+                self.subtractTerritoryFromPlayer(zero[a], map)
         else:
             for a in range(len(zero)-1):
-                self.subtractTerritoryFromPlayer(zero[a])
+                self.subtractTerritoryFromPlayer(zero[a], map)
                 self.territories[0].manuallyAddPopulation(1)
 
     def addProductionToTotal(self):
