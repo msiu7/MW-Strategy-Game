@@ -5,9 +5,14 @@ def managePopulation(map, screen, y, x, bigText, managescreen, currentplayer):
         for row in range(30):
             for col in range(50):
                 map.grid[row][col].draw(screen)
+        customText = pygame.font.SysFont("Arial", 20)
         unemployedTile = bigText.render(f"Unemployed: {map.grid[y][x].getUnemployedLength()}", True, (0, 0, 0))
         civiliansTile = bigText.render(f"Civilians: {map.grid[y][x].getCivLength()}", True, (0, 0, 0))
         soldiersTile = bigText.render(f"Soldiers: {map.grid[y][x].getSolLength()}", True, (0, 0, 0))
+        poptocivText = customText.render("Convert to Civilian", True, (0, 0, 0))
+        poptosolText = customText.render("Convert to Soldier", True, (0, 0, 0))
+        soltocivText = customText.render("Convert to Civilian", True, (0, 0, 0))
+        civtosolText = customText.render("Convert to Soldier", True, (0, 0, 0))
         exitButton = pygame.Rect(975, 225, 50, 50)
         pygame.draw.rect(screen, (211, 182, 131), managescreen)
         screen.blit(civiliansTile, (235, 230))
@@ -22,6 +27,10 @@ def managePopulation(map, screen, y, x, bigText, managescreen, currentplayer):
         pygame.draw.rect(screen, (255, 255, 255), poptosol)
         pygame.draw.rect(screen, (255, 255, 255), soltociv)
         pygame.draw.rect(screen, (255, 255, 255), civtosol)
+        screen.blit(poptocivText, (525, 475))
+        screen.blit(poptosolText, (745, 475))
+        screen.blit(soltocivText, (630, 365))
+        screen.blit(civtosolText, (630, 240))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
