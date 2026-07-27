@@ -8,7 +8,6 @@ from player import *
 from functions import *
 from oceanTile import oceanTile
 from gameMap import gameMap
-from managePopulation import managePopulation
 from move import *
 
 pygame.display.flip()
@@ -389,7 +388,7 @@ while gaming and numplayers != 0:
                                                     pygame.display.update() 
                                 
                                 if goToManageButton.collidepoint(event.pos):
-                                    managePopulation(mainMap, screen1, y, x, bigText, managescreen, currentplayer)
+                                    displays.managePopulation(mainMap, screen1, y, x, bigText, managescreen, currentplayer)
                                     tilePopup = False                  
                                                         
                     while unownedWaitingForSecond:

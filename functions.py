@@ -79,10 +79,3 @@ def checkPureAdjacency(id1, id2):
 def drawUI(screen1, backgroundUI, endturn):
     pygame.draw.rect(screen1, (211, 182, 131), backgroundUI)
     pygame.draw.rect(screen1, (0, 0, 0), endturn)
-
-#Work In Progess, Checks If Tile Controlled By Another Player (LITERALLY NOT USED ANYWHERE ?????)
-def checkIfUsedID(id, ids):
-    for a in range(0, ids.size()):
-        if id == ids[a]:
-            return True
-    return False
