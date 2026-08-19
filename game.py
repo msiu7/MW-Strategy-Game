@@ -11,7 +11,8 @@ from gameMap import gameMap
 from move import *
 
 pygame.display.flip()
-running0 = True 
+running0 = True
+maxTurnsScreen = False
 while running0:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -32,7 +33,48 @@ while running0:
                     players.append(player(str(a+1), str(a+1)))
                 currentplayer = players[currentplayerindex]        
                 running0 = False
-    pygame.display.update()
+                maxTurnsScreen = True
+
+#setMaxTurns
+screen0.fill(Background_color)
+pygame.draw.rect(screen0,(153, 32, 28), rect2)
+pygame.draw.rect(screen0,(153, 32, 28), rect3)
+pygame.draw.rect(screen0,(153, 32, 28), rect4)
+pygame.draw.rect(screen0,(153, 32, 28), rect5)
+pygame.draw.rect(screen0, (153, 32, 28), rect6)
+instruction = text2.render("Select Number Of Turns", True, (255, 255, 255))
+screen0.blit(instruction, (50, 100))
+fifty = text1.render("50", True, (255, 255, 255))
+screen0.blit(fifty, (225, 225))
+hundred = text1.render("100", True, (255, 255, 255))
+screen0.blit(hundred, (640, 225))
+hundredfifty = text1.render("150", True, (255, 255, 255))
+screen0.blit(hundredfifty, (1065, 225))
+twohundred = text1.render("200", True, (255, 255, 255))
+screen0.blit(twohundred, (432, 675))
+twohundredfifty = text1.render("250", True, ((255, 255, 255)))
+screen0.blit(twohundredfifty, (858, 675))
+pygame.display.update()
+pygame.display.flip()
+while maxTurnsScreen:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            maxTurnsScreen = False
+        if event.type == pygame.MOUSEBUTTONDOWN:       
+            if rect2.collidepoint(event.pos):
+                numOfTurns = 50
+            elif rect3.collidepoint(event.pos):
+                numOfTurns = 100 
+            elif rect4.collidepoint(event.pos):
+                numOfTurns = 150
+            elif rect5.collidepoint(event.pos):
+                numOfTurns = 200
+            elif rect6.collidepoint(event.pos):
+                numOfTurns = 250    
+            if(numOfTurns != 0):
+                maxTurnsScreen = False
+                pygame.display.update()
+                pygame.display.flip()
 
 #Setting up Game Screen & Tiles
 Background_color = (50, 168, 82)
@@ -76,7 +118,7 @@ scoreboardView = pygame.Rect(450, 750, 100, 100)
     #Ask If User Wants to Expand Button
     #ultimate super dooper awesome loop!!!!!!!!!!
 gaming = True
-while gaming and numplayers != 0:
+while gaming and numplayers != 0 and numOfTurns != 0 and turnnumber <= numOfTurns:
 
 #Game Loop
     running1 = True
@@ -426,7 +468,7 @@ while gaming and numplayers != 0:
         #player count display
         
         textdraw = text.render(f"Player: {currentplayer.name}", True, (0, 0, 0))
-        textturnnumber = text.render(f"Turn #{turnnumber}", True, (0, 0, 0))
+        textturnnumber = text.render(f"Turn #{turnnumber}/{numOfTurns}", True, (0, 0, 0))
         screen1.blit(textdraw, (10, 760))
         screen1.blit(textturnnumber, (10, 810))
 
@@ -718,3 +760,5 @@ while gaming and numplayers != 0:
                     levelView = False
                     running1 = True
         pygame.display.flip()
+
+#end of game (outside main while loop)

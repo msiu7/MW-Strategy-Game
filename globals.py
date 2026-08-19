@@ -8,7 +8,7 @@ turnnumber = 1
 
 #Setting up Initial Player Screen
 pygame.init() 
-Background_color = (48, 55, 191)
+Background_color = (211, 182, 131)
 SCREEN_WIDTH = 1250
 SCREEN_HEIGHT = 850
 text = pygame.font.SysFont("Arial", 30)
@@ -27,7 +27,7 @@ pygame.draw.rect(screen0,(153, 32, 28), rect3)
 pygame.draw.rect(screen0,(153, 32, 28), rect4)
 pygame.draw.rect(screen0,(153, 32, 28), rect5)
 pygame.draw.rect(screen0, (153, 32, 28), rect6)
-instruction = text2.render("SELECT THE AMOUNT OF PLAYERS IN YOU GAME!!!", True, (255, 255, 255))
+instruction = text2.render("Select Number of Players", True, (255, 255, 255))
 screen0.blit(instruction, (50, 100))
 twoplayer = text1.render("2", True, (255, 255, 255))
 screen0.blit(twoplayer, (240, 225))
@@ -41,4 +41,5 @@ sixplayer = text1.render("6", True, ((255, 255, 255)))
 screen0.blit(sixplayer, (873, 675))
 
 numplayers = 0
+numOfTurns = 0
 
