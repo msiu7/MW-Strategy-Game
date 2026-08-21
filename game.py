@@ -13,6 +13,7 @@ from move import *
 pygame.display.flip()
 running0 = True
 maxTurnsScreen = False
+endScreen = False
 while running0:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -62,7 +63,7 @@ while maxTurnsScreen:
             maxTurnsScreen = False
         if event.type == pygame.MOUSEBUTTONDOWN:       
             if rect2.collidepoint(event.pos):
-                numOfTurns = 50
+                numOfTurns = 5
             elif rect3.collidepoint(event.pos):
                 numOfTurns = 100 
             elif rect4.collidepoint(event.pos):
@@ -129,7 +130,7 @@ while gaming and numplayers != 0 and numOfTurns != 0 and turnnumber <= numOfTurn
     movePopMode = False 
     levelView = False
     scoreboard = False
-    while running1:
+    while running1 and turnnumber <= numOfTurns:
         
         popupText = pygame.font.SysFont("Arial", 10)
         bigText = pygame.font.SysFont("Arial", 30)
@@ -530,12 +531,7 @@ while gaming and numplayers != 0 and numOfTurns != 0 and turnnumber <= numOfTurn
             screen1.blit(treasureWood, (875, 60))
 
         elif scoreboard:
-            displays.makeScoreboard(screen1, numplayers, text)
-            for a in range (numplayers):
-                playerNumber = text.render(f"Player {a + 1}", True, (0, 0, 0))
-                screen1.blit(playerNumber, (210, 60 + (a * 35)))
-                playerScore = text.render(f"{players[a].totalScore}", True, (0, 0, 0))
-                screen1.blit(playerScore, (350, 60 + (a * 35)))
+            displays.showScores(players, screen1, numplayers, text)
 
         pygame.display.update()
     
@@ -762,3 +758,21 @@ while gaming and numplayers != 0 and numOfTurns != 0 and turnnumber <= numOfTurn
         pygame.display.flip()
 
 #end of game (outside main while loop)
+endScreen = True
+winnerIndex = 0
+#find the winner
+for a in range(numplayers):
+    if players[a].totalScore > players[winnerIndex].totalScore:
+        winnerIndex = a
+winnerText = text2.render(f"Player {winnerIndex + 1} Wins!", True, (255, 255, 255))
+#reset background color
+Background_color = (211, 182, 131)
+screen0.fill(Background_color)
+displays.showScores(players, screen0, numplayers, text)
+screen0.blit(winnerText, (500, 25))        
+pygame.display.flip()
+while endScreen:
+    #exit game
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            endScreen = False

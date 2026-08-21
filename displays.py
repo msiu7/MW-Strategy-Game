@@ -33,6 +33,15 @@ class displays:
         screen.blit(scoreLabel, (350, 30))
 
     @staticmethod
+    def showScores(players, screen, numplayers, text):
+        displays.makeScoreboard(screen, numplayers, text)
+        for a in range (numplayers):
+            playerNumber = text.render(f"Player {a + 1}", True, (0, 0, 0))
+            screen.blit(playerNumber, (210, 60 + (a * 35)))
+            playerScore = text.render(f"{players[a].totalScore}", True, (0, 0, 0))
+            screen.blit(playerScore, (350, 60 + (a * 35)))
+
+    @staticmethod
     def managePopulation(map, screen, y, x, bigText, managescreen, currentplayer):
         while(True):    
             for row in range(30):
