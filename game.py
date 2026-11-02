@@ -63,7 +63,7 @@ while maxTurnsScreen:
             maxTurnsScreen = False
         if event.type == pygame.MOUSEBUTTONDOWN:       
             if rect2.collidepoint(event.pos):
-                numOfTurns = 5
+                numOfTurns = 50
             elif rect3.collidepoint(event.pos):
                 numOfTurns = 100 
             elif rect4.collidepoint(event.pos):
